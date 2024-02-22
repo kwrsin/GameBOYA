@@ -18,7 +18,9 @@ loader_scene = 'loader'
 score_scene = 'score_scene'
 view_width = 480
 view_height = 320
-content_x = 100
-content_y = 600
+content_x = 48
+content_y = cy - 256 - 24
+frameWidth = 100
+frameHeight = 100
 
 gImageSheets = nil

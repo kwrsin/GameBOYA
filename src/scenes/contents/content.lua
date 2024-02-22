@@ -70,7 +70,15 @@ function M:create(parent, callback)
 	selectedLevel = require(storage:get('selectedLevel'))
 	tiled()
 	if player then
-		camera:create(parent, {layers={content}, target=player.go, offsetX=content_x, offsetY=content_y, viewWidth=view_width, viewHeight=view_height, frameWidth=0, frameHeight=0})
+		camera:create(parent, {
+      layers={content}, 
+      target=player.go, 
+      offsetX=content_x, 
+      offsetY=content_y, 
+      viewWidth=view_width, 
+      viewHeight=view_height, 
+      frameWidth=frameWidth, 
+      frameHeight=frameHeight})
     virtualControlelr:createVirtualController(parent)
     virtualControlelr:createCursor({x=-cx, y=0}, function(cursor) 
       player:move(utils.toKeys(cursor))
