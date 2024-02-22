@@ -3,7 +3,7 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
-require 'src.definitions.const'
+require 'src.structures.definitions.const'
 utils = require 'src.libs.utils'
 storage = require 'src.libs.storage'
 
