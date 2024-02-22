@@ -15,4 +15,36 @@ function M:createButton(title, x, y, onEvent)
 	return button
 end
 
+function M:nineslice(params)
+	local parent = params.parent
+	local frame = display.newGroup()
+	if parent then parent:insert(frame) end
+	local x, y = params.x or cx, params.y or cy
+	local halfWidth = params.width / 2
+	local halfHeight = params.height / 2
+	local halfBarsize = params.barsize / 2
+	local imageSheet = params.imageSheet
+	local top = y - halfHeight - halfBarsize
+	local bottom = y + halfHeight + halfBarsize
+	local left = x - halfWidth - halfBarsize
+	local right = x + halfWidth + halfBarsize
+
+	local topleft = display.newImageRect(frame, imageSheet, 1, params.barsize, params.barsize)
+	topleft.x, topleft.y = left, top
+	local topcenter = display.newImageRect(frame, imageSheet, 2, params.width, params.barsize)
+	topcenter.x, topcenter.y = x, top
+	local topright = display.newImageRect(frame, imageSheet, 3, params.barsize, params.barsize)
+	topright.x, topright.y = right, top
+	local centerleft = display.newImageRect(frame, imageSheet, 4, params.barsize, params.height)
+	centerleft.x, centerleft.y = left, y
+	local centerright = display.newImageRect(frame, imageSheet, 5, params.barsize, params.height)
+	centerright.x, centerright.y = right, y
+	local bottomleft = display.newImageRect(frame, imageSheet, 6, params.barsize, params.barsize)
+	bottomleft.x, bottomleft.y = left, bottom
+	local bottomcenter = display.newImageRect(frame, imageSheet, 7, params.width, params.barsize)
+	bottomcenter.x, bottomcenter.y = x, bottom
+	local bottomright = display.newImageRect(frame, imageSheet, 8, params.barsize, params.barsize)
+	bottomright.x, bottomright.y = right, bottom
+end
+
 return M

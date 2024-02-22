@@ -72,7 +72,7 @@ function M:create(parent, callback)
 	if player then
 		camera:create(parent, {layers={content}, target=player.go, offsetX=content_x, offsetY=content_y, viewWidth=view_width, viewHeight=view_height, frameWidth=0, frameHeight=0})
     virtualControlelr:createVirtualController(parent)
-    virtualControlelr:createCursor({x=-cx+90, y=80}, function(cursor) 
+    virtualControlelr:createCursor({x=-cx, y=0}, function(cursor) 
       player:move(utils.toKeys(cursor))
     end)
 		controller.keyInput(player, function(event, keys)
@@ -82,7 +82,7 @@ function M:create(parent, callback)
 		parent:insert(content)
 	end
 
-	createButton()
+	-- createButton()
 
 	addEventListeners()
 end

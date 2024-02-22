@@ -3,13 +3,12 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
-require 'src.libs.debug'
 require 'src.definitions.const'
 utils = require 'src.libs.utils'
 storage = require 'src.libs.storage'
 
-physics.start()
-system.activate( "multitouch" )
+require 'src.systems.system'
+require 'src.systems.debug'
 
 
 utils.gotoScene(loader_scene)

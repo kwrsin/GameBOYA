@@ -1,5 +1,8 @@
 -- debug.lua
 
+-- physics.setDrawMode( "hybrid" )
+
+
 local function printTable( t )
  
     local printTable_cache = {}
