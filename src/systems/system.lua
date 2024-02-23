@@ -32,7 +32,7 @@ local function getContentForeground()
 			imageSheet=imageSheet,
 		}
     virtualControlelr:createVirtualController(parent)
-    virtualControlelr:createCursor({x=-cx, y=0}, function(cursor)
+    virtualControlelr:createCursor({x=vc_pos.x, y=vc_pos.y}, function(cursor)
     	if not player then return end
       player:move(utils.toKeys(cursor))
     end)

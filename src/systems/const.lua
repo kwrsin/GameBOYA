@@ -23,3 +23,5 @@ content_y = cy - 256 - 24
 frameWidth = 100
 frameHeight = 100
 
+vc_pos = {x=-cx+120, y=cy - 120}
+
