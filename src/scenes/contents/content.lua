@@ -1,14 +1,11 @@
 -- content.lua
 local tileLoader = require 'src.libs.tileLoader'
 local camera = require 'src.libs.camera'
-local controller = require 'src.libs.controller'
-local virtualControlelr = require 'src.libs.virtual_controller'
 local uiLib = require 'src.libs.uiLib'
 
 local M = require('src.scenes.contents.base')()
 
 local content
-local player
 local gotoNext
 local selectedLevel
 
@@ -79,13 +76,6 @@ function M:create(parent, callback)
       viewHeight=view_height, 
       frameWidth=frameWidth, 
       frameHeight=frameHeight})
-    virtualControlelr:createVirtualController(parent)
-    virtualControlelr:createCursor({x=-cx, y=0}, function(cursor) 
-      player:move(utils.toKeys(cursor))
-    end)
-		controller.keyInput(player, function(event, keys)
-      player:move(keys)
-    end)
 	else
 		parent:insert(content)
 	end

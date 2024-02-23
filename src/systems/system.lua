@@ -31,6 +31,16 @@ local function getContentForeground()
 			barsize=64,
 			imageSheet=imageSheet,
 		}
+    virtualControlelr:createVirtualController(parent)
+    virtualControlelr:createCursor({x=-cx, y=0}, function(cursor)
+    	if not player then return end
+      player:move(utils.toKeys(cursor))
+    end)
+		controller.keyInput(player, function(event, keys)
+    	if not player then return end
+      player:move(keys)
+    end)
+
     return parent
 end
 
