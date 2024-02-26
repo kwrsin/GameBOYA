@@ -155,12 +155,12 @@ local function proc()
 				else
 					go = display.newRect( 
 						gp,
-						obj.x + obj.width / 2,
-						obj.y + obj.height / 2,
+						obj.x,
+						obj.y + obj.height,
 						obj.width, 
 						obj.height )					
-						-- go.anchorX = 0
-						-- go.anchorY = 0
+						go.anchorX = 0
+						go.anchorY = 1
 					physics.addBody( go, 'static', {density=1, friction=1, bounce=1} )
 				end
 				if go then

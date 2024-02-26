@@ -1,5 +1,5 @@
 -- debug.lua
-
+-- local physics = require 'physics'
 -- physics.setDrawMode( "hybrid" )
 
 
