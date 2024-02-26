@@ -92,6 +92,87 @@ local function proc()
 			local img = display.newImageRect( gp, path, tile.width * tile.tilewidth, tile.height * tile.tileheight)
 			img.anchorX, img.anchorY = 0, 0
 			parent:insert(gp)
+		elseif layer.type == 'objectgroup' and layer.visible then
+			local gp = display.newGroup( )
+			for i=1,#layer.objects do
+				local obj = layer.objects[i]
+				local gId = obj.gid
+				local go
+				if gId then
+					local tileset = getTilesetFromId(gId)
+					local imageSheet
+					if tileset then
+						imageSheet = tileset.imageSheet
+					end
+					if callback then
+						go = callback({
+							parent=gp, 
+							gId=gId,
+							imageSheet=imageSheet,
+							index=toIndex(gId),
+							width=tile.tilewidth,
+							height=tile.tileheight,
+							layername=layer.name,
+							})
+						-- go.anchorX = 0
+						-- go.anchorY = 1.0
+						go.x = obj.x + obj.width / 2
+						go.y = obj.y - obj.height / 2
+					end
+				elseif obj.shape == 'polygon' then
+					local top, bottom, right, left
+					local vertices = {}
+					for i, v in ipairs(obj.polygon) do
+						vertices[#vertices + 1] = v.x
+						vertices[#vertices + 1] = v.y
+						if not top then top = v.y end 
+						if not bottom then bottom = v.y end 
+						if not right then right = v.x end 
+						if not left then left = v.x end
+						if top > v.y then top = v.y end
+						if bottom < v.y then bottom = v.y end
+						if left > v.x then left = v.x end
+						if right < v.x then right = v.x end
+					end
+					local halfHeight= (math.abs(top) + math.abs(bottom)) / 2
+					local halfWidth = (math.abs(left) + math.abs(right)) / 2
+					go = display.newPolygon(
+						gp,
+						obj.x + halfWidth + left,
+						obj.y + halfHeight + top,
+						vertices)
+						-- go.anchorX = 0
+						-- go.anchorY = 0
+					physics.addBody( go, 'static', {density=1, friction=1, bounce=1} )
+				elseif obj.shape == 'ellipse' then
+					local radius = obj.width / 2
+					go = display.newCircle( 
+						gp, 
+						obj.x + obj.width / 2, 
+						obj.y + obj.height / 2, 
+						radius )
+					physics.addBody( go, 'static', {density=1, friction=1, bounce=1, radius=radius} )
+				else
+					go = display.newRect( 
+						gp,
+						obj.x + obj.width / 2,
+						obj.y + obj.height / 2,
+						obj.width, 
+						obj.height )					
+						-- go.anchorX = 0
+						-- go.anchorY = 0
+					physics.addBody( go, 'static', {density=1, friction=1, bounce=1} )
+				end
+				if go then
+					if obj.rotation then
+						go:rotate(obj.rotation)
+					end
+					if not obj.visible then
+						go.alpha = 0
+					end
+				end
+			end
+			parent:insert(gp)
 		end
 	end
 end

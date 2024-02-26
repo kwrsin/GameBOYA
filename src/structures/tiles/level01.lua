@@ -1,20 +1,22 @@
 return {
-  version = "1.5",
+  version = "1.10",
   luaversion = "5.1",
-  tiledversion = "1.8.4",
+  tiledversion = "1.10.2",
+  class = "",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 128,
   height = 128,
   tilewidth = 32,
   tileheight = 32,
-  nextlayerid = 6,
-  nextobjectid = 1,
+  nextlayerid = 7,
+  nextobjectid = 11,
   properties = {},
   tilesets = {
     {
       name = "platform2_tiles",
       firstgid = 1,
+      class = "",
       tilewidth = 32,
       tileheight = 32,
       spacing = 0,
@@ -24,6 +26,8 @@ return {
       imagewidth = 64,
       imageheight = 32,
       objectalignment = "unspecified",
+      tilerendersize = "tile",
+      fillmode = "stretch",
       tileoffset = {
         x = 0,
         y = 0
@@ -41,6 +45,7 @@ return {
     {
       name = "platform2_walls",
       firstgid = 3,
+      class = "",
       tilewidth = 32,
       tileheight = 32,
       spacing = 0,
@@ -50,6 +55,8 @@ return {
       imagewidth = 224,
       imageheight = 32,
       objectalignment = "unspecified",
+      tilerendersize = "tile",
+      fillmode = "stretch",
       tileoffset = {
         x = 0,
         y = 0
@@ -62,11 +69,45 @@ return {
       properties = {},
       wangsets = {},
       tilecount = 7,
-      tiles = {}
+      tiles = {
+        {
+          id = 6,
+          objectGroup = {
+            type = "objectgroup",
+            draworder = "index",
+            id = 2,
+            name = "",
+            class = "",
+            visible = true,
+            opacity = 1,
+            offsetx = 0,
+            offsety = 0,
+            parallaxx = 1,
+            parallaxy = 1,
+            properties = {},
+            objects = {
+              {
+                id = 1,
+                name = "",
+                type = "",
+                shape = "rectangle",
+                x = 13.4481,
+                y = 11.1427,
+                width = 0,
+                height = 0,
+                rotation = 0,
+                visible = true,
+                properties = {}
+              }
+            }
+          }
+        }
+      }
     },
     {
       name = "actorpositions",
       firstgid = 10,
+      class = "",
       tilewidth = 32,
       tileheight = 32,
       spacing = 0,
@@ -76,6 +117,8 @@ return {
       imagewidth = 96,
       imageheight = 32,
       objectalignment = "unspecified",
+      tilerendersize = "tile",
+      fillmode = "stretch",
       tileoffset = {
         x = 0,
         y = 0
@@ -97,6 +140,7 @@ return {
       image = "../../../../assets/images/platforms2groundgreen.png",
       id = 4,
       name = "green",
+      class = "",
       visible = true,
       opacity = 1,
       offsetx = 0,
@@ -115,6 +159,7 @@ return {
       height = 128,
       id = 1,
       name = "ground",
+      class = "",
       visible = false,
       opacity = 1,
       offsetx = 0,
@@ -262,6 +307,7 @@ return {
       height = 128,
       id = 2,
       name = "walls",
+      class = "",
       visible = true,
       opacity = 1,
       offsetx = 0,
@@ -409,6 +455,7 @@ return {
       height = 128,
       id = 5,
       name = "actors",
+      class = "",
       visible = true,
       opacity = 1,
       offsetx = 0,
@@ -546,6 +593,82 @@ return {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 6,
+      name = "objects",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 2,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 475.333,
+          y = 89.6667,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          gid = 9,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 3,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 276,
+          y = 101.334,
+          width = 104,
+          height = 58.6667,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 8,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 333.333,
+          y = 266.667,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 89.3333, y = -17.3333 },
+            { x = 118.667, y = 73.3333 },
+            { x = 21.3333, y = 140 },
+            { x = -53.3333, y = 109.333 }
+          },
+          properties = {}
+        },
+        {
+          id = 10,
+          name = "",
+          type = "",
+          shape = "ellipse",
+          x = 28,
+          y = 192,
+          width = 102.667,
+          height = 102.667,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
       }
     }
   }
