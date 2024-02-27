@@ -125,14 +125,14 @@ return {
                 properties = {}
               },
               {
-                id = 10,
+                id = 11,
                 name = "",
                 type = "",
-                shape = "ellipse",
-                x = 15.1756,
-                y = 4.93809,
-                width = 9.75575,
-                height = 9.75575,
+                shape = "rectangle",
+                x = 12.5259,
+                y = 0.602206,
+                width = 19.0297,
+                height = 15.296,
                 rotation = 0,
                 visible = true,
                 properties = {}

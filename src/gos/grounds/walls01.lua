@@ -22,7 +22,7 @@ return function(params)
 				local radius = vertex.width / 2
 				paramList[#paramList + 1] = {density=1.0, friction=0, bounce=0, filter=relations.wallBits,radius=radius}
 			elseif vertex.shape == 'rectangle' then
-				local box = {halfWidth=vertex.width / 2, halfHeight=vertex.height / 2, x=vertex.x * -1, y=vertex.y * -1}
+				local box = {halfWidth=vertex.width / 2, halfHeight=vertex.height / 2, x=-params.width / 2 + vertex.width / 2 + vertex.x, y=-params.height / 2 + vertex.height / 2 + vertex.y }
 				paramList[#paramList + 1] = {density=1.0, friction=0, bounce=0, filter=relations.wallBits,box=box}
 			end
 		end
