@@ -27,20 +27,6 @@ return function(params)
 		if #paramList > 0 then
 			physics.addBody( M.go, 'static',  unpack(paramList))
 		end
-		-- local vertex = collision.objects[1]
-		-- if vertex.shape == 'polygon' then
-		-- 	local vertices = {}
-		-- 	local origin = vertex.polygon[1]
-		-- 	for i, v in ipairs(vertex.polygon) do
-		-- 		vertices[#vertices + 1] = v.x - origin.x + vertex.x - params.width / 2
-		-- 		vertices[#vertices + 1] = v.y + origin.y + vertex.y - params.height / 2
-		-- 	end
-		-- 	physics.addBody( M.go, 'static', {density=1.0, friction=0, bounce=0, filter=relations.wallBits,shape=vertices} )			
-
-		-- elseif vertex.shape == 'rectangle' then
-		-- 	local box = {halfWidth=vertex.width / 2, halfHeight=vertex.height / 2, x=vertex.x * -1, y=vertex.y * -1}
-		-- 	physics.addBody( M.go, 'static', {density=1.0, friction=0, bounce=0, filter=relations.wallBits,box=box} )
-		-- end
 	else
 		physics.addBody( M.go, 'static', {density=1.0, friction=0, bounce=0, filter=relations.wallBits} )
 	end
