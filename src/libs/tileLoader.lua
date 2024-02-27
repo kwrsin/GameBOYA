@@ -82,6 +82,7 @@ local function proc()
 								width=tile.tilewidth,
 								height=tile.tileheight,
 								layername=layer.name,
+								type=layer.type,
 								collision=collision
 								})
 						else
@@ -130,6 +131,7 @@ local function proc()
 							width=tile.tilewidth,
 							height=tile.tileheight,
 							layername=layer.name,
+							type=layer.type,
 							collision=collision
 							})
 						-- go.anchorX = 0

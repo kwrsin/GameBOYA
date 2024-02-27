@@ -6,7 +6,7 @@ return function(params)
 	local M = base(params)
 	local collision = params.collision
 	M.go = display.newImageRect( params.parent, params.imageSheet, params.index, params.width, params.height )
-	if collision and collision.objects and #collision.objects > 0 then
+	if collision and collision.objects and #collision.objects > 0 and params.type == 'objectgroup' then
 		local paramList = {}
 		for i, object in ipairs(collision.objects) do
 			local vertex = object
