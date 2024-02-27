@@ -123,6 +123,19 @@ return {
                   { x = 6.14251, y = 8.67177 }
                 },
                 properties = {}
+              },
+              {
+                id = 10,
+                name = "",
+                type = "",
+                shape = "ellipse",
+                x = 15.1756,
+                y = 4.93809,
+                width = 9.75575,
+                height = 9.75575,
+                rotation = 0,
+                visible = true,
+                properties = {}
               }
             }
           }
