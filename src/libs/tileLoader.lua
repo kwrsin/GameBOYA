@@ -28,6 +28,16 @@ local function bind()
 	end
 end
 
+local function getCollision(tileset, index)
+	if not tileset.tiles or #tileset.tiles <= 0 then return end
+	for i, tile in ipairs(tileset.tiles) do
+		if index - 1 == tile.id and tile.objectGroup then
+			return tile.objectGroup
+		end
+	end
+	return nil
+end
+
 local function getTilesetFromId(id)
 	for k, v in pairs(dictionary) do
 		if id >= v.from and id <= v.to then
@@ -54,9 +64,12 @@ local function proc()
 				for j=1,layer.width do
 					local gId = data[(i-1) * layer.width + j]
 					local tileset = getTilesetFromId(gId)
+					local index = toIndex(gId)
 					local imageSheet
+					local collision
 					if tileset then
 						imageSheet = tileset.imageSheet
+						collision = getCollision(tileset, index)
 					end
 					if gId > 0 then
 						local go
@@ -65,16 +78,17 @@ local function proc()
 								parent=gp, 
 								gId=gId,
 								imageSheet=imageSheet,
-								index=toIndex(gId),
+								index=index,
 								width=tile.tilewidth,
 								height=tile.tileheight,
 								layername=layer.name,
+								collision=collision
 								})
 						else
 							go = display.newImageRect( 
 								gp, 
 								imageSheet, 
-								toIndex(gId), 
+								index, 
 								tile.tilewidth, 
 								tile.tileheight )
 						end
@@ -100,19 +114,23 @@ local function proc()
 				local go
 				if gId then
 					local tileset = getTilesetFromId(gId)
+					local index = toIndex(gId)
 					local imageSheet
+					local collision
 					if tileset then
 						imageSheet = tileset.imageSheet
+						collision = getCollision(tileset, index)
 					end
 					if callback then
 						go = callback({
 							parent=gp, 
 							gId=gId,
 							imageSheet=imageSheet,
-							index=toIndex(gId),
+							index=index,
 							width=tile.tilewidth,
 							height=tile.tileheight,
 							layername=layer.name,
+							collision=collision
 							})
 						-- go.anchorX = 0
 						-- go.anchorY = 1.0

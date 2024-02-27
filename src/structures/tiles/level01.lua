@@ -10,7 +10,7 @@ return {
   tilewidth = 32,
   tileheight = 32,
   nextlayerid = 7,
-  nextobjectid = 11,
+  nextobjectid = 13,
   properties = {},
   tilesets = {
     {
@@ -71,6 +71,63 @@ return {
       tilecount = 7,
       tiles = {
         {
+          id = 5,
+          objectGroup = {
+            type = "objectgroup",
+            draworder = "index",
+            id = 2,
+            name = "",
+            class = "",
+            visible = true,
+            opacity = 1,
+            offsetx = 0,
+            offsety = 0,
+            parallaxx = 1,
+            parallaxy = 1,
+            properties = {},
+            objects = {
+              {
+                id = 7,
+                name = "",
+                type = "",
+                shape = "polygon",
+                x = 4.33589,
+                y = 3.01103,
+                width = 0,
+                height = 0,
+                rotation = 0,
+                visible = true,
+                polygon = {
+                  { x = 0, y = 0 },
+                  { x = -3.13147, y = 2.89059 },
+                  { x = -2.28838, y = 8.55133 },
+                  { x = 4.57677, y = 5.41986 },
+                  { x = 4.57677, y = 2.16794 }
+                },
+                properties = {}
+              },
+              {
+                id = 8,
+                name = "",
+                type = "",
+                shape = "polygon",
+                x = 20.5955,
+                y = 19.9933,
+                width = 0,
+                height = 0,
+                rotation = 0,
+                visible = true,
+                polygon = {
+                  { x = 0, y = 0 },
+                  { x = -3.73368, y = 5.5403 },
+                  { x = 6.14251, y = 8.67177 }
+                },
+                properties = {}
+              }
+            }
+          }
+        },
+        {
           id = 6,
           objectGroup = {
             type = "objectgroup",
@@ -91,10 +148,10 @@ return {
                 name = "",
                 type = "",
                 shape = "rectangle",
-                x = 13.4481,
-                y = 11.1427,
-                width = 0,
-                height = 0,
+                x = 2.52002,
+                y = 3.62161,
+                width = 17.6135,
+                height = 15.7493,
                 rotation = 0,
                 visible = true,
                 properties = {}
@@ -448,6 +505,96 @@ return {
       }
     },
     {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 6,
+      name = "objects",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 2,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 65.9997,
+          y = 161.667,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          gid = 9,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 3,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 276,
+          y = 101.334,
+          width = 104,
+          height = 58.6667,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 8,
+          name = "",
+          type = "",
+          shape = "polygon",
+          x = 333.333,
+          y = 266.667,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 89.3333, y = -17.3333 },
+            { x = 118.667, y = 73.3333 },
+            { x = 21.3333, y = 140 },
+            { x = -53.3333, y = 109.333 }
+          },
+          properties = {}
+        },
+        {
+          id = 10,
+          name = "",
+          type = "",
+          shape = "ellipse",
+          x = 28,
+          y = 192,
+          width = 102.667,
+          height = 102.667,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 11,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 224,
+          y = 256,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          gid = 8,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
       type = "tilelayer",
       x = 0,
       y = 0,
@@ -593,82 +740,6 @@ return {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-      }
-    },
-    {
-      type = "objectgroup",
-      draworder = "topdown",
-      id = 6,
-      name = "objects",
-      class = "",
-      visible = true,
-      opacity = 1,
-      offsetx = 0,
-      offsety = 0,
-      parallaxx = 1,
-      parallaxy = 1,
-      properties = {},
-      objects = {
-        {
-          id = 2,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 475.333,
-          y = 89.6667,
-          width = 32,
-          height = 32,
-          rotation = 0,
-          gid = 9,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 3,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 276,
-          y = 101.334,
-          width = 104,
-          height = 58.6667,
-          rotation = 0,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 8,
-          name = "",
-          type = "",
-          shape = "polygon",
-          x = 333.333,
-          y = 266.667,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          visible = true,
-          polygon = {
-            { x = 0, y = 0 },
-            { x = 89.3333, y = -17.3333 },
-            { x = 118.667, y = 73.3333 },
-            { x = 21.3333, y = 140 },
-            { x = -53.3333, y = 109.333 }
-          },
-          properties = {}
-        },
-        {
-          id = 10,
-          name = "",
-          type = "",
-          shape = "ellipse",
-          x = 28,
-          y = 192,
-          width = 102.667,
-          height = 102.667,
-          rotation = 0,
-          visible = true,
-          properties = {}
-        }
       }
     }
   }
