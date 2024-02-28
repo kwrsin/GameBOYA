@@ -48,7 +48,7 @@ local function getContentForeground()
     local parent = display.newGroup()
 	
 	-- testFrameBody(parent)
-	gameGuyBody(parent)
+	-- gameGuyBody(parent)
 
     virtualControlelr:createVirtualController(parent)
     virtualControlelr:createCursor({x=vc_pos.x, y=vc_pos.y}, function(cursor)

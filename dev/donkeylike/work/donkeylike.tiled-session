@@ -1,0 +1,48 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "すべてのファイル (*)",
+    "fileStates": {
+        "actorpositions.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "donkeylikelbl01.tmx": {
+            "scale": 1.0947265625,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 423.39339875111506,
+                "y": 157.57359500446034
+            }
+        },
+        "donkeylikelbl01.tmx#actorpositions": {
+            "scaleInDock": 1
+        }
+    },
+    "last.exportedFilePath": "/Volumes/UNTITLED/corona_projects/GameBOYA/src/structures/tiles",
+    "last.imagePath": "/Volumes/UNTITLED/corona_projects/GameBOYA/assets/images",
+    "map.height": 8,
+    "map.lastUsedExportFilter": "Lua ファイル (*.lua)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "map.width": 8,
+    "openFiles": [
+    ],
+    "project": "donkeylike.tiled-project",
+    "recentFiles": [
+        "donkeylikelbl01.tmx",
+        "actorpositions.tsx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
+}

@@ -6,3 +6,5 @@ virtualControlelr = require 'src.libs.virtual_controller'
 
 gImageSheets = nil
 player = nil
+
+mRatio = 2

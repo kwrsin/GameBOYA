@@ -12,5 +12,17 @@ return function(params)
     self.go:play()
   end
 
+  function M:pause()
+    self.go:pause()
+  end
+
+  function M:setSequence(sequence)
+    self.go:setSequence(sequence)
+  end
+
+  function M:setFrame(num)
+    self.go:setFrame(num)
+  end
+
   return M
 end

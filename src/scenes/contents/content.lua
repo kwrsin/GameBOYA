@@ -1,6 +1,5 @@
 -- content.lua
 local tileLoader = require 'src.libs.tileLoader'
-local camera = require 'src.libs.camera'
 local uiLib = require 'src.libs.uiLib'
 
 local M = require('src.scenes.contents.base')()
@@ -28,7 +27,6 @@ local function enterFrame(event)
   if player then
     controller:enterFrame(event)
     virtualControlelr:enterFrame(event)
-    camera:enterFrame(event)
   end
 end
 
@@ -50,8 +48,35 @@ local function createGameObject(params)
   return obj.go
 end
 
+local function background(content)
+  local tileSize = 64
+  local counter = 0
+  local tiles = 8
+  local paddingX = (cw - tiles * tileSize) / 2
+  local paddingY = (ch - tiles * tileSize) / 2
+  content.x = paddingX
+  content.y = paddingY
+  for i=1,tiles do
+    for j=1,tiles do
+      local bg = display.newRect(
+        content, 
+        tileSize / 2 + tileSize * (j - 1), 
+        tileSize / 2 + tileSize * (i - 1), 
+        tileSize, tileSize)
+      local color = counter % 2 == 0 and {0, 0.5, 0.5} or {1, 0.5, 0.2}
+      bg:setFillColor( unpack( color ))
+      counter = counter + 1
+    end
+    counter = counter + 1
+  end
+end
+
 local function tiled()
   content = display.newGroup()
+  local tileSize = 64
+  local tiles = 8
+  content.x = (cw - tiles * tileSize) / 2
+  content.y = (ch - tiles * tileSize) / 2
   tileLoader{
     parent=content, 
     level=selectedLevel, 
@@ -66,21 +91,7 @@ function M:create(parent, callback)
 	gotoNext = callback
 	selectedLevel = require(storage:get('selectedLevel'))
 	tiled()
-	if player then
-		camera:create(parent, {
-      layers={content}, 
-      target=player.go, 
-      offsetX=content_x, 
-      offsetY=content_y, 
-      viewWidth=view_width, 
-      viewHeight=view_height, 
-      frameWidth=frameWidth, 
-      frameHeight=frameHeight})
-	else
-		parent:insert(content)
-	end
-
-	-- createButton()
+  parent:insert(content)
 
 	addEventListeners()
 end

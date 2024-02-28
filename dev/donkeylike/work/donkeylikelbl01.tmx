@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="8" height="8" tilewidth="64" tileheight="64" infinite="0" nextlayerid="8" nextobjectid="62">
+ <editorsettings>
+  <export target="../../../src/structures/tiles/level01.lua" format="lua"/>
+ </editorsettings>
+ <tileset firstgid="1" name="actorpositions" tilewidth="64" tileheight="64" tilecount="2" columns="2">
+  <image source="../../../assets/images/actorpositions.png" width="128" height="64"/>
+ </tileset>
+ <imagelayer id="2" name="画像レイヤー1">
+  <image source="../../../assets/images/level01bg.png" width="512" height="512"/>
+ </imagelayer>
+ <objectgroup id="3" name="floors">
+  <object id="1" x="0.91347" y="79.4719" visible="0">
+   <polygon points="0,0 62.116,31.9715 62.116,64.8564 0,30.1445"/>
+  </object>
+  <object id="3" x="510.63" y="165.338" visible="0">
+   <polygon points="0,0 -60.289,28.3176 -61.2025,60.289 0,30.1445"/>
+  </object>
+  <object id="5" x="512.457" y="260.339" visible="0">
+   <polygon points="0,0 -63.9429,30.1445 -64.8564,63.0294 -2.74041,29.231"/>
+  </object>
+  <object id="8" x="0.91347" y="346.205" visible="0">
+   <polygon points="0,0 62.116,29.231 60.289,59.3756 -0.91347,31.058"/>
+  </object>
+  <object id="20" x="0.91347" y="481.399" width="509.716" height="30.1445" visible="0"/>
+  <object id="49" x="63.9429" y="376.35" width="312.406" height="31.058" visible="0"/>
+  <object id="50" x="418.456" y="376.35" width="31.058" height="31.058" visible="0"/>
+  <object id="51" x="64.8564" y="290.483" width="36.5388" height="31.058" visible="0"/>
+  <object id="52" x="146.155" y="290.483" width="304.186" height="31.9715" visible="0"/>
+  <object id="56" x="65.7698" y="194.569" width="327.022" height="30.1445" visible="0"/>
+  <object id="57" x="64.8564" y="109.616" width="227.454" height="31.9715" visible="0"/>
+  <object id="58" x="341.638" y="109.616" width="105.049" height="33.7984" visible="0"/>
+  <object id="59" x="194.569" y="28.3176" width="61.2025" height="31.9715" visible="0"/>
+  <object id="60" x="128.799" y="29.231" width="17.3559" height="30.1445" visible="0"/>
+  <object id="61" x="423.85" y="-86.7797" visible="0"/>
+ </objectgroup>
+ <objectgroup id="6" name="objects">
+  <object id="35" gid="2" x="368.1" y="489.649" width="64" height="64"/>
+  <object id="36" gid="2" x="93.1454" y="389.166" width="64" height="64"/>
+  <object id="53" gid="2" x="383.629" y="300.559" width="64" height="64"/>
+  <object id="54" gid="2" x="284.974" y="201.905" width="64" height="64"/>
+  <object id="55" gid="2" x="139.732" y="116.952" width="64" height="64"/>
+ </objectgroup>
+ <objectgroup id="7" name="player">
+  <object id="46" gid="1" x="47.4719" y="479.6" width="64" height="64"/>
+ </objectgroup>
+</map>
