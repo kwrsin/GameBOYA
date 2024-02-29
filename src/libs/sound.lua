@@ -42,7 +42,11 @@ function M:setVolume(volume, options)
 end
 
 function M:stop(channel)
-	audio.stop( channel )
+	if channel then
+		audio.stop( channel )
+	else
+		audio.stop( )
+	end
 end
 
 function M:preload(resources, protect)
@@ -118,11 +122,17 @@ function M:fadeOut(params)
 end
 
 function M:pause(channel)
-	return audio.pause( channel )
+	if channel then
+		return audio.pause( channel )
+	end
+	return audio.pause( )
 end
 
 function M:resume(channel)
-	return audio.resume( channel )
+	if channel then
+		return audio.resume( channel )
+	end
+	return audio.resume( )
 end
 
 function M:isPlaying(channel)
