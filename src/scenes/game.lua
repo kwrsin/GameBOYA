@@ -21,6 +21,7 @@ end
 
 function scene:hide(event)
 	if event.phase == 'will' then
+		content:pause()
 	elseif event.phase == 'did' then
 	end
 end

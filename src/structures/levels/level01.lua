@@ -7,6 +7,9 @@ M.structures={
   },
   structPath=utils.dotPath('gos.', dot_structures)
 }
+M.musics={
+  bgm='assets/sounds/oldRRR_battle.wav',
+}
 M.gos={
   {class=utils.dotPath('actors.player', dot_go), gid=1, x=cx, y=cy, isPlayer=true},
   {class=utils.dotPath('actors.ladder', dot_go), gid=2, iterations=4},

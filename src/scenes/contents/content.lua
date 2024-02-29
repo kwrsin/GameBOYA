@@ -98,13 +98,16 @@ end
 
 function M:start()
   print('start game')
+  sound:music1('bgm', {loops=-1})
 end
 
 function M:pause()
+  sound:stop(1)
 end
 
 function M:destroy()
 	removeEventListeners()
+  sound:reset()
 end
 
 return M

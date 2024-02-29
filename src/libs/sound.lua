@@ -49,7 +49,6 @@ function M:preload(resources, protect)
 	for i, filename in ipairs(resources.names) do
 		local structure = require(resources.structPath .. filename)
 		if structure and structure.sounds then
-				table.print(structure.sounds)
 			for name, path in pairs(structure.sounds) do
 				self.resources[name] = audio.loadSound(path)
 				if protect then
@@ -60,19 +59,28 @@ function M:preload(resources, protect)
 	end
 end
 
-function M:preloadStream(resources, protect)
-	for i, filename in ipairs(resources.names) do
-		local structure = require(resources.structPath .. filename)
-		if structure and structure.sounds and #structure.sounds > 0 then
-			for name, path in pairs(structure.sounds) do
-				self.resources[name] = audio.loadStream(path)
-				if protect then
-					self.ignoreList[#self.ignoreList + 1] = name
-				end
-			end
+function M:preloadStream(musics, protect)
+	for name, path in pairs(musics) do
+		self.resources[name] = audio.loadStream(path)
+		if protect then
+			self.ignoreList[#self.ignoreList + 1] = name
 		end
 	end
 end
+
+-- function M:preloadStream(resources, protect)
+-- 	for i, filename in ipairs(resources.names) do
+-- 		local structure = require(resources.structPath .. filename)
+-- 		if structure and structure.sounds and #structure.sounds > 0 then
+-- 			for name, path in pairs(structure.sounds) do
+-- 				self.resources[name] = audio.loadStream(path)
+-- 				if protect then
+-- 					self.ignoreList[#self.ignoreList + 1] = name
+-- 				end
+-- 			end
+-- 		end
+-- 	end
+-- end
 
 function M:play(params)
 	if params and params.name and self.resources[params.name] then
