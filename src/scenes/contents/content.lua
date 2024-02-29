@@ -107,7 +107,7 @@ end
 
 function M:destroy()
 	removeEventListeners()
-  sound:reset()
+  sound:reset(true)
 end
 
 return M

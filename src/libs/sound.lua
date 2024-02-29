@@ -178,9 +178,11 @@ function M:dispose()
 	end
 end
 
-function M:reset()
+function M:reset(all)
 	self:stop()
-	self.ignoreList = {}
+	if all then
+		self.ignoreList = {}
+	end
 	self:dispose()
 end
 
