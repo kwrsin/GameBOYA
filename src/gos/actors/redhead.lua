@@ -1,5 +1,5 @@
 local base = require 'src.gos.base'
-local structure = require 'src.structures.gos.redhead'
+local structure = require 'src.structures.data.redhead'
 local relations = require 'src.structures.relations'
 local sprite
 

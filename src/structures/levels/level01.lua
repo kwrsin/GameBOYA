@@ -5,7 +5,7 @@ M.structures={
     'aboya',
     'ladder'
   },
-  structPath=utils.dotPath('gos.', dot_structures)
+  structPath=utils.dotPath('data.', dot_structures)
 }
 M.musics={
   bgm='assets/sounds/oldRRR_battle.wav',

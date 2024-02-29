@@ -1,6 +1,6 @@
 -- player.lua
 local base = require 'src.gos.base'
-local structure = require 'src.structures.gos.aboya'
+local structure = require 'src.structures.data.aboya'
 local relations = require 'src.structures.relations'
 local sprite
 local gravityScale = 1
