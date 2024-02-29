@@ -16,7 +16,8 @@ end
 local function loadAssets(level)
   gImageSheets = utils.getImageSheets(level.structures)
   sound:preload(level.structures)
-  sound:preloadStream(level.musics)
+  sound:preloadMusics(level.musics)
+  sound:preloadSounds(level.sounds)
 end
 
 local function createTitle(sceneGroup)

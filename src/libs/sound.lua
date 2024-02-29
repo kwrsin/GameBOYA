@@ -63,9 +63,18 @@ function M:preload(resources, protect)
 	end
 end
 
-function M:preloadStream(musics, protect)
+function M:preloadMusics(musics, protect)
 	for name, path in pairs(musics) do
 		self.resources[name] = audio.loadStream(path)
+		if protect then
+			self.ignoreList[#self.ignoreList + 1] = name
+		end
+	end
+end
+
+function M:preloadSounds(sounds, protect)
+	for name, path in pairs(sounds) do
+		self.resources[name] = audio.loadSound(path)
 		if protect then
 			self.ignoreList[#self.ignoreList + 1] = name
 		end
