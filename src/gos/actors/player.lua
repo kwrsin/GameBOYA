@@ -67,12 +67,14 @@ return function(params)
 			M.go.xScale = 1
 			if not self.onLadder then
 				M:play('move')
+				sound:effect2('aboyaWalk')
 			end
 		elseif keys.left > 0 then
 			pos.x = -self.speed
 			M.go.xScale = -1
 			if not self.onLadder then
 				M:play('move')
+				sound:effect2('aboyaWalk')
 			end
 		end
 		self.go.x = self.go.x + pos.x 

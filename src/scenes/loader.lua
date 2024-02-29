@@ -13,8 +13,9 @@ local function loadData()
     flags=require(utils.dotPath('flags', dot_structures))})
 end
 
-local function loadAssets(structures)
-  return utils.getImageSheets(structures)
+local function loadAssets(level)
+  gImageSheets = utils.getImageSheets(level.structures)
+  sound:preload(level.structures)
 end
 
 local function createTitle(sceneGroup)
@@ -32,7 +33,7 @@ function scene:create(event)
 
   loadData()
   local lvlPath = storage:get('selectedLevel')
-  gImageSheets = loadAssets(require(lvlPath).structures)
+  loadAssets(require(lvlPath))
 end
 
 function scene:show(event)

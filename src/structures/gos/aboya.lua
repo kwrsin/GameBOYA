@@ -4,5 +4,8 @@ return {
   sequences = {
     {loopCount = 0, time = 240, frames = {1, 2}, name = "move"},
     {loopCount = 0, time = 240, frames = {3, 4}, name = "ladder"},
+  },
+  sounds = {
+    aboyaWalk='assets/sounds/step01.wav'
   }
 }
