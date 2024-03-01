@@ -92,6 +92,7 @@ return function(params)
 	end
 
 	function M:walk(x, complete)
+		if self.disabled then return end
 		self:disable()
 
 		local direction = x - sprite.x
