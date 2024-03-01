@@ -2,6 +2,7 @@ return function(params)
   local M = {}
   M.params = params
   M.currentSequence = nil
+  M.disabled = false
 
   function M:play(sequence)
     if self.go.currentSequence == sequence then
@@ -22,6 +23,10 @@ return function(params)
 
   function M:setFrame(num)
     self.go:setFrame(num)
+  end
+
+  function M:disable()
+    self.disabled = true
   end
 
   return M
