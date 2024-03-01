@@ -283,7 +283,7 @@ return {
         {
           id = 63,
           name = "",
-          type = "",
+          type = "wall",
           shape = "rectangle",
           x = -64.9987,
           y = -39.27,
@@ -296,7 +296,7 @@ return {
         {
           id = 65,
           name = "",
-          type = "",
+          type = "wall",
           shape = "rectangle",
           x = 511.865,
           y = -37.9159,

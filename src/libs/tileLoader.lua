@@ -164,7 +164,7 @@ local function proc()
 						-- go.anchorX = 0
 						-- go.anchorY = 0
 					physics.addBody( go, 'static', {density=1, friction=1, bounce=0} )
-					go.class = 'floor'
+					go.class = obj.type == '' and 'floor' or obj.type
 				elseif obj.shape == 'ellipse' then
 					local radius = obj.width / 2
 					go = display.newCircle( 
@@ -173,7 +173,7 @@ local function proc()
 						obj.y + obj.height / 2, 
 						radius )
 					physics.addBody( go, 'static', {density=1, friction=1, bounce=0, radius=radius} )
-					go.class = 'floor'
+					go.class = obj.type == '' and 'floor' or obj.type
 				else
 					go = display.newRect( 
 						gp,
@@ -184,7 +184,7 @@ local function proc()
 						go.anchorX = 0
 						go.anchorY = 1
 					physics.addBody( go, 'static', {density=1, friction=1, bounce=0} )
-					go.class = 'floor'
+					go.class = obj.type == '' and 'floor' or obj.type
 				end
 				if go then
 					if obj.rotation then
