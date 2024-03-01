@@ -4,7 +4,7 @@ local M = {}
 M.resources = {}
 M.ignoreList = {}
 
-local function isIgnoredResource(name)
+function M:isIgnoredResource(name)
 	for i, ignore in ipairs(self.ignoreList) do
 		if ignore == name then
 			return true
@@ -64,6 +64,7 @@ function M:preload(resources, protect)
 end
 
 function M:preloadMusics(musics, protect)
+	if not musics then return end
 	for name, path in pairs(musics) do
 		self.resources[name] = audio.loadStream(path)
 		if protect then
@@ -73,6 +74,7 @@ function M:preloadMusics(musics, protect)
 end
 
 function M:preloadSounds(sounds, protect)
+	if not sounds then return end
 	for name, path in pairs(sounds) do
 		self.resources[name] = audio.loadSound(path)
 		if protect then
@@ -190,9 +192,10 @@ end
 
 function M:dispose()
 	for name, resource in pairs(self.resources) do
-		if not isIgnoredResource(name) then
+		if not self:isIgnoredResource(name) then
 			audio.dispose( resource )
-			table.remove( self.resources, self.index(name) )
+			self.resources[name] = nil
+			table.remove( self.resources, self:index(name) )
 		end
 	end
 end
