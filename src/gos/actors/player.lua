@@ -6,20 +6,32 @@ local sprite
 local gravityScale = 1
 local laderCounter = 0
 
--- local function preCollision(self, event)
--- 	if event.other.class == 'floor' then
--- 		local flr = event.other
--- 		if sprite.y + (self.height * 0.5) > flr.y - (flr.height * 0.5) + 0.2 then
--- 			if event.contact then
--- 				event.contact.isEnabled = false
--- 				-- self.onFloor = false
--- 			end
--- 		else
--- 			-- self.onFloor = true
--- 		end
--- 	end
--- 	return true
--- end
+local function onFloor(x)
+	local hits = physics.rayCast( 
+		sprite.x + x, 
+		sprite.y, 
+		sprite.x + x, 
+		sprite.y + sprite.height / 2 + 1, 
+		"closest" )
+  if hits then
+    local hitFirst = hits[1]
+    local class = hitFirst.object.class
+    if class == 'floor' then
+    	return true
+    end
+  end
+	return false
+end
+
+local function enterFrame(event)
+	sprite.onFloor = false
+  local left = onFloor(-sprite.width / 2)
+  local center = onFloor(0)
+  local right = onFloor(sprite.width / 2)
+  if left or right or center then 
+  	sprite.onFloor = true
+  end
+end
 
 local function createSprite(params)
 	sprite = display.newSprite( params.parent, gImageSheets.aboya, structure.sequences )
@@ -28,8 +40,7 @@ local function createSprite(params)
 	sprite.gravityScale = gravityScale
 	sprite.isFixedRotation = true
 	sprite.class = 'player'
-	-- sprite.preCollision = preCollision
-	-- sprite:addEventListener( 'preCollision' )
+	Runtime:addEventListener( 'enterFrame', enterFrame )
 	return sprite
 end
 
@@ -37,6 +48,7 @@ return function(params)
 	local M = base(params)
 	M.speed = mRatio
 	M.go = createSprite(params)
+	M.go.onFloor = false
 	M.onLadder = false
 	M:play('move')
 
@@ -65,17 +77,17 @@ return function(params)
 		if keys.right > 0 then
 			pos.x = self.speed
 			M.go.xScale = 1
-			if not self.onLadder then
+			if not self.onLadder and self.go.onFloor then
 				M:play('move')
+				sound:effect2('aboyaWalk')
 			end
-			sound:effect2('aboyaWalk')
 		elseif keys.left > 0 then
 			pos.x = -self.speed
 			M.go.xScale = -1
-			if not self.onLadder then
+			if not self.onLadder and self.go.onFloor then
 				M:play('move')
+				sound:effect2('aboyaWalk')
 			end
-			sound:effect2('aboyaWalk')
 		end
 		self.go.x = self.go.x + pos.x 
 		self.go.y = self.go.y + pos.y 
@@ -119,6 +131,12 @@ return function(params)
 			end
 		end,  count )
 	end
+
+  function M:disable()
+		Runtime:removeEventListener( 'enterFrame', enterFrame )
+    self.disabled = true
+  end
+
 
 	return M
 end
