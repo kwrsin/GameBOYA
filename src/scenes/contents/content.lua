@@ -8,21 +8,6 @@ local content
 local gotoNext
 local selectedLevel
 
-local function createButton()
-	local btn = uiLib:createButton("End Game", 120, 120, function(event)
-		if event.phase == 'ended' then
-			storage:put('levelName', 'YOU WIN')
-			storage:put('selectedLevel', utils.dotPath('levels.level02', dot_structures))
-      storage:store()
-      player = nil
-      if gotoNext then
-        gotoNext()
-      end
-		end
-	end)
-	content:insert(btn)
-end
-
 local function enterFrame(event)
   if player then
     controller:enterFrame(event)
@@ -48,29 +33,6 @@ local function createGameObject(params)
   return obj.go
 end
 
-local function background(content)
-  local tileSize = 64
-  local counter = 0
-  local tiles = 8
-  local paddingX = (cw - tiles * tileSize) / 2
-  local paddingY = (ch - tiles * tileSize) / 2
-  content.x = paddingX
-  content.y = paddingY
-  for i=1,tiles do
-    for j=1,tiles do
-      local bg = display.newRect(
-        content, 
-        tileSize / 2 + tileSize * (j - 1), 
-        tileSize / 2 + tileSize * (i - 1), 
-        tileSize, tileSize)
-      local color = counter % 2 == 0 and {0, 0.5, 0.5} or {1, 0.5, 0.2}
-      bg:setFillColor( unpack( color ))
-      counter = counter + 1
-    end
-    counter = counter + 1
-  end
-end
-
 local function tiled()
   content = display.newGroup()
   local tileSize = 64
@@ -85,6 +47,16 @@ local function tiled()
   }
   content.isContent = true
   return content  
+end
+
+function M:result()
+  storage:put('levelName', 'YOU WIN')
+  storage:put('selectedLevel', utils.dotPath('levels.level02', dot_structures))
+  storage:store()
+  player = nil
+  if gotoNext then
+    gotoNext()
+  end
 end
 
 function M:create(parent, callback)
@@ -102,7 +74,6 @@ function M:start()
 end
 
 function M:pause()
-  sound:stop(1)
 end
 
 function M:destroy()

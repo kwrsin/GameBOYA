@@ -1,6 +1,6 @@
 -- player.lua
 local base = require 'src.gos.base'
-local structure = require 'src.structures.data.aboya'
+local structure = require 'src.structures.gos.aboya'
 local relations = require 'src.structures.relations'
 local sprite
 local gravityScale = 1
@@ -89,6 +89,34 @@ return function(params)
 			self:play()
 			laderCounter = 0
 		end
+	end
+
+	function M:walk(x, complete)
+		self:disable()
+
+		local direction = x - sprite.x
+		local keys = {}
+		keys.up, keys.down, keys.right, keys.left = 0, 0, 0, 0
+		if direction > 0 then
+			keys.right = self.speed
+		elseif direction < 0 then
+			keys.left = self.speed
+		end
+		local count = math.round(math.abs(direction / self.speed))
+		if count < 0 then 
+			if complete then
+				complete()
+			end
+			return 
+		end
+		timer.performWithDelay( 20, function(event)
+			player:move(keys)
+			if event.count == count then
+				if complete then
+					complete()
+				end
+			end
+		end,  count )
 	end
 
 	return M

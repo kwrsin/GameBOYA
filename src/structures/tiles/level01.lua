@@ -9,8 +9,8 @@ return {
   height = 8,
   tilewidth = 64,
   tileheight = 64,
-  nextlayerid = 8,
-  nextobjectid = 62,
+  nextlayerid = 9,
+  nextobjectid = 63,
   properties = {},
   tilesets = {
     {
@@ -21,9 +21,9 @@ return {
       tileheight = 64,
       spacing = 0,
       margin = 0,
-      columns = 2,
+      columns = 3,
       image = "../../../assets/images/actorpositions.png",
-      imagewidth = 128,
+      imagewidth = 192,
       imageheight = 64,
       objectalignment = "unspecified",
       tilerendersize = "tile",
@@ -39,7 +39,7 @@ return {
       },
       properties = {},
       wangsets = {},
-      tilecount = 2,
+      tilecount = 3,
       tiles = {}
     }
   },
@@ -376,6 +376,36 @@ return {
           height = 64,
           rotation = 0,
           gid = 2,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 8,
+      name = "doors",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 62,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 192.787,
+          y = 38.7707,
+          width = 64,
+          height = 64,
+          rotation = 0,
+          gid = 3,
           visible = true,
           properties = {}
         }

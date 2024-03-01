@@ -3,7 +3,7 @@ M.layers = {}
 
 M.structures={
   names={},
-  structPath=utils.dotPath('data.', dot_structures)
+  structPath=utils.dotPath('gos.', dot_structures)
 }
 
 return M
