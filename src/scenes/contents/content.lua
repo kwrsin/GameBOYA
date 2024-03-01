@@ -51,7 +51,7 @@ end
 
 function M:result()
   storage:put('levelName', 'YOU WIN')
-  storage:put('selectedLevel', utils.dotPath('levels.level02', dot_structures))
+  storage:put('selectedLevel', utils.dotPath('levels.level01', dot_structures))
   storage:store()
   player = nil
   if gotoNext then

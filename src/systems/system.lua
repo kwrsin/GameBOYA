@@ -47,7 +47,7 @@ end
 local function getContentForeground()
     local parent = display.newGroup()
 	
-	testFrameBody(parent)
+	-- testFrameBody(parent)
 	-- gameGuyBody(parent)
 
     virtualControlelr:createVirtualController(parent)

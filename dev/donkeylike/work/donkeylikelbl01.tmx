@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="8" height="8" tilewidth="64" tileheight="64" infinite="0" nextlayerid="9" nextobjectid="63">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="8" height="8" tilewidth="64" tileheight="64" infinite="0" nextlayerid="9" nextobjectid="66">
  <editorsettings>
   <export target="../../../src/structures/tiles/level01.lua" format="lua"/>
  </editorsettings>
@@ -32,7 +32,8 @@
   <object id="58" x="341.638" y="109.616" width="105.049" height="33.7984" visible="0"/>
   <object id="59" x="194.569" y="28.3176" width="61.2025" height="31.9715" visible="0"/>
   <object id="60" x="128.799" y="29.231" width="17.3559" height="30.1445" visible="0"/>
-  <object id="61" x="423.85" y="-86.7797" visible="0"/>
+  <object id="63" x="-64.9987" y="-39.27" width="63.6445" height="561.968" visible="0"/>
+  <object id="65" x="511.865" y="-37.9159" width="63.6445" height="561.968" visible="0"/>
  </objectgroup>
  <objectgroup id="6" name="objects">
   <object id="35" gid="2" x="368.1" y="489.649" width="64" height="64"/>
