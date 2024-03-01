@@ -47,16 +47,18 @@ end
 local function getContentForeground()
     local parent = display.newGroup()
 	
-	-- testFrameBody(parent)
+	testFrameBody(parent)
 	-- gameGuyBody(parent)
 
     virtualControlelr:createVirtualController(parent)
     virtualControlelr:createCursor({x=vc_pos.x, y=vc_pos.y}, function(cursor)
     	if not player then return end
+    	if player.disabled then return end
       player:move(utils.toKeys(cursor))
     end)
 		controller.keyInput(player, function(event, keys)
     	if not player then return end
+    	if player.disabled then return end
       player:move(keys)
     end)
 
