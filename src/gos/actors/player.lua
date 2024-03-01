@@ -63,6 +63,7 @@ return function(params)
 		else
 			laderCounter = 0
 		end
+		sound:effect2('aboyaLadder')
 	end
 
 	function M:move(keys)

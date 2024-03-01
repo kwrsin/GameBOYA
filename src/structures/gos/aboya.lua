@@ -6,6 +6,7 @@ return {
     {loopCount = 0, time = 240, frames = {3, 4}, name = "ladder"},
   },
   sounds = {
-    aboyaWalk='assets/sounds/step01.wav'
+    aboyaWalk='assets/sounds/step01.wav',
+    aboyaLadder='assets/sounds/ladder.wav',
   }
 }
