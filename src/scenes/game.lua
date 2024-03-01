@@ -1,7 +1,6 @@
 -- game.lua
 local composer = require 'composer'
 local scene = composer.newScene( )
-local content = require 'src.scenes.contents.content'
 
 function scene:create(event)
 	local sceneGroup = self.view
