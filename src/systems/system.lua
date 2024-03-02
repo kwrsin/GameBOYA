@@ -54,12 +54,34 @@ local function getContentForeground()
     virtualControlelr:createCursor({x=vc_pos.x, y=vc_pos.y}, function(cursor)
     	if not player then return end
     	if player.disabled then return end
-      player:move(utils.toKeys(cursor))
+    	local keys = utils.toKeys(cursor)
+    	-- buttonStatus.up = keys.up
+    	-- buttonStatus.down = keys.down
+    	-- buttonStatus.right = keys.right
+    	-- buttonStatus.left = keys.left
+     	player:move(keys)
     end)
-		controller.keyInput(player, function(event, keys)
+    virtualControlelr:createButton({x=vba_pos.x, y=vba_pos.y}, function(button)
+        if not player then return end
+    	if player.disabled then return end
+    	-- buttonStatus.btnA = button.counter
+    	if button.counter == 1 then
+    		player:jump()
+    	end
+    end)
+	controller.keyInput(player, function(event, keys)
     	if not player then return end
     	if player.disabled then return end
-      player:move(keys)
+    	buttonStatus.up = keys.up
+    	buttonStatus.down = keys.down
+    	buttonStatus.right = keys.right
+    	buttonStatus.left = keys.left
+    	buttonStatus.btnA = keys.space
+     	if keys.space == 1 then
+     		player:jump()
+     	else
+	     	player:move(keys)
+     	end
     end)
 
     return parent

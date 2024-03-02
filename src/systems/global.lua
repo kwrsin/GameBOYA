@@ -10,3 +10,11 @@ gImageSheets = nil
 player = nil
 
 mRatio = 2
+
+buttonStatus = {
+	up=0,
+	down=0,
+	right=0,
+	left=0,
+	btnA=0,
+}
