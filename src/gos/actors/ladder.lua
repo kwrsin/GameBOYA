@@ -25,7 +25,7 @@ local function createImage(params)
 	
 	group.collision = function(self,event)
 		if player then
-			player:ladder(event.phase == 'began' or true and false)
+			player:message({onLadder=event.phase == 'began' or true and false})
 		end
 	end
 	group:addEventListener( 'collision')

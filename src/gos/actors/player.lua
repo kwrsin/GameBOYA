@@ -4,140 +4,187 @@ local structure = require 'src.structures.gos.aboya'
 local relations = require 'src.structures.relations'
 local sprite
 local gravityScale = 1
-local laderCounter = 0
-
-local function onFloor(x)
-	local hits = physics.rayCast( 
-		sprite.x + x, 
-		sprite.y, 
-		sprite.x + x, 
-		sprite.y + sprite.height / 2 + 1, 
-		"closest" )
-  if hits then
-    local hitFirst = hits[1]
-    local class = hitFirst.object.class
-    if class == 'floor' then
-    	return true
-    end
-  end
-	return false
-end
-
-local function enterFrame(event)
-	sprite.onFloor = false
-  local left = onFloor(-sprite.width / 2)
-  local center = onFloor(0)
-  local right = onFloor(sprite.width / 2)
-  if left or right or center then 
-  	sprite.onFloor = true
-  end
-end
+local ladderCounter = 0
 
 local function createSprite(params)
 	sprite = display.newSprite( params.parent, gImageSheets.aboya, structure.sequences )
 	sprite.x, sprite.y = params.x, params.y
-	physics.addBody( sprite, 'dynamic', {density=10, bounce=0, friction=1, filter=relations.playerBits, radius=20} )
+	physics.addBody( sprite, 'dynamic', {density=1, bounce=0, friction=1, filter=relations.playerBits, radius=20} )
 	sprite.gravityScale = gravityScale
 	sprite.isFixedRotation = true
 	sprite.class = 'player'
-	Runtime:addEventListener( 'enterFrame', enterFrame )
+	
 	return sprite
 end
+
 
 return function(params)
 	local M = base(params)
 	M.speed = mRatio
 	M.go = createSprite(params)
-	M.go.onFloor = false
-	M.onLadder = false
-	M:play('move')
+	M.defaultStatus = 'move'
+	-- M:play('move')
 
-	function M:moveLadder()
-		self:pause()
-		self:setSequence( 'ladder' )
-		laderCounter = laderCounter + 1
-		if laderCounter < 8 then
+-- ACTIONS
+
+	function M:_animLadder()
+		ladderCounter = ladderCounter + 1
+		if ladderCounter < 8 then
 			self:setFrame(1)
-		elseif laderCounter < 8 * 2 then
+		elseif ladderCounter < 8 * 2 then
 			self:setFrame(2)
 		else
-			laderCounter = 0
+			ladderCounter = 0
 		end
 		sound:effect2('aboyaLadder')
 	end
 
-	function M:move(keys)
-		local pos = {x=0, y=0}
-		if keys.up > 0 and self.onLadder then
-			pos.y = -self.speed * 0.5
-			self:moveLadder()
-		elseif keys.down > 0 and self.onLadder then
-			pos.y = self.speed * 0.5
-			self:moveLadder()
+	function M:_right()
+		self.vel.x = 1
+		if buttonStatus.right > 0 then
+			M.go.x = M.go.x + M.speed * self.vel.x
+			self.go.xScale = 1
+			self:play('move')
+			sound:effect2('aboyaWalk')
 		end
-		if keys.right > 0 then
-			pos.x = self.speed
-			M.go.xScale = 1
-			if not self.onLadder and self.go.onFloor then
-				M:play('move')
-				sound:effect2('aboyaWalk')
-			end
-		elseif keys.left > 0 then
-			pos.x = -self.speed
-			M.go.xScale = -1
-			if not self.onLadder and self.go.onFloor then
-				M:play('move')
-				sound:effect2('aboyaWalk')
-			end
-		end
-		self.go.x = self.go.x + pos.x 
-		self.go.y = self.go.y + pos.y 
 	end
 
-	function M:ladder(enable)
-		self.onLadder = enable
-		sprite.gravityScale = enable == true or 0 and gravityScale
-		if not enable then
-			self:setSequence( nil )
-			self:play()
+	function M:_left()
+		self.vel.x = -1
+		if buttonStatus.left > 0 then
+			M.go.x = M.go.x + M.speed * self.vel.x
+			self.go.xScale = -1
+			self:play('move')
+			sound:effect2('aboyaWalk')
+		end
+	end
+
+	function M:_jump()
+		if buttonStatus.btnA == 1 then
+			self:play('jump')
+			sound:effect('aboyaJump')
+			self.delay = 10
+			self.go:applyLinearImpulse( 0, -8, self.go.x, self.go.y )
+		end
+	end
+
+	function M:_jumpright()
+		self.vel.x = 1
+		if buttonStatus.right > 0 then
+			M.go.x = M.go.x + M.speed * self.vel.x
+			self.go.xScale = 1
+		end
+	end
+
+	function M:_jumpleft()
+		self.vel.x = -1
+		if buttonStatus.left > 0 then
+			M.go.x = M.go.x + M.speed * self.vel.x
+			self.go.xScale = -1
+		end
+	end
+
+	function M:_onFloor()
+		if self.delay == 0 and self:raycast('floor') then
+			self:play(self.defaultStatus)
+		end
+	end
+
+	function M:_onLadder()
+		if self.delay == 0 and self.messages.onLadder then
+			self:play('ladder')
+			self:pause()
+			self.go.gravityScale = 0
+			self.go:setLinearVelocity(0, 0)
+		end
+	end
+
+	function M:_ladderright()
+		self.vel.x = 1
+		if buttonStatus.right > 0 then
+			self.go.x = self.go.x + self.speed * self.vel.x * 0.5
+	  	self:_animLadder()
+		end
+	end
+
+	function M:_ladderleft()
+		self.vel.x = -1
+		if buttonStatus.left > 0 then
+			self.go.x = self.go.x + self.speed * self.vel.x * 0.5
+			self:_animLadder()
+		end
+	end
+
+	function M:_ladderup()
+		self.vel.y = -1
+		if buttonStatus.up > 0 then
+			self.go.y = self.go.y + self.speed * self.vel.y * 0.5
+			self:_animLadder()
+		end
+	end
+
+	function M:_ladderdown()
+		self.vel.y = 1
+		if buttonStatus.down > 0 then
+			self.go.y = self.go.y + self.speed * self.vel.y * 0.5
+			self:_animLadder()
+		end
+	end
+
+	function M:_onUnLadder()
+		if not self.messages.onLadder then
+			self:play(self.defaultStatus)
+			self.go.gravityScale = gravityScale
 			laderCounter = 0
 		end
 	end
 
-	function M:walk(x, complete)
-		if self.disabled then return end
-		self:disable()
-
-		local direction = x - sprite.x
-		local keys = {}
-		keys.up, keys.down, keys.right, keys.left = 0, 0, 0, 0
-		if direction > 0 then
-			keys.right = self.speed
-		elseif direction < 0 then
-			keys.left = self.speed
+	function M:_ladderjump()
+		if buttonStatus.btnA == 1 then
+			self.go.gravityScale = gravityScale
+			laderCounter = 0
+			self:play('jump')
+			sound:effect('aboyaJump')
+			self.delay = 10
+			self.go:applyLinearImpulse( 0, -8, self.go.x, self.go.y )
 		end
-		local count = math.round(math.abs(direction / self.speed))
-		if count < 0 then 
-			if complete then
-				complete()
-			end
-			return 
-		end
-		timer.performWithDelay( 20, function(event)
-			player:move(keys)
-			if event.count == count then
-				if complete then
-					complete()
-				end
-			end
-		end,  count )
 	end
 
-  function M:disable()
-		Runtime:removeEventListener( 'enterFrame', enterFrame )
-    self.disabled = true
+
+
+-- UPDATE STATUS
+  function M:move()
+  	self:_right()
+  	self:_left()
+  	self:_jump()
+  	self:_onLadder()
   end
-
-
+  function M:jump()
+  	self:_jumpright()
+  	self:_jumpleft()
+  	self:_onFloor()
+  	self:_onLadder()
+  end
+  function M:ladder()
+  	self:_ladderright()
+  	self:_ladderleft()
+  	self:_ladderup()
+  	self:_ladderdown()
+  	self:_ladderjump()
+  	self:_onUnLadder()
+  end
+  function M:damage()
+  end
+  function M:win()
+  end
+  function M:lose()
+  end
+  M.commands.move = M.move
+  M.commands.jump = M.jump
+  M.commands.ladder = M.ladder
+  M.commands.damage = M.damage
+  M.commands.win = M.win
+  M.commands.lose = M.lose
+  M:addEventListeners()
 	return M
 end
