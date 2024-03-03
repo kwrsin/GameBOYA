@@ -5,12 +5,7 @@ local go
 local function collision(self, event)
 	if event.phase == 'began' then
 		sound:stop()
-		player:walk(go.x, function()
-			sound:effect('lblclear')
-			timer.performWithDelay( 1000, function(e)
-				content:result()
-			end, 1 )
-		end)
+		player:advanceToGoal(go.x)
 	end
 end
 

@@ -25,11 +25,11 @@ return function(params)
 	M.defaultStatus = 'move'
 	-- M:play('move')
 
-	function M:walk(x, complete)
+	function M:advanceToGoal(destX)
 		if self.disabled then return end
 		self:disable()
 
-		local direction = x - sprite.x
+		local direction = destX - sprite.x
 		local keys = {}
 		keys.up, keys.down, keys.right, keys.left = 0, 0, 0, 0
 		if direction > 0 then
@@ -38,18 +38,13 @@ return function(params)
 			keys.left = self.speed
 		end
 		local count = math.round(math.abs(direction / self.speed))
-		if count < 0 then 
-			if complete then
-				complete()
-			end
-			return 
-		end
 		timer.performWithDelay( 20, function(event)
 			player:move(keys)
 			if event.count == count then
-				if complete then
-					complete()
-				end
+				sound:effect('lblclear')
+				timer.performWithDelay( 1000, function(e)
+					content:result()
+				end, 1 )
 			end
 		end,  count )
 	end
