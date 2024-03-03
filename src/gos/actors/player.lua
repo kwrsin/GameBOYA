@@ -25,6 +25,39 @@ return function(params)
 	M.defaultStatus = 'move'
 	-- M:play('move')
 
+	function M:walk(x, complete)
+		if self.disabled then return end
+		self:disable()
+
+		local direction = x - sprite.x
+		local keys = {}
+		keys.up, keys.down, keys.right, keys.left = 0, 0, 0, 0
+		if direction > 0 then
+			keys.right = self.speed
+		elseif direction < 0 then
+			keys.left = self.speed
+		end
+		local count = math.round(math.abs(direction / self.speed))
+		if count < 0 then 
+			if complete then
+				complete()
+			end
+			return 
+		end
+		timer.performWithDelay( 20, function(event)
+			player:move(keys)
+			if event.count == count then
+				if complete then
+					complete()
+				end
+			end
+		end,  count )
+	end
+
+  function M:disable()
+  	M:removeEventListeners()
+    self.disabled = true
+  end
 
   function M:getButtonStatus()
     utils.merge(buttonStatus, self.buttons)  	
