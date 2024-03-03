@@ -25,6 +25,11 @@ return function(params)
 	M.defaultStatus = 'move'
 	-- M:play('move')
 
+
+  function M:getButtonStatus()
+    utils.merge(buttonStatus, self.buttons)  	
+  end
+
 -- ACTIONS
 
 	function M:_animLadder()
@@ -41,7 +46,7 @@ return function(params)
 
 	function M:_right()
 		self.vel.x = 1
-		if buttonStatus.right > 0 then
+		if self.buttons.right > 0 then
 			M.go.x = M.go.x + M.speed * self.vel.x
 			self.go.xScale = 1
 			self:play('move')
@@ -51,7 +56,7 @@ return function(params)
 
 	function M:_left()
 		self.vel.x = -1
-		if buttonStatus.left > 0 then
+		if self.buttons.left > 0 then
 			M.go.x = M.go.x + M.speed * self.vel.x
 			self.go.xScale = -1
 			self:play('move')
@@ -60,7 +65,7 @@ return function(params)
 	end
 
 	function M:_jump()
-		if buttonStatus.btnA == 1 then
+		if self.buttons.btnA == 1 then
 			self:play('jump')
 			sound:effect('aboyaJump')
 			self.delay = 10
@@ -70,7 +75,7 @@ return function(params)
 
 	function M:_jumpright()
 		self.vel.x = 1
-		if buttonStatus.right > 0 then
+		if self.buttons.right > 0 then
 			M.go.x = M.go.x + M.speed * self.vel.x
 			self.go.xScale = 1
 		end
@@ -78,7 +83,7 @@ return function(params)
 
 	function M:_jumpleft()
 		self.vel.x = -1
-		if buttonStatus.left > 0 then
+		if self.buttons.left > 0 then
 			M.go.x = M.go.x + M.speed * self.vel.x
 			self.go.xScale = -1
 		end
@@ -101,7 +106,7 @@ return function(params)
 
 	function M:_ladderright()
 		self.vel.x = 1
-		if buttonStatus.right > 0 then
+		if self.buttons.right > 0 then
 			self.go.x = self.go.x + self.speed * self.vel.x * 0.5
 	  	self:_animLadder()
 		end
@@ -109,7 +114,7 @@ return function(params)
 
 	function M:_ladderleft()
 		self.vel.x = -1
-		if buttonStatus.left > 0 then
+		if self.buttons.left > 0 then
 			self.go.x = self.go.x + self.speed * self.vel.x * 0.5
 			self:_animLadder()
 		end
@@ -117,7 +122,7 @@ return function(params)
 
 	function M:_ladderup()
 		self.vel.y = -1
-		if buttonStatus.up > 0 then
+		if self.buttons.up > 0 then
 			self.go.y = self.go.y + self.speed * self.vel.y * 0.5
 			self:_animLadder()
 		end
@@ -125,7 +130,7 @@ return function(params)
 
 	function M:_ladderdown()
 		self.vel.y = 1
-		if buttonStatus.down > 0 then
+		if self.buttons.down > 0 then
 			self.go.y = self.go.y + self.speed * self.vel.y * 0.5
 			self:_animLadder()
 		end
@@ -140,7 +145,7 @@ return function(params)
 	end
 
 	function M:_ladderjump()
-		if buttonStatus.btnA == 1 then
+		if self.buttons.btnA == 1 then
 			self.go.gravityScale = gravityScale
 			laderCounter = 0
 			self:play('jump')

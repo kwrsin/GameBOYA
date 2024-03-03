@@ -7,6 +7,7 @@ return function(params)
   M.commands={}
   M.delay=0
   M.messages={}
+  M.buttons={}
 
   function M:play(sequence)
     if self.go.currentSequence == sequence then
@@ -66,11 +67,15 @@ return function(params)
   end
 
   function M:enterFrame(event)
+    self:getButtonStatus()
     if self.disabled then return end
     self:update(event)
     if self.delay > 0 then
       self.delay = self.delay - 1
     end
+  end
+
+  function M:getButtonStatus()
   end
 
   function M:message(params)
