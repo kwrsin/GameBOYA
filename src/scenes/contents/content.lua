@@ -7,11 +7,15 @@ local M = require('src.scenes.contents.base')()
 local content
 local gotoNext
 local selectedLevel
+local actors
 
 local function enterFrame(event)
   if player then
     controller:enterFrame(event)
     virtualControlelr:enterFrame(event)
+  end
+  for i, actor in ipairs(actors) do
+    actor:enterFrame(event)
   end
 end
 
@@ -27,6 +31,7 @@ local function createGameObject(params)
   if not params.gId or params.gId < 0 then return nil end
   local goPath = selectedLevel.gos[params.gId]
   local obj = require(goPath.class)(params)
+  M:entry(obj)
   if goPath.isPlayer then
     player = obj
   end
@@ -49,6 +54,19 @@ local function tiled()
   return content  
 end
 
+function M:entry(actor)
+  if not actor then return end
+  actors[#actors + 1] = actor
+end
+
+function M:disableActors()
+  for i, actor in ipairs(actors) do
+    if actor then
+      actor:disable()
+    end
+  end
+end
+
 function M:result()
   storage:put('levelName', 'YOU WIN')
   storage:put('selectedLevel', utils.dotPath('levels.level01', dot_structures))
@@ -60,6 +78,7 @@ function M:result()
 end
 
 function M:create(parent, callback)
+  actors = {}
 	gotoNext = callback
 	selectedLevel = require(storage:get('selectedLevel'))
 	tiled()

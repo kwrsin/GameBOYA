@@ -10,6 +10,8 @@ gImageSheets = nil
 player = nil
 
 mRatio = 2
+tagTimer = 'timer'
+tagCask = 'cask'
 
 buttonStatus = {
 	up=0,

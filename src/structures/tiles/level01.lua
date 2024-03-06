@@ -10,7 +10,7 @@ return {
   tilewidth = 64,
   tileheight = 64,
   nextlayerid = 9,
-  nextobjectid = 66,
+  nextobjectid = 67,
   properties = {},
   tilesets = {
     {
@@ -21,9 +21,9 @@ return {
       tileheight = 64,
       spacing = 0,
       margin = 0,
-      columns = 3,
+      columns = 4,
       image = "../../../assets/images/actorpositions.png",
-      imagewidth = 192,
+      imagewidth = 256,
       imageheight = 64,
       objectalignment = "unspecified",
       tilerendersize = "tile",
@@ -39,7 +39,7 @@ return {
       },
       properties = {},
       wangsets = {},
-      tilecount = 3,
+      tilecount = 4,
       tiles = {}
     }
   },
@@ -389,6 +389,20 @@ return {
           height = 64,
           rotation = 0,
           gid = 2,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 66,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 32,
+          y = 96,
+          width = 64,
+          height = 64,
+          rotation = 0,
+          gid = 4,
           visible = true,
           properties = {}
         }

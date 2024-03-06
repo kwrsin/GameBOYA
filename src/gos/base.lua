@@ -9,12 +9,18 @@ return function(params)
   M.messages={}
   M.buttons={}
 
-  function M:play(sequence)
+  function M:play(sequence, delay)
     if self.go.currentSequence == sequence then
       return
     end
+    self.delay = delay or 0
     self:setSequence(sequence)
     self.go:play()
+  end
+
+  function M:canExcute()
+    if self.delay <= 0 then return true end
+    return false
   end
 
   function M:pause()

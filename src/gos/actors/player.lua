@@ -27,7 +27,7 @@ return function(params)
 
 	function M:advanceToGoal(destX)
 		if self.disabled then return end
-		self:disable()
+		content:disableActors()
 
 		local direction = destX - sprite.x
 		local keys = {}
@@ -48,11 +48,6 @@ return function(params)
 			end
 		end,  count )
 	end
-
-  function M:disable()
-  	M:removeEventListeners()
-    self.disabled = true
-  end
 
   function M:getButtonStatus()
     utils.merge(buttonStatus, self.buttons)  	
@@ -94,9 +89,8 @@ return function(params)
 
 	function M:_jump()
 		if self.buttons.btnA == 1 then
-			self:play('jump')
+			self:play('jump', 10)
 			sound:effect('aboyaJump')
-			self.delay = 10
 			self.go:applyLinearImpulse( 0, -8, self.go.x, self.go.y )
 		end
 	end
@@ -118,13 +112,13 @@ return function(params)
 	end
 
 	function M:_onFloor()
-		if self.delay == 0 and self:raycast('floor') then
+		if self:canExcute() and self:raycast('floor') then
 			self:play(self.defaultStatus)
 		end
 	end
 
 	function M:_onLadder()
-		if self.delay == 0 and self.messages.onLadder then
+		if self:canExcute() and self.messages.onLadder then
 			self:play('ladder')
 			self:pause()
 			self.go.gravityScale = 0
@@ -176,9 +170,8 @@ return function(params)
 		if self.buttons.btnA == 1 then
 			self.go.gravityScale = gravityScale
 			laderCounter = 0
-			self:play('jump')
+			self:play('jump', 10)
 			sound:effect('aboyaJump')
-			self.delay = 10
 			self.go:applyLinearImpulse( 0, -8, self.go.x, self.go.y )
 		end
 	end
@@ -218,6 +211,5 @@ return function(params)
   M.commands.damage = M.damage
   M.commands.win = M.win
   M.commands.lose = M.lose
-  M:addEventListeners()
 	return M
 end

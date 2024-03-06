@@ -78,6 +78,7 @@ local function getContentForeground()
     return parent
 end
 
+math.randomseed( os.time() )
 physics.start()
 system.activate( "multitouch" )
 display.setDefault( "background", 0, 0, 1 )

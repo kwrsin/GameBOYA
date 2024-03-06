@@ -1,6 +1,6 @@
 -- debug.lua
--- local physics = require 'physics'
--- physics.setDrawMode( "hybrid" )
+local physics = require 'physics'
+physics.setDrawMode( "hybrid" )
 
 
 local function printTable( t )
