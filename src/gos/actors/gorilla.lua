@@ -10,6 +10,7 @@ local function createSprite(params)
 		params.parent, 
 		gImageSheets.gorilla, 
 		structure.sequences )
+	sprite.class = 'gorilla'
 	return sprite
 end
 
@@ -43,9 +44,14 @@ return function(params)
 			isFront=true}
 	end
 
+	function M:runaway()
+  	transition.moveBy(self.go, {time=100, y=-128})
+	end
+
 	M.commands = {
 		throw1=M.throw1,
-		throw2=M.throw2
+		throw2=M.throw2,
+		runaway=M.runaway
 	}
 
   function M:update(event)
@@ -74,6 +80,11 @@ return function(params)
 			self.commands[self.go.sequence](self)
 		end
 	end
+
+  function M:disappear()
+  	self:disable()
+  	self:play('runaway')
+  end
 
 	M.go:addEventListener( 'sprite', M )
 	return M

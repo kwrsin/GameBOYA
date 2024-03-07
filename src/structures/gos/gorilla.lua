@@ -5,7 +5,7 @@ return {
     {loopCount = 1, time = 500, frames = {1, 2}, name = "throw1"},
     {loopCount = 1, time = 500, frames = {3, 4}, name = "throw2"},
     {loopCount = 0, time = 500, frames = {5, 6}, name = "drumming"},
-    {loopCount = 1, time = 3000, frames = {7, 8}, name = "runaway"},
+    {loopCount = 1, time = 500, frames = {7, 8}, name = "runaway"},
 	},
 	sounds={}
 }

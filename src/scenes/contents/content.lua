@@ -76,7 +76,6 @@ function M:stopTheWorld()
       actor:freez()
     end
   end
-
 end
 
 function M:restartTheWorld()
@@ -88,7 +87,14 @@ function M:restartTheWorld()
       actor:restart()
     end
   end
+end
 
+function M:disappearAll()
+  for i, actor in ipairs(actors) do
+    if actor then
+      actor:disappear()
+    end
+  end
 end
 
 function M:result()

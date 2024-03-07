@@ -78,6 +78,12 @@ return function(params)
     return false
   end
 
+  function M:appear()
+  end
+
+  function M:disappear()
+  end
+
   function M:update(event)
     if not self.go then return end
     local sequence = self.go.sequence
