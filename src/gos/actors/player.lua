@@ -32,13 +32,16 @@ return function(params)
 
 		local wrapped
 		wrapped = coroutine.wrap(function()
+			transition.blink( self.go, { time=300, tag=tagBlink })
 			timer.performWithDelay( 600, function(event)
 				wrapped()
+				transition.cancel( tagBlink )
+				self.go.alpha = 1
 			end, 1)
 			coroutine.yield()
 			content:restartTheWorld()
 			self:disable()
-			
+
 			local direction = destX - sprite.x
 			local keys = {}
 			keys.up, keys.down, keys.right, keys.left = 0, 0, 0, 0
