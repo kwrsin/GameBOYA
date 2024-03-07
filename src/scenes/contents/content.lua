@@ -67,6 +67,30 @@ function M:disableActors()
   end
 end
 
+function M:stopTheWorld()
+  physics.pause()
+  timer.pause(tagTimer)
+  transition.pause(tagTransition)
+  for i, actor in ipairs(actors) do
+    if actor then
+      actor:freez()
+    end
+  end
+
+end
+
+function M:restartTheWorld()
+  physics.start()
+  timer.resume(tagTimer)
+  transition.resume(tagTransition)
+  for i, actor in ipairs(actors) do
+    if actor then
+      actor:restart()
+    end
+  end
+
+end
+
 function M:result()
   storage:put('levelName', 'YOU WIN')
   storage:put('selectedLevel', utils.dotPath('levels.level01', dot_structures))

@@ -24,7 +24,7 @@ return function(params)
 	function M:disable()
      self.disabled = true
      -- timer.cancel( tagTimer )
-     transition.cancel(tagCask)
+     -- transition.cancel(tagCask)
 	end
 
 	function M:throw1()

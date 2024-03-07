@@ -27,26 +27,43 @@ return function(params)
 
 	function M:advanceToGoal(destX)
 		if self.disabled then return end
-		content:disableActors()
+		-- content:disableActors()
+		content:stopTheWorld()
 
-		local direction = destX - sprite.x
-		local keys = {}
-		keys.up, keys.down, keys.right, keys.left = 0, 0, 0, 0
-		if direction > 0 then
-			keys.right = self.speed
-		elseif direction < 0 then
-			keys.left = self.speed
-		end
-		local count = math.round(math.abs(direction / self.speed))
-		timer.performWithDelay( 20, function(event)
-			player:move(keys)
-			if event.count == count then
-				sound:effect('lblclear')
-				timer.performWithDelay( 1000, function(e)
-					content:result()
-				end, 1 )
+		local wrapped
+		wrapped = coroutine.wrap(function()
+			timer.performWithDelay( 600, function(event)
+				wrapped()
+			end, 1)
+			coroutine.yield()
+			content:restartTheWorld()
+			self:disable()
+			
+			local direction = destX - sprite.x
+			local keys = {}
+			keys.up, keys.down, keys.right, keys.left = 0, 0, 0, 0
+			if direction > 0 then
+				keys.right = self.speed
+			elseif direction < 0 then
+				keys.left = self.speed
 			end
-		end,  count )
+			local count = math.round(math.abs(direction / self.speed))
+			timer.performWithDelay( 20, function(event)
+				player:move(keys)
+				if event.count == count then
+					wrapped()
+				end
+			end,  count )
+			coroutine.yield()
+			sound:effect('lblclear')
+			timer.performWithDelay( 1000, function(e)
+				wrapped()
+			end, 1 )
+			coroutine.yield()
+			content:result()
+		end)
+		wrapped()
+
 	end
 
   function M:getButtonStatus()
@@ -112,7 +129,7 @@ return function(params)
 	end
 
 	function M:_onFloor()
-		if self:canExcute() and self:raycast('floor') then
+		if self:canExcute() and self:raycast{'floor', 'cask'} then
 			self:play(self.defaultStatus)
 		end
 	end

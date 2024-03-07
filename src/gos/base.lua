@@ -44,19 +44,35 @@ return function(params)
     self.disabled = false
   end
 
-  function M:raycast(name)
-    local halfWidth = self.go.width / 2
-    local hits = physics.rayCast( 
-      self.go.x + halfWidth, 
-      self.go.y, 
-      self.go.x + halfWidth, 
-      self.go.y + self.go.height / 2 + 1, 
-      "closest" )
-    if hits then
-      local hitFirst = hits[1]
-      local class = hitFirst.object.class
-      if class == name then
-        return true
+  function M:freez()
+    self:disable()
+    if self.go.pause then
+      self.go:pause()
+    end
+  end
+
+  function M:restart()
+    self:enable()
+    if self.go.start then
+      self.go:start()
+    end
+  end
+
+  function M:raycast(names)
+    for i, name in ipairs(names) do
+      local halfWidth = self.go.width / 2
+      local hits = physics.rayCast( 
+        self.go.x + halfWidth, 
+        self.go.y, 
+        self.go.x + halfWidth, 
+        self.go.y + self.go.height / 2 + 1, 
+        "closest" )
+      if hits then
+        local hitFirst = hits[1]
+        local class = hitFirst.object.class
+        if class == name then
+          return true
+        end
       end
     end
     return false

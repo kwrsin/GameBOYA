@@ -11,7 +11,7 @@ player = nil
 
 mRatio = 2
 tagTimer = 'timer'
-tagCask = 'cask'
+tagTransition = 'trans'
 
 buttonStatus = {
 	up=0,
