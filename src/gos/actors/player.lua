@@ -74,6 +74,30 @@ return function(params)
     utils.merge(buttonStatus, self.buttons)  	
   end
 
+  function M:hit()
+  	self:disable()
+  	self:play('lose')
+  	sound:effect('aboyaHit')
+		timer.performWithDelay( 1000, function()
+			content:restartTheWorld()
+			self:fall() 
+		end, 1 )
+  end
+
+  function M:fall()
+		physics.removeBody( self.go )
+		local filter = utils.merge(
+			relations.playerBits, {})
+		filter.maskBits = 0
+		physics.addBody( self.go, 'dynamic', {density=1, bounce=0, friction=1, filter=filter, radius=20} )
+		self.go:applyLinearImpulse( 0, -10 )
+		self.go.isFixedRotation = true
+		sound:effect('aboyaFall')
+		timer.performWithDelay( 2000, function()
+			content:result()
+		end ,1 )
+  end
+
 -- ACTIONS
 
 	function M:_animLadder()

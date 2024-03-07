@@ -11,5 +11,7 @@ return {
     aboyaWalk='assets/sounds/step01.wav',
     aboyaLadder='assets/sounds/ladder.wav',
     aboyaJump='assets/sounds/jump.wav',
+    aboyaHit='assets/sounds/hit01.wav',
+    aboyaFall='assets/sounds/fall01.wav'
   }
 }

@@ -3,6 +3,15 @@ local base = require 'src.gos.base'
 local structure = require 'src.structures.gos.cask'
 local relations =  require 'src.structures.relations'
 
+local function collision(self, event)
+	if event.phase == 'began' then
+		if event.other.class == 'player' then
+			content:stopTheWorld()
+			player:hit()
+		end
+	end
+end
+
 local function createSprite(params)
 	local imageSheet = 
 		graphics.newImageSheet( structure.path, structure.sheetParams )
@@ -16,10 +25,10 @@ local function createSprite(params)
 	if params.isFront then
 		local filter = utils.merge(
 			relations.enemyrBulletBits, {})
-		filter.maskBits = 1
+		filter.maskBits = 2
 		physics.addBody( 
 			sprite, 'kinematic', {
-				isSensor=true, 
+				-- isSensor=true, 
 				density=1, 
 				bounce=0, 
 				friction=1, 
@@ -37,6 +46,7 @@ local function createSprite(params)
 		sprite:setSequence( 'side' )
 		sprite:applyLinearImpulse( 5, 0 )
 	end
+
 	sprite:play()
 
 	return sprite
@@ -45,6 +55,8 @@ end
 return function ( params )
 	local M = base(params)
 	M.go = createSprite(params)
+	M.go.collision = collision
+	M.go:addEventListener( 'collision' )
 
 	function M:zigzag(origin)
 		local wrapped
