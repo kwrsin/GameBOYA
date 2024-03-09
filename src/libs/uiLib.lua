@@ -3,6 +3,64 @@ local widget = require 'widget'
 
 local M = {}
 
+function M:layout(params)
+	local parent = params.parent
+	local height = params.height or 160
+	local aWidth = display.actualContentWidth
+	local aHeight = display.actualContentHeight
+	local color = params.color or {1, 0, 0}
+	local group = display.newGroup()
+	local topInset, leftInset, bottomInset, rightInset
+		 = display.getSafeAreaInsets()
+	local cols = params.evenCols or {}
+	local colOffsetX = params.colOffsetX or 0
+
+	local rows = params.evenRows or {}
+	local rowHeight = params.RowHegiht or 60
+	local rowsHeight = rowHeight * #rows
+	
+	local posY = topInset + height / 2
+	if params.posY then
+		posY = posY + params.posY
+	end
+
+	parent:insert(group)
+
+	local bg = display.newRect(
+		group,
+		0,
+		0,
+		aWidth,
+		height)
+	bg:setFillColor(unpack(color))
+
+	if #cols > 0 then
+		local w = math.round(aWidth / (#cols))
+		local wh = w / 2
+		for i=1,#cols do
+			local cell = cols[i]
+			group:insert(cell)
+			cell.x = -aWidth / 2 + colOffsetX + wh + (i - 1) * w
+			cell.y = 0
+		end
+	end
+
+	if #rows > 0 then
+		local h = math.round(rowHeight)
+		local hh = h / 2
+		for i=1,#rows do
+			local cell = rows[i]
+			group:insert(cell)
+			cell.x = 0
+			cell.y = -rowsHeight / 2 + hh + (i - 1) * h
+		end
+	end
+
+	group.x = aWidth / 2
+	group.y = posY
+	return group
+end
+
 function M:createButton(title, x, y, onEvent)
 	local button = widget.newButton( {
 		left=x,
