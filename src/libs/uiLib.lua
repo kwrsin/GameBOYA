@@ -14,14 +14,21 @@ function M:layout(params)
 		 = display.getSafeAreaInsets()
 	local cols = params.evenCols or {}
 	local colOffsetX = params.colOffsetX or 0
+	local colWidth = math.round(aWidth / (#cols))
 
 	local rows = params.evenRows or {}
-	local rowHeight = params.RowHegiht or 60
+	local rowHeight = math.round(params.RowHegiht or 60)
 	local rowsHeight = rowHeight * #rows
 	
 	local posY = topInset + height / 2
 	if params.posY then
 		posY = posY + params.posY
+	end
+	local posX = leftInset + aWidth / 2
+	if params.posX then
+		posX = posX + params.posX
+	else
+		posX = leftInset + aWidth / 2
 	end
 
 	parent:insert(group)
@@ -35,7 +42,7 @@ function M:layout(params)
 	bg:setFillColor(unpack(color))
 
 	if #cols > 0 then
-		local w = math.round(aWidth / (#cols))
+		local w = colWidth
 		local wh = w / 2
 		for i=1,#cols do
 			local cell = cols[i]
@@ -46,7 +53,7 @@ function M:layout(params)
 	end
 
 	if #rows > 0 then
-		local h = math.round(rowHeight)
+		local h = rowHeight
 		local hh = h / 2
 		for i=1,#rows do
 			local cell = rows[i]
@@ -56,7 +63,7 @@ function M:layout(params)
 		end
 	end
 
-	group.x = aWidth / 2
+	group.x = posX
 	group.y = posY
 	return group
 end
