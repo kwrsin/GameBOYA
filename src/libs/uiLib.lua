@@ -9,7 +9,7 @@ function M:layout(params)
 	local aWidth = display.actualContentWidth
 	local aHeight = display.actualContentHeight
 	local background = params.background
-	local bgcolor = params.bgcolor or {1, 0, 0}
+	local bgcolor = params.bgcolor
 	local group = display.newGroup()
 	local topInset, leftInset, bottomInset, rightInset
 		 = display.getSafeAreaInsets()
@@ -32,7 +32,9 @@ function M:layout(params)
 		posX = leftInset + aWidth / 2
 	end
 
-	parent:insert(group)
+	if parent then
+		parent:insert(group)
+	end
 
 	if background then
 		group:insert(background)
@@ -40,13 +42,15 @@ function M:layout(params)
 			background:setFillColor(unpack(bgcolor))
 		end
 	else
-		local bg = display.newRect(
-			group,
-			0,
-			0,
-			aWidth,
-			height)
-		bg:setFillColor(unpack(bgcolor))
+		if bgcolor then
+			local bg = display.newRect(
+				group,
+				0,
+				0,
+				aWidth,
+				height)
+			bg:setFillColor(unpack(bgcolor))
+		end
 	end
 
 	if #cols > 0 then
