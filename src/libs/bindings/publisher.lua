@@ -23,7 +23,7 @@ function M:observe(key, value)
 end
 
 function M:subscribe(key, updator)
-	if not updator.update then return end
+	-- if not updator.update then return end
 	local entries = subscribers[key] or {}
 	updator.PubSubKey = key
 	updator.put = function(value)
@@ -86,12 +86,14 @@ function M:put(source, key, value)
 	for i, sub in ipairs(keySubs) do
 		if source == sub then 
 		else
-			local event = {
-				source=source,
-				value=values[key], 
-				oldValue=old, 
-				key=key}
-			sub.update(sub, event)
+			if sub.update then
+				local event = {
+					source=source,
+					value=values[key], 
+					oldValue=old, 
+					key=key}
+				sub.update(sub, event)
+			end
 		end
 	end
 end

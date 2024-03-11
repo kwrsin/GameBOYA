@@ -9,10 +9,12 @@ function scene:create(event)
 	alphabetTB.anchorX = 0
 	alphabetTB:addEventListener( "userInput", function(event)
 		if ( event.phase == "ended" or event.phase == "submitted" ) then
-			local v = alphabetTB.get()
-			v[#v + 1] = alphabetTB.text
-			alphabetTB.text = ''
-			alphabetTB.put(v)
+			if alphabetTB.text == '' then else
+				local v = alphabetTB.get()
+				v[#v + 1] = alphabetTB.text
+				alphabetTB.text = ''
+				alphabetTB.put(v)
+			end
 		end
 	end )
 	alphabetTB.update = function(obj, event)--1 updator

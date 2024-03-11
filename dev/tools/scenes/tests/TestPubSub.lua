@@ -50,10 +50,12 @@ function scene:create(event)
 	nameTB.anchorX = 0
 	nameTB:addEventListener( "userInput", function(event)
 		if ( event.phase == "ended" or event.phase == "submitted" ) then
-			local v = nameTB.get()
-			v[#v + 1] = nameTB.text
-			nameTB.text = ''
-			nameTB.put(v)
+			if nameTB.text == '' then else
+				local v = nameTB.get()
+				v[#v + 1] = nameTB.text
+				nameTB.text = ''
+				nameTB.put(v)
+			end
 		end
 	end )
 	nameTB.update = function(obj, event)
