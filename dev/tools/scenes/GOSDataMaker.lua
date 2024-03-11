@@ -9,6 +9,8 @@ local imageHeight
 local spriteWidth
 local spriteHeight
 local numFrames
+local sequenceList
+local sequences = {}
 
 publisher:observe(BIND_SELECTEDITEM, {})
 publisher:observe(BIND_SEQUENCE, {})
@@ -157,13 +159,76 @@ local function sequenceAppendField()
 		},
 		bgcolor={0, 0, 0, 0},
 	}
+end
 
+local function updateSequenceList()
+	sequenceList:deleteAllRows()
+	for i=1, #sequences do
+		sequenceList:insertRow{
+      isCategory = false,
+      rowHeight = 48,
+      rowColor = { default={0,0,0}, over={1,0.5,0,0.2} },
+      lineColor = { 0.5, 0.5, 0.5 }
+    }
+	end
+end
+
+local function sequenceListView()
+	sequenceList = uiLib:list(nil, {
+		top = 0,
+		left = 0,
+		width = 560,
+		height = 260,
+		hideBackground = true,
+		onRowRender = function( event )
+			local phase = event.phase
+			local row = event.row
+			local rowTitle = display.newText( row, sequences[row.index], 0, 0, nil, 14 )
+			rowTitle:setFillColor( 1, 0, 0 )
+			rowTitle.x = 10
+			rowTitle.anchorX = 0
+			rowTitle.y = row.contentHeight * 0.5
+
+			local btn = uiLib:createButton('Delete', 400, 0, function(event)
+				if event.phase == 'ended' then
+					table.remove( sequences, row.index )
+					updateSequenceList()
+				end
+			end)
+			row:insert(btn)
+		end
+	})
+	sequenceList.update = function(obj, event)
+		local seq = event.value
+		local frames = seq.frames
+		local frameStr = '{ '
+		for i, frame in ipairs(frames) do
+			frameStr = frameStr .. frame ..','
+		end
+		frameStr = frameStr .. '},' 
+		local str = string.format( '{ time=%d, loopCount=%d, name="%s", frames=%s },', seq.time, seq.loopCount, seq.name, frameStr )
+		sequences[#sequences + 1] = str
+		updateSequenceList()
+	end
+	publisher:subscribe(BIND_SEQUENCE, sequenceList)
+
+	updateSequenceList()
+
+	local g = uiLib:layout{
+		parent=root,
+		posY=450,
+		evenRows={
+			sequenceList,
+		},
+	}
+
+	return g
 end
 
 local function createCenterView()
 	uiLib:layout{
 		parent=root,
-		posY=CY,
+		posY=220,
 		evenRows={
 			fileField(),
 			imageField(),
@@ -178,16 +243,13 @@ local function createContent(sceneGroup)
 	sceneGroup:insert(root)
 	createTopView()
 	createCenterView()
+	sequenceListView()
+
 end
 
-local mock = {}
-mock.update = function(obj, event)
-	table.print(event.value)
-end
 function scene:create(event)
 	local sceneGroup = self.view
 	createContent(sceneGroup)
-	publisher:subscribe(BIND_SEQUENCE, mock)
 end
 
 function scene:show(event)

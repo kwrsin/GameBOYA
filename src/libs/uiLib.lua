@@ -3,6 +3,52 @@ local widget = require 'widget'
 
 local M = {}
 
+function M:list(parent, options)
+	local function tableViewListener( event )
+		local phase = event.phase
+	end
+
+	local function onRowRender( event )
+		local phase = event.phase
+		local row = event.row
+		local rowTitle = display.newText( row, "Row " .. row.index, 0, 0, nil, 14 )
+		rowTitle.x = 10
+		rowTitle.anchorX = 0
+		rowTitle.y = row.contentHeight * 0.5
+	end
+
+	local function onRowUpdate( event )
+		local phase = event.phase
+		local row = event.row
+	end
+
+	local function onRowTouch( event )
+		local phase = event.phase
+		local row = event.target
+		if ( "release" == phase ) then
+		end
+	end
+
+	local tableView = widget.newTableView(options)
+	if options.listener then
+		options.listener = tableViewListener
+	end
+	if options.onRowRender then
+		options.onRowRender = onRowRender
+	end
+	if options.onRowUpdate then
+		options.onRowUpdate = onRowUpdate
+	end
+	if options.onRowTouch then
+		options.onRowTouch = onRowTouch
+	end
+
+	if parent then
+		parent:insert(tableView)
+	end
+	return tableView
+end
+
 function M:layout(params)
 	local parent = params.parent
 	local height = params.height or 160

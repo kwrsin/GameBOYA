@@ -8,7 +8,8 @@ local title
 
 local function update(params)
 	items = params.items or {}
-	title.text = params.title or  ''
+	title.text = params.title or ''
+	tableView:deleteAllRows()
 	for i=1, #items do
 		tableView:insertRow{
       isCategory = false,
