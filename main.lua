@@ -3,7 +3,7 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
--- require 'src.systems.debug'
+require 'src.systems.debug'
 -- require 'src.systems.const'
 -- require 'src.systems.global'
 -- require 'src.systems.system'
@@ -15,6 +15,9 @@
 --[[
 	Development Tools
 ]]--
+publisher = require 'src.libs.bindings.publisher'
 require 'dev.tools.systems.global' 
 -- utils.gotoTop()
 utils.gotoDataMaker()
+
+-- utils.gotoTestPubSub()

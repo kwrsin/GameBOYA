@@ -9,6 +9,7 @@ GOS_TOP = 'dev.tools.scenes.top'
 GOS_DATA_MAKER = 'dev.tools.scenes.GOSDataMaker'
 SEQUENCE_MAKER = 'dev.tools.scenes.SequenceMaker'
 FILE_SELECTOR = 'dev.tools.scenes.FileSelector'
+TEST_PUBSUB = 'dev.tools.scenes.tests.TestPubSub'
 
 HEADER_HEIGHT = 64
 
@@ -53,6 +54,10 @@ function utils.gotoFileSelector(options)
   options.time = 400
 
 	composer.showOverlay( FILE_SELECTOR, options )
+end
+
+function utils.gotoTestPubSub(options)
+	utils.gotoScene(TEST_PUBSUB, options)
 end
 
 function utils.hideFileSelector()
