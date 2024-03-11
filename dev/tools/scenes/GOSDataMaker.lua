@@ -53,11 +53,16 @@ local function fileField()
 	parent:insert(filename)
 	local btn = uiLib:createButton('Open', 80, -24, function(event)
 		if event.phase == 'ended' then
+			local files = storage:files(IMAGES_PATH)
+			local items = {}
+			for i, file in ipairs(files) do
+				items[#items + 1] = string.format( '%s%s', IMAGES_BASE_PATH, file )
+			end
 			utils.gotoFileSelector(
 				{
 					params={
 						title='File Selector', 
-						items={'assets/images/cask01.png', 'assets/images/gorilla00.png', 'assets/images/aboya.png'}
+						items=items
 					}
 				})
 		end

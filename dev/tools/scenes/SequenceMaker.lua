@@ -246,13 +246,15 @@ end
 local function doneField()
 	return uiLib:createButton('Done', 0, 0, function(event)
 		if event.phase == 'ended' then
-			local result = {
-				name=nameTB.text,
-				loopCount=tonumber(loopCountTB.text),
-				time=tonumber(timeTB.text),
-				frames=selectedFrames
-			}
-			publisher:put({}, BIND_SEQUENCE, result)
+			if #nameTB.text > 0 then
+				local result = {
+					name=nameTB.text,
+					loopCount=tonumber(loopCountTB.text),
+					time=tonumber(timeTB.text),
+					frames=selectedFrames
+				}
+				publisher:put({}, BIND_SEQUENCE, result)
+			end  
 			utils.previous()
 		end
 	end)

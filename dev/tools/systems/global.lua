@@ -11,6 +11,9 @@ SEQUENCE_MAKER = 'dev.tools.scenes.SequenceMaker'
 FILE_SELECTOR = 'dev.tools.scenes.FileSelector'
 TEST_PUBSUB = 'dev.tools.scenes.tests.TestPubSub'
 
+IMAGES_PATH = '../../../assets/images'
+IMAGES_BASE_PATH = 'assets/images/'
+
 HEADER_HEIGHT = 64
 
 BIND_SELECTEDITEM = 'selectedItem'
