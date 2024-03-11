@@ -11,6 +11,7 @@ local spriteHeight
 local numFrames
 
 publisher:observe(BIND_SELECTEDITEM, {})
+publisher:observe(BIND_SEQUENCE, {})
 
 local function getImageDimention(selectedItem)
 	selectedImage = display.newImage( selectedItem )
@@ -179,9 +180,14 @@ local function createContent(sceneGroup)
 	createCenterView()
 end
 
+local mock = {}
+mock.update = function(obj, event)
+	table.print(event.value)
+end
 function scene:create(event)
 	local sceneGroup = self.view
 	createContent(sceneGroup)
+	publisher:subscribe(BIND_SEQUENCE, mock)
 end
 
 function scene:show(event)

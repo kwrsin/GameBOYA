@@ -93,6 +93,7 @@ local function framesSelector(sceneGroup)
 				topPadding = 0,
 				bottomPadding = 0
 			}
+	sceneGroup:insert(containerGroup)
 end
 
 local function clear()
@@ -242,6 +243,21 @@ local function previewField()
 	return previewGroup
 end
 
+local function doneField()
+	return uiLib:createButton('Done', 0, 0, function(event)
+		if event.phase == 'ended' then
+			local result = {
+				name=nameTB.text,
+				loopCount=tonumber(loopCountTB.text),
+				time=tonumber(timeTB.text),
+				frames=selectedFrames
+			}
+			publisher:put({}, BIND_SEQUENCE, result)
+			utils.previous()
+		end
+	end)
+end
+
 local function bottom(sceneGroup)
 	return uiLib:layout{
 		parent=sceneGroup,
@@ -249,6 +265,7 @@ local function bottom(sceneGroup)
 		evenRows={
 			frameField(),
 			previewField(),
+			doneField()
 		}
 	}
 end

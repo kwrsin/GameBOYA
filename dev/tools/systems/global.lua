@@ -14,6 +14,7 @@ TEST_PUBSUB = 'dev.tools.scenes.tests.TestPubSub'
 HEADER_HEIGHT = 64
 
 BIND_SELECTEDITEM = 'selectedItem'
+BIND_SEQUENCE = 'selectedSequence'
 
 -- GLOBAL VALUES
 
