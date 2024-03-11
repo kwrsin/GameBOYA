@@ -214,15 +214,13 @@ local function sequenceListView()
 
 	updateSequenceList()
 
-	local g = uiLib:layout{
+	return uiLib:layout{
 		parent=root,
 		posY=450,
 		evenRows={
 			sequenceList,
 		},
 	}
-
-	return g
 end
 
 local function createCenterView()
