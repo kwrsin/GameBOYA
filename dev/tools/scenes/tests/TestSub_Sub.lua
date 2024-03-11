@@ -12,7 +12,7 @@ function scene:create(event)
 			local v = alphabetTB.get()
 			v[#v + 1] = alphabetTB.text
 			alphabetTB.text = ''
-			alphabetTB.put(key, v)
+			alphabetTB.put(v)
 		end
 	end )
 	alphabetTB.update = function(obj, event)--1 updator

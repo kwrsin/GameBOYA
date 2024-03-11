@@ -53,7 +53,7 @@ function scene:create(event)
 			local v = nameTB.get()
 			v[#v + 1] = nameTB.text
 			nameTB.text = ''
-			nameTB.put(key, v)
+			nameTB.put(v)
 		end
 	end )
 	nameTB.update = function(obj, event)
