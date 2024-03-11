@@ -10,6 +10,15 @@ local spriteWidth
 local spriteHeight
 local numFrames
 
+publisher:observe(BIND_SELECTEDITEM, {})
+
+local function getImageDimention(selectedItem)
+	selectedImage = display.newImage( selectedItem )
+	local width, height = selectedImage.width, selectedImage.height
+	display.remove( selectedImage )
+	return width, height
+end
+
 local function createTopView()
 	uiLib:layout{
 		parent=root,
@@ -33,6 +42,11 @@ local function fileField()
 	local parent = display.newGroup()
 	display.newText(parent, 'File Name:', -240, 0, native.systemFontBold, 24)
 	filename = native.newTextField( -20, 0, 280, 48 )
+	filename.update = function(obj, event)
+		filename.text = event.value.selectedItem
+		imageWidth.text, imageHeight.text = getImageDimention(filename.text)
+	end
+	publisher:subscribe(BIND_SELECTEDITEM, filename)
 	parent:insert(filename)
 	local btn = uiLib:createButton('Open', 80, -24, function(event)
 		if event.phase == 'ended' then
@@ -40,7 +54,7 @@ local function fileField()
 				{
 					params={
 						title='File Selector', 
-						items={'msg1', 'assets/images/gorilla00.png', 'assets/images/aboya.png'}
+						items={'assets/images/cask01.png', 'assets/images/gorilla00.png', 'assets/images/aboya.png'}
 					}
 				})
 		end
@@ -159,25 +173,10 @@ local function createCenterView()
 	}
 end
 
-local function getImageDimention(selectedItem)
-	selectedImage = display.newImage( selectedItem )
-	local width, height = selectedImage.width, selectedImage.height
-	display.remove( selectedImage )
-	return width, height
-end
-
-
 local function createContent(sceneGroup)
 	sceneGroup:insert(root)
 	createTopView()
 	createCenterView()
-end
-
-function scene:resumeGame(selectedItem)
-	if selectedItem and #selectedItem > 0 then
-		filename.text = selectedItem
-		imageWidth.text, imageHeight.text = getImageDimention(selectedItem)
-	end
 end
 
 function scene:create(event)

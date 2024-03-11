@@ -5,7 +5,6 @@ local scene = composer.newScene( )
 local tableView
 local items
 local title
-local seletectedItem = ''
 
 local function update(params)
 	items = params.items or {}
@@ -44,7 +43,8 @@ local function onRowTouch( event )
 	local phase = event.phase
 	local row = event.target
 	if ( "release" == phase ) then
-		seletectedItem = items[row.index]
+		-- tableView.put(selectedItem=items[row.index])
+		publisher:put(tableView, BIND_SELECTEDITEM, {selectedItem=items[row.index]})
 		utils.hideFileSelector()
 	end
 end
@@ -63,11 +63,11 @@ local function createTable(sceneGroup)
 		onRowTouch = onRowTouch,
 	}
 	sceneGroup:insert( tableView )
-
+	publisher:subscribe(BIND_SELECTEDITEM, tableView)
 end
 
 local function createTitle(sceneGroup)
-	title = display.newText( seletectedItem, 0, 0, native.systemFont, 24 )
+	title = display.newText( 'Item Selector', 0, 0, native.systemFont, 24 )
 	uiLib:layout{
 		parent=sceneGroup,
 		background=display.newRect( 0, 0, display.actualContentWidth, HEADER_HEIGHT),
@@ -80,7 +80,6 @@ end
 
 local function createClose(sceneGroup)
 	local btn = uiLib:createButton('Close', CX, 900, function(event)
-		seletectedItem = ''
 		utils.hideFileSelector()
 	end)
 	btn.anchorX = 1
@@ -118,7 +117,6 @@ end
 function scene:hide(event)
 	if event.phase == 'will' then
 		local parent = event.parent
-		parent:resumeGame(seletectedItem)
 	elseif event.phase == 'did' then
 	end
 end
