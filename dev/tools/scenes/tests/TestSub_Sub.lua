@@ -9,7 +9,7 @@ function scene:create(event)
 	alphabetTB.anchorX = 0
 	alphabetTB:addEventListener( "userInput", function(event)
 		if ( event.phase == "ended" or event.phase == "submitted" ) then
-			local v = publisher:get(key)
+			local v = alphabetTB.get()
 			v[#v + 1] = alphabetTB.text
 			alphabetTB.text = ''
 			alphabetTB.put(key, v)

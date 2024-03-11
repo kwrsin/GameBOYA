@@ -25,8 +25,12 @@ end
 function M:subscribe(key, updator)
 	if not updator.update then return end
 	local entries = subscribers[key] or {}
+	updator.PubSubKey = key
 	updator.put = function(key, value)
 		self:put(updator, key, value)
+	end
+	updator.get = function()
+		return self:get(updator.PubSubKey)
 	end
 	entries[#entries + 1] = updator
 	subscribers[key] = entries

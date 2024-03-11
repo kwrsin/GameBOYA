@@ -50,7 +50,7 @@ function scene:create(event)
 	nameTB.anchorX = 0
 	nameTB:addEventListener( "userInput", function(event)
 		if ( event.phase == "ended" or event.phase == "submitted" ) then
-			local v = publisher:get(key)
+			local v = nameTB.get()
 			v[#v + 1] = nameTB.text
 			nameTB.text = ''
 			nameTB.put(key, v)
