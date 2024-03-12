@@ -15,6 +15,7 @@ IMAGES_PATH = '../../../assets/images'
 IMAGES_BASE_PATH = 'assets/images/'
 SOUNDS_PATH = '../../../assets/sounds'
 SOUNDS_BASE_PATH = 'assets/sounds/'
+GOS_DATA_PATH = '../../../src/structures/gos'
 
 HEADER_HEIGHT = 64
 

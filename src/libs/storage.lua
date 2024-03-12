@@ -13,6 +13,16 @@ function M:path(filename, dir)
 	return system.pathForFile( filename, dir or system.DocumentsDirectory )
 end
 
+function M:writeString(path, str)
+	local file, error = io.open(path, 'w')
+	if not file then
+		print('Error: ', error)
+	else
+		file:write(str)
+		io.close( file )
+	end	
+end
+
 function M:write(path, tbl)
 	local jText = utils.toJSON(tbl, {indent=true})
 

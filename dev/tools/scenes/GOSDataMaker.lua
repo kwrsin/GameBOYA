@@ -13,6 +13,8 @@ local sequenceList
 local sequences = {}
 local soundList
 local sounds = {}
+local dataname = {}
+local soundKey
 
 publisher:observe(BIND_SELECTEDITEM, {})
 publisher:observe(BIND_SEQUENCE, {})
@@ -232,28 +234,39 @@ local function sequenceListView()
 	}
 end
 
+local function soundNameField()
+	soundKey = native.newTextField( 0, 0, 280, 32 )
+	soundKey.placeholder = 'Key Name'
+	return uiLib:layout{
+			evenCols={
+				soundKey,
+				uiLib:createButton('Add', 0, 0, function(event)
+					if event.phase == 'ended' then
+					local files = storage:files(SOUNDS_PATH)
+					local items = {}
+					for i, file in ipairs(files) do
+						items[#items + 1] = string.format( '%s%s', SOUNDS_BASE_PATH, file )
+					end
+					utils.gotoFileSelector(
+						{
+							params={
+								title=NAME_SOUND_SELECTOR, 
+								items=items,
+							}
+						})
+					end
+				end)
+			},
+		}
+end
+
 local function soundLabelField()
 	return uiLib:layout{
 		parent=root,
 		posY=624,
 		evenRows={
 			display.newText('Sound List', 0, 0, native.systemFontBold, 24),
-			uiLib:createButton('Add', 0, 0, function(event)
-				if event.phase == 'ended' then
-				local files = storage:files(SOUNDS_PATH)
-				local items = {}
-				for i, file in ipairs(files) do
-					items[#items + 1] = string.format( '%s%s', SOUNDS_BASE_PATH, file )
-				end
-				utils.gotoFileSelector(
-					{
-						params={
-							title=NAME_SOUND_SELECTOR, 
-							items=items
-						}
-					})
-				end
-			end)
+			soundNameField(),
 		},
 	}
 end
@@ -286,7 +299,7 @@ local function soundListField()
 			rowTitle.anchorX = 0
 			rowTitle.y = row.contentHeight * 0.5
 
-			local btn = uiLib:createButton('Delete', 400, 0, function(event)
+			local btn = uiLib:createButton('Delete', 440, 0, function(event)
 				if event.phase == 'ended' then
 					table.remove( sounds, row.index )
 					updateSoundList()
@@ -297,8 +310,9 @@ local function soundListField()
 	})
 	soundList.update = function(obj, event)
 		if event.value.title == NAME_SOUND_SELECTOR then
-			sounds[#sounds + 1] = event.value.selectedItem
+			sounds[#sounds + 1] = string.format('{ %s="%s, }",', soundKey.text, event.value.selectedItem)
 			updateSoundList()
+			soundKey.text = ''
 		end
 	end
 	publisher:subscribe(BIND_SELECTEDITEM, soundList)
@@ -317,6 +331,65 @@ end
 local function soundListView()
 	soundLabelField()
 	soundListField()
+end
+
+local function createGOSData()
+	local function getStrItems(array)
+		local tab = '\t\t'
+		local str = ''
+		for i, seq in ipairs(array) do
+			str = str .. string.format('%s%s\n', tab, seq)
+		end
+		return str
+	end
+
+	local str = 'return {\n'
+	str = str .. string.format('\tpath="%s",\n', filename.text)
+	str = str .. string.format(
+		'\tsheetParams = { numFrames = %s, height = %s, sheetContentHeight = %s, sheetContentWidth = %s, width = %s },\n' ,
+		numFrames.text, spriteHeight.text, imageHeight.text, spriteWidth.text, imageWidth.text )
+	str = str .. '\tsequences = {\n'
+	str = str .. getStrItems(sequences)
+	str = str .. '\t},\n'
+	str = str .. '\tsounds = {\n'
+	str = str .. getStrItems(sounds)
+	str = str .. '\t},\n'
+	str = str .. '}\n'
+
+	return str
+end
+
+local function saveGosData(filename)
+	local str = createGOSData()
+	local path = string.format( '%s/%s.lua' , GOS_DATA_PATH, filename )
+	storage:writeString(path, str)
+end
+
+local function genField()
+	dataname = native.newTextField( 0, 0, 280, 48 )
+	dataname.placeholder = 'Data Name'
+	return uiLib:layout{
+		evenCols={
+			dataname,
+			uiLib:createButton('Generate', 0, 0, function(event)
+				if event.phase == 'ended' then
+					saveGosData(dataname.text)
+				end
+			end),
+		},
+		bgcolor={0, 0, 0, 0},
+	}
+end
+
+local function bottomView()
+	return uiLib:layout{
+		parent=root,
+		posY=960,
+		evenRows={
+			genField()
+		},
+		bgcolor={0, 0, 0, 0},
+	}
 end
 
 local function createCenterView()
@@ -339,6 +412,7 @@ local function createContent(sceneGroup)
 	createCenterView()
 	sequenceListView()
 	soundListView()
+	bottomView()
 end
 
 function scene:create(event)
