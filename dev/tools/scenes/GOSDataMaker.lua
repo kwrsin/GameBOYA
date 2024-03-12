@@ -11,6 +11,8 @@ local spriteHeight
 local numFrames
 local sequenceList
 local sequences = {}
+local soundList
+local sounds = {}
 
 publisher:observe(BIND_SELECTEDITEM, {})
 publisher:observe(BIND_SEQUENCE, {})
@@ -46,8 +48,10 @@ local function fileField()
 	display.newText(parent, 'File Name:', -240, 0, native.systemFontBold, 24)
 	filename = native.newTextField( -20, 0, 280, 48 )
 	filename.update = function(obj, event)
-		filename.text = event.value.selectedItem
-		imageWidth.text, imageHeight.text = getImageDimention(filename.text)
+		if event.value.title == NAME_FILE_SELECTOR then
+			filename.text = event.value.selectedItem
+			imageWidth.text, imageHeight.text = getImageDimention(filename.text)
+		end
 	end
 	publisher:subscribe(BIND_SELECTEDITEM, filename)
 	parent:insert(filename)
@@ -61,7 +65,7 @@ local function fileField()
 			utils.gotoFileSelector(
 				{
 					params={
-						title='File Selector', 
+						title=NAME_FILE_SELECTOR, 
 						items=items
 					}
 				})
@@ -228,6 +232,93 @@ local function sequenceListView()
 	}
 end
 
+local function soundLabelField()
+	return uiLib:layout{
+		parent=root,
+		posY=624,
+		evenRows={
+			display.newText('Sound List', 0, 0, native.systemFontBold, 24),
+			uiLib:createButton('Add', 0, 0, function(event)
+				if event.phase == 'ended' then
+				local files = storage:files(SOUNDS_PATH)
+				local items = {}
+				for i, file in ipairs(files) do
+					items[#items + 1] = string.format( '%s%s', SOUNDS_BASE_PATH, file )
+				end
+				utils.gotoFileSelector(
+					{
+						params={
+							title=NAME_SOUND_SELECTOR, 
+							items=items
+						}
+					})
+				end
+			end)
+		},
+	}
+end
+
+local function updateSoundList()
+	soundList:deleteAllRows()
+	for i=1, #sounds do
+		soundList:insertRow{
+      isCategory = false,
+      rowHeight = 48,
+      rowColor = { default={0,0,0}, over={1,0.5,0,0.2} },
+      lineColor = { 0.5, 0.5, 0.5 }
+    }
+	end
+end
+
+local function soundListField()
+	soundList = uiLib:list(nil, {
+		top = 0,
+		left = 0,
+		width = 560,
+		height = 260,
+		hideBackground = true,
+		onRowRender = function( event )
+			local phase = event.phase
+			local row = event.row
+			local rowTitle = display.newText( row, sounds[row.index], 0, 0, nil, 14 )
+			rowTitle:setFillColor( 1, 0, 0 )
+			rowTitle.x = 10
+			rowTitle.anchorX = 0
+			rowTitle.y = row.contentHeight * 0.5
+
+			local btn = uiLib:createButton('Delete', 400, 0, function(event)
+				if event.phase == 'ended' then
+					table.remove( sounds, row.index )
+					updateSoundList()
+				end
+			end)
+			row:insert(btn)
+		end
+	})
+	soundList.update = function(obj, event)
+		if event.value.title == NAME_SOUND_SELECTOR then
+			sounds[#sounds + 1] = event.value.selectedItem
+			updateSoundList()
+		end
+	end
+	publisher:subscribe(BIND_SELECTEDITEM, soundList)
+
+	updateSoundList()
+
+	return uiLib:layout{
+		parent=root,
+		posY=800,
+		evenRows={
+			soundList,
+		},
+	}
+end
+
+local function soundListView()
+	soundLabelField()
+	soundListField()
+end
+
 local function createCenterView()
 	uiLib:layout{
 		parent=root,
@@ -247,7 +338,7 @@ local function createContent(sceneGroup)
 	createTopView()
 	createCenterView()
 	sequenceListView()
-
+	soundListView()
 end
 
 function scene:create(event)

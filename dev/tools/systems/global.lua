@@ -13,11 +13,16 @@ TEST_PUBSUB = 'dev.tools.scenes.tests.TestPubSub'
 
 IMAGES_PATH = '../../../assets/images'
 IMAGES_BASE_PATH = 'assets/images/'
+SOUNDS_PATH = '../../../assets/sounds'
+SOUNDS_BASE_PATH = 'assets/sounds/'
 
 HEADER_HEIGHT = 64
 
 BIND_SELECTEDITEM = 'selectedItem'
 BIND_SEQUENCE = 'selectedSequence'
+
+NAME_FILE_SELECTOR = 'File Selector'
+NAME_SOUND_SELECTOR = 'Sound Selector'
 
 -- GLOBAL VALUES
 

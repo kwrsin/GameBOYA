@@ -44,7 +44,7 @@ local function onRowTouch( event )
 	local phase = event.phase
 	local row = event.target
 	if ( "release" == phase ) then
-		tableView.put({selectedItem=items[row.index]})
+		tableView.put({selectedItem=items[row.index], title=title.text})
 		-- publisher:put(tableView, BIND_SELECTEDITEM, {selectedItem=items[row.index]})
 		utils.hideFileSelector()
 	end
