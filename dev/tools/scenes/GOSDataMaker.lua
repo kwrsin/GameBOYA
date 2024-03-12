@@ -310,7 +310,7 @@ local function soundListField()
 	})
 	soundList.update = function(obj, event)
 		if event.value.title == NAME_SOUND_SELECTOR then
-			sounds[#sounds + 1] = string.format('{ %s="%s, }",', soundKey.text, event.value.selectedItem)
+			sounds[#sounds + 1] = string.format('{ %s="%s", },', soundKey.text, event.value.selectedItem)
 			updateSoundList()
 			soundKey.text = ''
 		end
