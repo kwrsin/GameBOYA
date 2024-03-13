@@ -9,6 +9,8 @@ GOS_TOP = 'dev.tools.scenes.top'
 GOS_DATA_MAKER = 'dev.tools.scenes.GOSDataMaker'
 SEQUENCE_MAKER = 'dev.tools.scenes.SequenceMaker'
 FILE_SELECTOR = 'dev.tools.scenes.FileSelector'
+RELATIONS_MAKER = 'dev.tools.scenes.RelationsMaker'
+MULTI_SELECTOR = 'dev.tools.scenes.MultiSelector'
 TEST_PUBSUB = 'dev.tools.scenes.tests.TestPubSub'
 
 IMAGES_PATH = '../../../assets/images'
@@ -20,6 +22,7 @@ GOS_DATA_PATH = '../../../src/structures/gos'
 HEADER_HEIGHT = 64
 
 BIND_SELECTEDITEM = 'selectedItem'
+BIND_SELECTEDITEMS = 'selectedItems'
 BIND_SEQUENCE = 'selectedSequence'
 
 NAME_FILE_SELECTOR = 'File Selector'
@@ -45,6 +48,20 @@ function utils.gotoDataMaker(options)
 	options.effect = 'fromLeft' 
 	options.time = 400
 	utils.gotoScene(GOS_DATA_MAKER, options)
+end
+
+function utils.gotoRelationsMaker(options)
+	local options  = options or {}
+	options.effect = 'fromLeft' 
+	options.time = 400
+	utils.gotoScene(RELATIONS_MAKER, options)
+end
+
+function utils.gotoMultiSelector(options)
+	local options  = options or {}
+	options.effect = 'fromLeft' 
+	options.time = 400
+	utils.gotoScene(MULTI_SELECTOR, options)
 end
 
 function utils.gotoSequenceMaker(options)
@@ -80,4 +97,14 @@ function utils.previous(options)
 	options.time = 400
 	utils.gotoScene(
 	composer.getSceneName( 'previous' ), options)
+end
+
+function utils.merge(params, options)
+	if params == nil then
+		return options
+	end
+	for k, v in pairs(params) do
+		options[k] = params[k]		
+	end
+	return options
 end

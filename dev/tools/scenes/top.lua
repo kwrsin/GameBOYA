@@ -14,7 +14,7 @@ local function createMenu(sceneGroup)
 	root:insert(button)
 	button = uiLib:createButton('Relations', 0, -0, function(event)
 		if event.phase == 'ended' then
-			print('Relations')
+			utils.gotoRelationsMaker(options)
 		end
 	end)
 	button.anchorX = 1
