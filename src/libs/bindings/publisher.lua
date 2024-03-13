@@ -22,9 +22,19 @@ function M:observe(key, value)
 	values[key] = value
 end
 
+local function existUpdator(entries, updator)
+	for i, ent in ipairs(entries) do
+		if updator == ent then
+			return true
+		end
+	end
+	return false
+end
+
 function M:subscribe(key, updator)
 	-- if not updator.update then return end
 	local entries = subscribers[key] or {}
+	if existUpdator(entries, updator) then return end
 	updator.PubSubKey = key
 	updator.put = function(value)
 		self:put(updator, updator.PubSubKey, value)
