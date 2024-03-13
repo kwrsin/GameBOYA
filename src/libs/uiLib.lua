@@ -64,7 +64,7 @@ function M:layout(params)
 	local colWidth = math.round(aWidth / (#cols))
 
 	local rows = params.evenRows or {}
-	local rowHeight = math.round(params.RowHegiht or 60)
+	local rowHeight = math.round(params.RowHeight or 60)
 	local rowsHeight = rowHeight * #rows
 	
 	local posY = topInset + height / 2
