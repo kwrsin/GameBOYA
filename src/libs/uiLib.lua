@@ -51,12 +51,13 @@ end
 
 function M:layout(params)
 	local parent = params.parent
-	local height = params.height or 160
 	local aWidth = display.actualContentWidth
 	local aHeight = display.actualContentHeight
+	local group = display.newGroup()
+	group.boxWidth = params.boxWidth or aWidth
+	group.boxHeight = params.boxHeight
 	local background = params.background
 	local bgcolor = params.bgcolor
-	local group = display.newGroup()
 	local topInset, leftInset, bottomInset, rightInset
 		 = display.getSafeAreaInsets()
 	local cols = params.evenCols or {}
@@ -67,17 +68,6 @@ function M:layout(params)
 	local rowHeight = math.round(params.RowHeight or 60)
 	local rowsHeight = rowHeight * #rows
 	
-	local posY = topInset + height / 2
-	if params.posY then
-		posY = posY + params.posY
-	end
-	local posX = leftInset + aWidth / 2
-	if params.posX then
-		posX = posX + params.posX
-	else
-		posX = leftInset + aWidth / 2
-	end
-
 	if parent then
 		parent:insert(group)
 	end
@@ -93,16 +83,19 @@ function M:layout(params)
 				group,
 				0,
 				0,
-				aWidth,
-				height)
+				group.boxWidth,
+				group.boxHeight)
 			bg:setFillColor(unpack(bgcolor))
 		end
 	end
 
 	if #cols > 0 then
-		local w = colWidth
-		local wh = w / 2
 		for i=1,#cols do
+			local w = colWidth
+			if cols[i].boxWidth then
+				w = cols[i].boxWidth
+			end
+			local wh = w / 2
 			local cell = cols[i]
 			group:insert(cell)
 			cell.x = -aWidth / 2 + colOffsetX + wh + (i - 1) * w
@@ -111,14 +104,42 @@ function M:layout(params)
 	end
 
 	if #rows > 0 then
-		local h = rowHeight
-		local hh = h / 2
+		local totalHeight = 0
 		for i=1,#rows do
+			if rows[i].boxHeight then
+				totalHeight = totalHeight + rows[i].boxHeight
+			else
+				totalHeight = totalHeight + rowHeight
+			end
+		end
+		if totalHeight > 0 then
+			rowsHeight = totalHeight
+		end
+
+		local amountHeight = 0
+		for i=1,#rows do
+			local h = rowHeight
+			if rows[i].boxHeight then
+				h = rows[i].boxHeight
+			end
+			local hh = h / 2
+			amountHeight = amountHeight + h
 			local cell = rows[i]
 			group:insert(cell)
 			cell.x = 0
-			cell.y = -rowsHeight / 2 + hh + (i - 1) * h
+			cell.y = -rowsHeight / 2 + amountHeight - hh
 		end
+	end
+
+	local posY = topInset + rowsHeight / 2
+	if params.posY then
+		posY = posY + params.posY
+	end
+	local posX = leftInset + aWidth / 2
+	if params.posX then
+		posX = posX + params.posX
+	else
+		posX = leftInset + aWidth / 2
 	end
 
 	group.x = posX
