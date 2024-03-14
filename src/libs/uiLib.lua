@@ -46,6 +46,20 @@ function M:list(parent, options)
 	if parent then
 		parent:insert(tableView)
 	end
+
+	tableView.refresh = function(self, items, params)
+		self:deleteAllRows( )
+		for i=1, #items do
+			local options = params or {
+	      isCategory = false,
+	      rowHeight = 48,
+	      rowColor = { default={0,0,0}, over={1,0.5,0,0.2} },
+	      lineColor = { 0.5, 0.5, 0.5 }
+			}
+			self:insertRow(options)
+		end
+	end
+
 	return tableView
 end
 
