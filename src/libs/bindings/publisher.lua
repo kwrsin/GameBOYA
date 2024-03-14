@@ -105,7 +105,7 @@ end
 
 function M:put(source, key, value)
 	if not values[key] then return end
-	local old = values[key]
+	local old = merge(values[key], {})
 	values[key] = merge(value, old)
 	local keySubs = subscribers[key]
 	if not keySubs then return end
