@@ -4,21 +4,14 @@ local scene = composer.newScene( )
 local items
 local multiSelectorTable
 local title
+local response
+local targetIdx
 
 local function update(params)
 	items = params.items or {}
 	title.text = params.title or ''
-	local others = items[params.targetIdx].others or {}
-	for j, item in ipairs(items) do
-		item.selected = false
-	end
-	for i, o in ipairs(others) do
-		for j, item in ipairs(items) do
-			if o.name == item.name then
-				item.selected = true
-			end
-		end
-	end
+	targetIdx = params.targetIdx
+	response = params.response
 	multiSelectorTable:deleteAllRows()
 	for i=1, #items do
 		multiSelectorTable:insertRow{
@@ -56,7 +49,7 @@ local function createTable(sceneGroup)
 		onRowRender = function(event)
 			local phase = event.phase
 			local row = event.row
-			local rowTitle = display.newText( row, getRowContent(items[row.index]) , 0, 0, nil, 14 )
+			local rowTitle = display.newText( row, items[row.index].name , 0, 0, nil, 14 )
 			rowTitle:setFillColor( 1, 0, 0 )
 			rowTitle.x = 10
 			rowTitle.anchorX = 0
@@ -85,16 +78,6 @@ function createContent(sceneGroup)
 	}
 end
 
-local function getSelectedItems()
-	local selectedItems = {}
-	for i, item in ipairs(items) do
-		if item.selected then
-			selectedItems[#selectedItems + 1] = item
-		end	
-	end
-	return selectedItems
-end
-
 function createDone(sceneGroup)
 	return uiLib:layout{
 		parent=sceneGroup,
@@ -102,7 +85,11 @@ function createDone(sceneGroup)
 		evenRows={
 			uiLib:createButton('done', 0, 0, function(event)
 				if event.phase == 'ended' then
-					publisher:put({}, BIND_SELECTEDITEMS, {selectedItems=getSelectedItems()})
+					if response then
+						local selectedItems = utils.deepcopy(items)
+						response({selectedItems=selectedItems, targetIdx=targetIdx})
+					end
+					items = {}
 					utils.previous()
 				end
 			end)

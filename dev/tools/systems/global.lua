@@ -12,12 +12,14 @@ FILE_SELECTOR = 'dev.tools.scenes.FileSelector'
 RELATIONS_MAKER = 'dev.tools.scenes.RelationsMaker'
 MULTI_SELECTOR = 'dev.tools.scenes.MultiSelector'
 TEST_PUBSUB = 'dev.tools.scenes.tests.TestPubSub'
+ARRAY_MAKER = 'dev.tools.scenes.ArrayMaker'
 
 IMAGES_PATH = '../../../assets/images'
 IMAGES_BASE_PATH = 'assets/images/'
 SOUNDS_PATH = '../../../assets/sounds'
 SOUNDS_BASE_PATH = 'assets/sounds/'
 GOS_DATA_PATH = '../../../src/structures/gos'
+RELATIONS_PATH = '../../../src/structures/relations_.lua'
 
 HEADER_HEIGHT = 64
 
@@ -27,6 +29,9 @@ BIND_SEQUENCE = 'selectedSequence'
 
 NAME_FILE_SELECTOR = 'File Selector'
 NAME_SOUND_SELECTOR = 'Sound Selector'
+NAME_COLLISION_NAME = 'Collision Name'
+NAME_COLLISION_TYPE = 'Collision Type'
+
 
 -- GLOBAL VALUES
 
@@ -71,6 +76,13 @@ function utils.gotoSequenceMaker(options)
 	utils.gotoScene(SEQUENCE_MAKER, options)
 end
 
+function utils.gotoArrayMaker(options)
+	local options  = options or {}
+	options.effect = 'fromLeft' 
+	options.time = 400
+	utils.gotoScene(ARRAY_MAKER, options)
+end
+
 function utils.gotoFileSelector(options)
 	local options  = options or {}
 	-- options.effect = 'fromLeft' 
@@ -98,6 +110,22 @@ function utils.previous(options)
 	utils.gotoScene(
 	composer.getSceneName( 'previous' ), options)
 end
+
+function utils.deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[utils.deepcopy(orig_key)] = utils.deepcopy(orig_value)
+        end
+        setmetatable(copy, utils.deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
 
 function utils.merge(params, options)
 	if params == nil then
