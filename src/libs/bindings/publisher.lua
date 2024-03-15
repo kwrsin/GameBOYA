@@ -52,8 +52,8 @@ function M:subscribe(key, updator)
 	local entries = subscribers[key] or {}
 	if existUpdator(entries, updator) then return end
 	updator.PubSubKey = key
-	updator.put = function(hash)
-		self:put(updator, updator.PubSubKey, hash)
+	updator.put = function(value)
+		self:put(updator, updator.PubSubKey, value)
 	end
 	updator.get = function()
 		return self:get(updator.PubSubKey)
@@ -103,10 +103,10 @@ function M:get(key)
 	return merge(values[key], {})
 end
 
-function M:put(source, key, hash)
+function M:put(source, key, value)
 	if not values[key] then return end
 	local old = merge(values[key], {})
-	values[key] = merge(hash, old)
+	values[key] = merge(value, old)
 	local keySubs = subscribers[key]
 	if not keySubs then return end
 	for i, sub in ipairs(keySubs) do
