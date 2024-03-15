@@ -89,18 +89,19 @@ function utils.gotoFileSelector(options)
 	-- options.time = 400
 	-- utils.gotoScene(FILE_SELECTOR, options)
 	options.isModal = true
-  options.effect = "fade"
-  options.time = 400
+	options.effect = "fade"
+	options.time = 400
 
-	composer.showOverlay( FILE_SELECTOR, options )
+	utils.gotoScene(FILE_SELECTOR, options )
 end
 
 function utils.gotoTestPubSub(options)
 	utils.gotoScene(TEST_PUBSUB, options)
 end
 
-function utils.hideFileSelector()
-	composer.hideOverlay( "fade", 400 )
+function utils.hideFileSelector(options)
+	-- composer.hideOverlay( "fade", 400 )
+	utils.previous(options)
 end
 
 function utils.previous(options)

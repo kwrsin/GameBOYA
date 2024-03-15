@@ -98,7 +98,7 @@ function M:layout(params)
 				0,
 				0,
 				group.boxWidth,
-				group.boxHeight)
+				group.boxHeight or rowsHeight)
 			bg:setFillColor(unpack(bgcolor))
 		end
 	end

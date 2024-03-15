@@ -1,7 +1,6 @@
 -- GOSDataMaker.lua
 local composer = require 'composer'
 local scene = composer.newScene( )
-local root = display.newGroup( )
 local filename
 local selectedImage
 local imageWidth
@@ -16,8 +15,10 @@ local sounds = {}
 local dataname = {}
 local soundKey
 
+local BIND_SOUNDCONTROLS = 'bind_soundcontrols'
 publisher:observe(BIND_SELECTEDITEM, {})
 publisher:observe(BIND_SEQUENCE, {})
+publisher:observe(BIND_SOUNDCONTROLS, {})
 
 local function getImageDimention(selectedItem)
 	selectedImage = display.newImage( selectedItem )
@@ -26,21 +27,12 @@ local function getImageDimention(selectedItem)
 	return width, height
 end
 
-local function createTopView()
-	uiLib:layout{
-		parent=root,
-		-- posY=0,
-		-- posX=0,
+local function createTitle()
+	return uiLib:layout{
+		background=display.newRect( 0, 0, display.actualContentWidth, HEADER_HEIGHT),
 		evenCols={
 			display.newText( 'GOSDataMaker', 0, 0, native.systemFont, 24 )
 		},
-		-- evenRows={
-		-- 	display.newText( 'text4', 0, 0, native.systemFont, 24 ),
-		-- 	display.newText( 'text5', 0, 0, native.systemFont, 24 ),
-		-- 	display.newText( 'text6', 0, 0, native.systemFont, 24 ),
-		-- 	display.newText( 'text7', 0, 0, native.systemFont, 24 )
-		-- },
-		background=display.newRect( 0, 0, display.actualContentWidth, HEADER_HEIGHT),
 		bgcolor={1, 0, 0, 0.6}
 	}
 end
@@ -84,8 +76,6 @@ local function imageField()
 	local lblHeight = display.newText('height:', 0, 0, native.systemFontBold, 24)
 	imageHeight = display.newText('', 0, 0, native.systemFontBold, 24)
 	return uiLib:layout{
-		parent=root,
-		posX=CX,
 		evenCols={
 			lblWidth,
 			imageWidth,
@@ -123,8 +113,6 @@ local function spriteField()
 	local lblNumFrames = display.newText('NumFrames:', 0, 0, native.systemFontBold, 24)
 	numFrames = display.newText('', 0, 0, native.systemFontBold, 24)
 	return uiLib:layout{
-		parent=root,
-		posX=CX,
 		evenCols={
 			lblSpriteWidth,
 			spriteWidth,
@@ -151,6 +139,9 @@ local function sequenceAppendField()
 	local lblSequence = display.newText('Secuences:', 0, 0, native.systemFontBold, 24)
 	local btnNewSequence = uiLib:createButton('New', 0, 0, function(event)
 		if event.phase == 'ended' then
+			if #filename.text <= 0 then return end
+			if #spriteWidth.text  < 0 or tonumber(spriteWidth.text) == nil then return end
+			if #spriteHeight.text  < 0 or tonumber(spriteHeight.text) == nil  then return end
 			local options = {}
 			options.params = {
 				path = filename.text,
@@ -162,8 +153,6 @@ local function sequenceAppendField()
 		end
 	end)
 	return uiLib:layout{
-		parent=root,
-		posX=CX,
 		evenCols={
 			lblSequence,
 			btnNewSequence
@@ -226,44 +215,62 @@ local function sequenceListView()
 	updateSequenceList()
 
 	return uiLib:layout{
-		parent=root,
-		posY=450,
-		evenRows={
+		boxHeight=260,
+		evenCols={
 			sequenceList,
 		},
 	}
 end
 
 local function soundNameField()
+	local addSoundBtn = uiLib:createButton('Add', 0, 0, function(event)
+		if event.phase == 'ended' then
+		local files = storage:files(SOUNDS_PATH)
+		local items = {}
+		for i, file in ipairs(files) do
+			items[#items + 1] = string.format( '%s%s', SOUNDS_BASE_PATH, file )
+		end
+		utils.gotoFileSelector(
+			{
+				params={
+					title=NAME_SOUND_SELECTOR, 
+					items=items,
+				}
+			})
+		end
+	end)
+	addSoundBtn.update = function(obj, event)
+		if event.value.soundEnabled then
+			addSoundBtn:setEnabled(true)
+		else
+			addSoundBtn:setEnabled(false)
+		end
+	end
+	addSoundBtn:setEnabled(false)
+	publisher:subscribe(BIND_SOUNDCONTROLS, addSoundBtn)
+
 	soundKey = native.newTextField( 0, 0, 280, 32 )
 	soundKey.placeholder = 'Key Name'
+	soundKey:addEventListener( 'userInput', function(event)
+		if ( event.phase == "ended" or event.phase == "submitted" ) then
+			if #soundKey.text > 0 then
+				publisher:put({}, BIND_SOUNDCONTROLS, {soundEnabled=true})
+			else
+				publisher:put({}, BIND_SOUNDCONTROLS, {soundEnabled=false})
+			end
+		end
+	end )
 	return uiLib:layout{
 			evenCols={
 				soundKey,
-				uiLib:createButton('Add', 0, 0, function(event)
-					if event.phase == 'ended' then
-					local files = storage:files(SOUNDS_PATH)
-					local items = {}
-					for i, file in ipairs(files) do
-						items[#items + 1] = string.format( '%s%s', SOUNDS_BASE_PATH, file )
-					end
-					utils.gotoFileSelector(
-						{
-							params={
-								title=NAME_SOUND_SELECTOR, 
-								items=items,
-							}
-						})
-					end
-				end)
+				addSoundBtn,
 			},
 		}
 end
 
 local function soundLabelField()
 	return uiLib:layout{
-		parent=root,
-		posY=624,
+		boxHeight=160,
 		evenRows={
 			display.newText('Sound List', 0, 0, native.systemFontBold, 24),
 			soundNameField(),
@@ -272,6 +279,8 @@ local function soundLabelField()
 end
 
 local function updateSoundList()
+	soundKey.text = ''
+	publisher:put({}, BIND_SOUNDCONTROLS, {soundEnabled=false})
 	soundList:deleteAllRows()
 	for i=1, #sounds do
 		soundList:insertRow{
@@ -320,17 +329,11 @@ local function soundListField()
 	updateSoundList()
 
 	return uiLib:layout{
-		parent=root,
-		posY=800,
+		boxHeight=260,
 		evenRows={
 			soundList,
 		},
 	}
-end
-
-local function soundListView()
-	soundLabelField()
-	soundListField()
 end
 
 local function createGOSData()
@@ -373,7 +376,9 @@ local function genField()
 			dataname,
 			uiLib:createButton('Generate', 0, 0, function(event)
 				if event.phase == 'ended' then
-					saveGosData(dataname.text)
+					if #dataname.text > 0 then
+						saveGosData(dataname.text)
+					end
 				end
 			end),
 		},
@@ -383,8 +388,6 @@ end
 
 local function bottomView()
 	return uiLib:layout{
-		parent=root,
-		posY=960,
 		evenRows={
 			genField()
 		},
@@ -392,27 +395,21 @@ local function bottomView()
 	}
 end
 
-local function createCenterView()
+local function createContent(sceneGroup)
 	uiLib:layout{
-		parent=root,
-		posY=220,
+		parent=sceneGroup,
 		evenRows={
+			createTitle(),
 			fileField(),
 			imageField(),
 			spriteField(),
 			sequenceAppendField(),
-		},
-		bgcolor={0, 0, 0, 0},
+			sequenceListView(),
+			soundLabelField(),
+			soundListField(),
+			bottomView(),
+		}
 	}
-end
-
-local function createContent(sceneGroup)
-	sceneGroup:insert(root)
-	createTopView()
-	createCenterView()
-	sequenceListView()
-	soundListView()
-	bottomView()
 end
 
 function scene:create(event)
@@ -426,6 +423,8 @@ function scene:show(event)
 		filename.isVisible = true
 		spriteWidth.isVisible = true
 		spriteHeight.isVisible = true
+		soundKey.isVisible = true
+		dataname.isVisible = true
 	elseif event.phase == 'did' then
 	end
 end
@@ -436,6 +435,8 @@ function scene:hide(event)
 		filename.isVisible = false
 		spriteWidth.isVisible = false
 		spriteHeight.isVisible = false
+		soundKey.isVisible = false
+		dataname.isVisible = false
 	end
 end
 
