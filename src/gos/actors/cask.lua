@@ -1,7 +1,6 @@
 -- cask.lua
 local base = require 'src.gos.base'
 local structure = require 'src.structures.gos.cask'
-local relations =  require 'src.structures.relations'
 
 local function collision(self, event)
 	if event.phase == 'began' then
@@ -21,10 +20,10 @@ local function createSprite(params)
 		imageSheet, 
 		structure.sequences )
 	sprite.x, sprite.y = params.x, params.y
-	sprite.class = 'cask'
+	sprite.class = structure.class
 	if params.isFront then
 		local filter = utils.merge(
-			relations.enemyrBulletBits, {})
+			structure.relation, {})
 		filter.maskBits = 2
 		physics.addBody( 
 			sprite, 'kinematic', {
@@ -41,7 +40,7 @@ local function createSprite(params)
 				density=1, 
 				bounce=0, 
 				friction=1, 
-				filter=relations.enemyrBulletBits, 
+				filter=structure.relation, 
 				radius=20} )
 		sprite:setSequence( 'side' )
 		sprite:applyLinearImpulse( 5, 0 )

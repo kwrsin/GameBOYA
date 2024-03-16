@@ -1,12 +1,11 @@
 local base = require 'src.gos.base'
 local structure = require 'src.structures.gos.redhead'
-local relations = require 'src.structures.relations'
 local sprite
 
 local function createSprite(params)
 	sprite = display.newSprite( params.parent, gImageSheets.redhead, structure.sequences )
 	sprite.x, sprite.y = params.x, params.y
-	physics.addBody( sprite, 'dynamic', {density=1.0, bounce=0, friction=0, filter=relations.playerBits} )
+	physics.addBody( sprite, 'dynamic', {density=1.0, bounce=0, friction=0, filter=structure.relation} )
 	sprite.gravityScale = 0
 	sprite.isFixedRotation = true
 	return sprite

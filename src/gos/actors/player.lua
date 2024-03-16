@@ -1,7 +1,6 @@
 -- player.lua
 local base = require 'src.gos.base'
 local structure = require 'src.structures.gos.aboya'
-local relations = require 'src.structures.relations'
 local sprite
 local gravityScale = 1
 local ladderCounter = 0
@@ -9,10 +8,10 @@ local ladderCounter = 0
 local function createSprite(params)
 	sprite = display.newSprite( params.parent, gImageSheets.aboya, structure.sequences )
 	sprite.x, sprite.y = params.x, params.y
-	physics.addBody( sprite, 'dynamic', {density=1, bounce=0, friction=1, filter=relations.playerBits, radius=20} )
+	physics.addBody( sprite, 'dynamic', {density=1, bounce=0, friction=1, filter=structure.relation, radius=20} )
 	sprite.gravityScale = gravityScale
 	sprite.isFixedRotation = true
-	sprite.class = 'player'
+	sprite.class = structure.class
 	
 	return sprite
 end
@@ -87,7 +86,7 @@ return function(params)
   function M:fall()
 		physics.removeBody( self.go )
 		local filter = utils.merge(
-			relations.playerBits, {})
+			structure.relation, {})
 		filter.maskBits = 0
 		physics.addBody( self.go, 'dynamic', {density=1, bounce=0, friction=1, filter=filter, radius=20} )
 		self.go:applyLinearImpulse( 0, -10 )

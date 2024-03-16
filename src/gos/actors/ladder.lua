@@ -1,6 +1,6 @@
 -- ladder.lua
 local base = require 'src.gos.base'
-local relations = require 'src.structures.relations'
+local structure = require 'src.structures.gos.ladder'
 local group
 
 local function createImage(params)
@@ -20,7 +20,7 @@ local function createImage(params)
 	end
 	physics.addBody( group, 'static', {
 		isSensor=true, 
-		filter=relations.wallBits, 
+		filter=structure.relation, 
 		box={halfWidth=5, halfHeight=heightAmount/ 2, x=0, y=-heightAmount/2 + objectHeight / 2}} )
 	
 	group.collision = function(self,event)
@@ -31,7 +31,7 @@ local function createImage(params)
 		end
 	end
 	group:addEventListener( 'collision')
-	group.class = 'ladder'
+	group.class = structure.class
 	return group
 end
 

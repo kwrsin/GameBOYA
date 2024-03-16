@@ -10,7 +10,7 @@ local function createSprite(params)
 		params.parent, 
 		gImageSheets.gorilla, 
 		structure.sequences )
-	sprite.class = 'gorilla'
+	sprite.class = relations.class
 	return sprite
 end
 

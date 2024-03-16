@@ -1,6 +1,10 @@
+local relations = require 'src.structures.relations'
+
 return {
   path = "assets/images/redhead.png",
   sheetParams = {numFrames = 16, height = 32, sheetContentHeight = 32, sheetContentWidth = 16*32, width = 32},
+  relation=relations.playerBits,
+  class='redhead',
   sequences = {
     {loopCount = 0, time = 240, frames = {1, 2, 3}, name = "right"},
     {loopCount = 0, time = 240, frames = {4, 5, 6}, name = "down"},

@@ -7,8 +7,6 @@ require 'src.systems.debug'
 -- require 'src.systems.const'
 -- require 'src.systems.global'
 -- require 'src.systems.system'
-
-
 -- utils.gotoScene(loader_scene)
 
 
@@ -22,6 +20,4 @@ utils.gotoTop()
 
 -- utils.gotoRelationsMaker()
 -- utils.gotoDataMaker()
-
 -- utils.gotoTestPubSub()
--- require('composer').gotoScene( 'dev.tools.scenes.ArrayMaker' )
