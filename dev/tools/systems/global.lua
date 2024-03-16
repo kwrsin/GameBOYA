@@ -1,3 +1,5 @@
+publisher = require 'src.libs.bindings.publisher'
+storage = require 'src.libs.storage'
 uiLib = require 'src.libs.uiLib'
 utils = {}
 local composer = require 'composer'
@@ -137,3 +139,10 @@ function utils.merge(params, options)
 	end
 	return options
 end
+
+utils.gotoTop()
+
+-- utils.gotoRelationsMaker()
+-- utils.gotoDataMaker()
+-- utils.gotoTestPubSub()
+
