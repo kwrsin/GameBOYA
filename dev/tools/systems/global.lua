@@ -7,9 +7,15 @@ local composer = require 'composer'
 -- CONSTANTS
 CX = display.contentCenterX
 CY = display.contentCenterY
+CW = display.contentWidth
+CH = display.contentHeight
+SOY, SOX = display.screenOriginY, display.screenOriginY
+ACW, ACH = display.actualContentWidth, display.actualContentHeight
+
 GOS_TOP = 'dev.tools.scenes.top'
 GOS_DATA_MAKER = 'dev.tools.scenes.GOSDataMaker'
 SEQUENCE_MAKER = 'dev.tools.scenes.SequenceMaker'
+GAMEOBJECT_MAKER = 'dev.tools.scenes.GameObjectMaker'
 FILE_SELECTOR = 'dev.tools.scenes.FileSelector'
 RELATIONS_MAKER = 'dev.tools.scenes.RelationsMaker'
 MULTI_SELECTOR = 'dev.tools.scenes.MultiSelector'
@@ -97,6 +103,13 @@ function utils.gotoFileSelector(options)
 	utils.gotoScene(FILE_SELECTOR, options )
 end
 
+function utils.gotoGameObjectMaker(options)
+	local options  = options or {}
+	options.effect = 'fromLeft' 
+	options.time = 400
+	utils.gotoScene(GAMEOBJECT_MAKER, options)
+end
+
 function utils.gotoTestPubSub(options)
 	utils.gotoScene(TEST_PUBSUB, options)
 end
@@ -140,8 +153,8 @@ function utils.merge(params, options)
 	return options
 end
 
-utils.gotoTop()
-
+-- utils.gotoTop()
+utils.gotoGameObjectMaker()
 -- utils.gotoRelationsMaker()
 -- utils.gotoDataMaker()
 -- utils.gotoTestPubSub()
