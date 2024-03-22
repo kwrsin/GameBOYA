@@ -161,6 +161,49 @@ function M:layout(params)
 	return group
 end
 
+function M:input(parent, title, x, y, inputType, default, onEvent)
+	local group = display.newGroup()
+	if parent then
+		parent:insert(group)
+	end
+	local bg = display.newRect(
+		group, 
+		display.contentCenterX, 
+		display.contentCenterY, 
+		display.actualContentWidth, 
+		display.actualContentHeight)
+	bg:setFillColor(0.1, 0.1, 0.1)
+	bg:addEventListener( 'touch', function(event)
+		return true
+	end )
+	centerPos = {x=x or display.contentCenterX, y=y or display.contentCenterY}
+	local frame = display.newRoundedRect(
+		group, 
+		centerPos.x,
+		centerPos.y,
+		400, 180, 30)
+	frame:setFillColor(0.2, 0.3, 0,6)
+	local lbl = display.newText( group, title, centerPos.x, centerPos.y - 68, native.systemFontBold , 32)
+	lbl:setFillColor( 0.7, 0.3, 0.4 )
+	local tf = native.newTextField( centerPos.x, centerPos.y, 350, 60 )
+	if default then
+		tf.text = default
+	end
+	if inputType then
+		tf.inputType = inputType
+	end
+	tf:addEventListener( "userInput", function(event)
+		if onEvent then
+			onEvent(event)
+			if event.phase == "ended" or event.phase == "submitted" then
+				tf:removeSelf( )
+				group:removeSelf( )
+			end
+		end
+	end )
+	return group
+end
+
 function M:createButton(title, x, y, onEvent)
 	local button = widget.newButton( {
 		left=x,

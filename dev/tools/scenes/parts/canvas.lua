@@ -118,6 +118,11 @@ mode[MODE_SET] = {}
 function mode.MODE_SET:toggleMenu(params)
 	params.items = {
 		x={type=TYPE_BUTTON, fn=function(event)
+			uiLib:input(nil, 'input x', nil, nil, 'number', '0', function(event)
+				if event.phase == "ended" or event.phase == "submitted" then
+					print(event.target.text)
+				end
+			end)
 			print('x')
 		end,},
 		y={type=TYPE_BUTTON, fn=function(event)
@@ -186,33 +191,7 @@ function M:createCenterAixs()
 	xAxis:setStrokeColor(0, 1, 0)
 end
 
--- function M:touch(event)
--- 	local obj = event.target
--- 	if not obj then return end
--- 	self.focus = obj
--- 	self.diff = {x=obj.x - event.x, y=obj.y - event.y}
--- 	if event.phase == 'began' then
--- 		obj:scale(1.2, 1.2)
--- 	elseif event.phase == 'moved' then
--- 		obj.x = event.x
--- 		obj.y = event.y
--- 	elseif event.phase == 'ended' or event.phase == 'canceled' then
--- 		-- obj:scale(1.0, 1.0)
--- 		obj.xScale = 1.0
--- 		obj.yScale = 1.0
--- 		self.focus = nil
--- 		self.diff = nil
--- 	end
--- 	return true
--- end
-
-
-
 function M:startMouseEvent()
-	-- local menuItems = {
-	-- 	gameObjects = {_NEWGROUP, _NEWSPRITE, _NEWRECT, _NEWCIRCLE, _NEWROUNDEDRECT,},
-	-- 	propertySettings = {'x', 'y', 'width', 'heght', 'addChild'},
-	-- }
 	Runtime:addEventListener( 'touch', function(event)
 		if event.phase == 'ended' then
 			self:modeAppend():toggleMenu{x=event.x, y=event.y}
