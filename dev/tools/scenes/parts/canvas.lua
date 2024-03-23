@@ -100,6 +100,10 @@ function mode.MODE_APPEND:toggleMenu(params)
 		end,},
 		_NEWSPRITE={type=TYPE_BUTTON, fn=function(event)
 			print(_NEWSPRITE) 
+utils.gotoFilePicker({params={currentDir='../', callback=function(values)
+		table.print(values)
+	end}})
+
 		end,},
 		_NEWRECT={type=TYPE_BUTTON, fn=function(event)
 			print(_NEWRECT) 
@@ -161,7 +165,6 @@ function M:setMode(state)
 	mode.canvas = self
 	return self.mode
 end
-
 
 function M:create(params)
 	self:setup()

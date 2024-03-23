@@ -4,7 +4,6 @@ local scene = composer.newScene( )
 -- local graphGen = require 'dev.tools.scenes.parts.graph'
 local canvas = require 'dev.tools.scenes.parts.canvas'
 
-
 function scene:create(event)
 	local sceneGroup = self.view
 	-- graphGen{parent=sceneGroup}

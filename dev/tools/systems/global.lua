@@ -164,8 +164,7 @@ end
 system.setTapDelay( 0.2 )
 
 -- utils.gotoTop()
--- utils.gotoGameObjectMaker()
-utils.gotoFilePicker()
+utils.gotoGameObjectMaker()
 -- utils.gotoRelationsMaker()
 -- utils.gotoDataMaker()
 -- utils.gotoTestPubSub()

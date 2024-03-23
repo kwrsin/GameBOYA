@@ -10,6 +10,7 @@ local selectType
 local selections = {}
 local fileList
 local filteredFiles = {}
+local callback
 
 local function selectedNum()
 	local num = 0
@@ -34,6 +35,11 @@ local function parentPath()
 	return currentDir
 end
 
+local function isContained(v1, v2)
+	local i, j = string.match( v1, v2 )
+	return i  or false
+end
+
 local function update(dir)
 	local path = currentDir
 	if dir and #dir > 0 then
@@ -46,7 +52,7 @@ local function update(dir)
 		for l, file in ipairs(files) do
 			for m, e in ipairs(excludes) do
 				local ignore = true
-				if file == e then else
+				if isContained(file, e) then else
 					if selectType == 'file' then else
 						if storage:isDir(storage:path(file, currentDir) == true) then
 							ignore = false
@@ -74,7 +80,7 @@ local function update(dir)
 	if #includes > 0 then
 		for l, e in ipairs(exfiles) do
 			for m, i in ipairs(includes) do
-				if e == i then
+				if isContained(e, i) then
 					infiles[#infiles + 1] = e
 				end
 			end
@@ -172,6 +178,33 @@ local function createTable()
 	}
 end
 
+local function clear()
+	for i, f in ipairs(filteredFiles) do
+		f.selected = false
+	end
+end
+
+local function createButtons()
+	return uiLib:layout{
+		evenCols={
+			uiLib:createButton('CANCEL', 0, 0, function(event)
+				if event.phase == 'ended'then
+					clear()
+					utils.previous()
+				end
+			end),
+			uiLib:createButton('OK', 0, 0, function(event)
+				if event.phase == 'ended'then
+					if callback then
+						callback(filteredFiles)
+					end
+					utils.previous()
+				end
+			end),
+		}
+	}
+end
+
 local function createContent(sceneGroup)
 	createBackground(sceneGroup)
 	uiLib:layout{
@@ -179,6 +212,7 @@ local function createContent(sceneGroup)
 		evenRows={
 			createTitle(),
 			createTable(),
+			createButtons(),
 		}
 	}
 end
@@ -191,24 +225,24 @@ end
 function scene:show(event)
 	local sceneGroup = self.view
 	if event.phase == 'will' then
-		event.params = {currentDir='../'}--TODO remove this
-		home = event.params.currentDir or './'
+		-- event.params = {currentDir='../'}--TODO remove this
+		local params = event.params or {}
+		home = params.currentDir or './'
 		currentDir = home
-		event.params.filters = event.params.filters or {}
-		excludes = event.params.filters.excludes or {}
-		includes = event.params.filters.includes or {}
-		selectType = event.params.selectType or 'file'
-		numOfselections = event.params.numOfselections or 1
+		params.filters = params.filters or {}
+		excludes = params.filters.excludes or {'.DS_Store',}
+		includes = params.filters.includes or {}
+		selectType = params.selectType or 'file'
+		numOfselections = params.numOfselections or 1
+		callback = params.callback
 		update()
 	elseif event.phase == 'did' then
 	end
 end
 
 function scene:hide(event)
+	local parent = event.parent
 	if event.phase == 'will' then
-		-- if event.parent.backFromFilePicker then
-		-- 	event.parent:backFromFilePicker(selections)
-		-- end
 	elseif event.phase == 'did' then
 	end
 end
