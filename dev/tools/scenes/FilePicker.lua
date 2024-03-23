@@ -5,7 +5,7 @@ local home
 local currentDir
 local excludes
 local includes
-local numOfselections
+local numOfSelections
 local selectType
 local selections = {}
 local fileList
@@ -22,7 +22,7 @@ end
 
 local function select(idx)
 	local value = selectedNum() + (filteredFiles[idx].selected and 0 or 1)
-	if numOfselections < value then return false end
+	if numOfSelections < value then return false end
 	filteredFiles[idx].selected = not filteredFiles[idx].selected
 	return true
 end
@@ -197,7 +197,7 @@ local function createButtons()
 			uiLib:createButton('OK', 0, 0, function(event)
 				if event.phase == 'ended'then
 					if callback then
-						callback(filteredFiles)
+						callback(filteredFiles, currentDir)
 					end
 					utils.previous()
 				end
@@ -232,8 +232,8 @@ function scene:show(event)
 		params.filters = params.filters or {}
 		excludes = params.filters.excludes or {'.DS_Store',}
 		includes = params.filters.includes or {}
-		selectType = params.selectType or 'dir'
-		numOfselections = params.numOfselections or 1
+		selectType = params.selectType or 'file'
+		numOfSelections = params.numOfSelections or 1
 		callback = params.callback
 		update()
 	elseif event.phase == 'did' then

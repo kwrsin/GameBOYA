@@ -100,7 +100,8 @@ function mode.MODE_APPEND:toggleMenu(params)
 		end,},
 		_NEWSPRITE={type=TYPE_BUTTON, fn=function(event)
 			print(_NEWSPRITE) 
-utils.gotoFilePicker({params={currentDir='../', callback=function(values)
+utils.gotoFilePicker({params={currentDir='../', selectType='file', numOfSelections=2, callback=function(values, parentDir)
+		print(parentDir)
 		table.print(values)
 	end}})
 
