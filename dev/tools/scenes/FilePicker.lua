@@ -11,8 +11,19 @@ local selections = {}
 local fileList
 local filteredFiles = {}
 
+local function selectedNum()
+	local num = 0
+	for i, f in ipairs(filteredFiles) do
+		if f.selected then num = num + 1 end
+	end
+	return num
+end
+
 local function select(idx)
+	local value = selectedNum() + (filteredFiles[idx].selected and 0 or 1)
+	if numOfselections < value then return false end
 	filteredFiles[idx].selected = not filteredFiles[idx].selected
+	return true
 end
 
 local function parentPath()
@@ -124,8 +135,9 @@ local function createTable()
 			cellBg:addEventListener( 'tap', function(event)
 				local col = filteredFiles[row.index]
 		    if ( event.numTaps == 1 ) then
-						select(row.index)
-						fileList:reloadData()
+						if select(row.index) then
+							fileList:reloadData()
+						end
 		    elseif ( event.numTaps == 2 ) then
 		    	if col.name:gsub('/$', '') == '..' then
 		    		parentPath()
