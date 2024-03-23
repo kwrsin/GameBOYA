@@ -41,10 +41,11 @@ local function isContained(v1, v2)
 end
 
 local function update(dir)
-	local path = currentDir
+	local path = currentDir:gsub('/$', '')
 	if dir and #dir > 0 then
 		path = string.format('%s/%s', path, dir)
 	end
+	currentDir = path
 	local files = storage:files(path)
 	local exfiles = {}
 	local infiles = {}
@@ -54,9 +55,7 @@ local function update(dir)
 				local ignore = true
 				if isContained(file, e) then else
 					if selectType == 'file' then else
-						if storage:isDir(storage:path(file, currentDir) == true) then
-							ignore = false
-						end
+						ignore = storage:isDir(string.format('%s/%s', currentDir, file))
 					end
 					if ignore then
 						exfiles[#exfiles + 1] = file
@@ -68,9 +67,7 @@ local function update(dir)
 		for l, file in ipairs(files) do
 			local ignore = true
 			if selectType == 'file' then else
-				if storage:isDir(storage:path(file, currentDir) == true) then
-					ignore = false
-				end
+				ignore = storage:isDir(string.format('%s/%s', currentDir, file))
 			end
 			if ignore then
 				exfiles[#exfiles + 1] = file
@@ -91,7 +88,6 @@ local function update(dir)
 	for i=#filteredFiles,1,-1 do
 		table.remove( filteredFiles, i )
 	end
-	currentDir = path
 	if home:gsub('/$', "") ~= currentDir:gsub('/$', "") then
 		filteredFiles[#filteredFiles + 1] = {
 			name='../',
@@ -141,9 +137,14 @@ local function createTable()
 			cellBg:addEventListener( 'tap', function(event)
 				local col = filteredFiles[row.index]
 		    if ( event.numTaps == 1 ) then
-						if select(row.index) then
-							fileList:reloadData()
-						end
+		    	local canSelect = true
+	    		if selectType == 'file' and storage:isDir(
+						string.format('%s/%s', currentDir, col.name)) then
+	    			canSelect = false
+	    		end
+					if canSelect and select(row.index) then
+						fileList:reloadData()
+					end
 		    elseif ( event.numTaps == 2 ) then
 		    	if col.name:gsub('/$', '') == '..' then
 		    		parentPath()
@@ -225,14 +226,13 @@ end
 function scene:show(event)
 	local sceneGroup = self.view
 	if event.phase == 'will' then
-		-- event.params = {currentDir='../'}--TODO remove this
 		local params = event.params or {}
 		home = params.currentDir or './'
 		currentDir = home
 		params.filters = params.filters or {}
 		excludes = params.filters.excludes or {'.DS_Store',}
 		includes = params.filters.includes or {}
-		selectType = params.selectType or 'file'
+		selectType = params.selectType or 'dir'
 		numOfselections = params.numOfselections or 1
 		callback = params.callback
 		update()
