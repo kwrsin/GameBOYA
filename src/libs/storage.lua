@@ -13,6 +13,11 @@ function M:path(filename, dir)
 	return system.pathForFile( filename, dir or system.DocumentsDirectory )
 end
 
+function M:isDir(path)
+-- https://stackoverflow.com/questions/2833675/using-lua-check-if-file-is-a-directory
+  return path:sub(-1) == "/" or lfs.attributes(path, "mode") == "directory"
+end
+
 function M:writeString(path, str)
 	local file, error = io.open(path, 'w')
 	if not file then

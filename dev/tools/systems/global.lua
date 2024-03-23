@@ -17,6 +17,7 @@ GOS_DATA_MAKER = 'dev.tools.scenes.GOSDataMaker'
 SEQUENCE_MAKER = 'dev.tools.scenes.SequenceMaker'
 GAMEOBJECT_MAKER = 'dev.tools.scenes.GameObjectMaker'
 FILE_SELECTOR = 'dev.tools.scenes.FileSelector'
+FILE_PICKER = 'dev.tools.scenes.FilePicker'
 RELATIONS_MAKER = 'dev.tools.scenes.RelationsMaker'
 MULTI_SELECTOR = 'dev.tools.scenes.MultiSelector'
 TEST_PUBSUB = 'dev.tools.scenes.tests.TestPubSub'
@@ -110,6 +111,13 @@ function utils.gotoGameObjectMaker(options)
 	utils.gotoScene(GAMEOBJECT_MAKER, options)
 end
 
+function utils.gotoFilePicker(options)
+	local options  = options or {}
+	options.effect = 'fromLeft' 
+	options.time = 400
+	utils.gotoScene(FILE_PICKER, options)
+end
+
 function utils.gotoTestPubSub(options)
 	utils.gotoScene(TEST_PUBSUB, options)
 end
@@ -153,9 +161,16 @@ function utils.merge(params, options)
 	return options
 end
 
+system.setTapDelay( 0.2 )
+
 -- utils.gotoTop()
-utils.gotoGameObjectMaker()
+-- utils.gotoGameObjectMaker()
+utils.gotoFilePicker()
 -- utils.gotoRelationsMaker()
 -- utils.gotoDataMaker()
 -- utils.gotoTestPubSub()
+
+
+
+-- require 'dev.tools.scenes.tests.TestAPI'
 
