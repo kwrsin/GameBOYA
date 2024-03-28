@@ -161,6 +161,63 @@ function M:layout(params)
 	return group
 end
 
+function M:menu(items, options)
+	local function createButton(x, y, item, options)
+		return M:createButton(item.title, x, y, function(event)
+			if event.phase == 'ended' then
+				if type(item.value) == 'function' then
+					item.value(item.title, options)
+					if options.parent then
+						display.remove(options.parent)
+					end
+				else
+					M:menu(item.value, options)
+				end
+			end
+		end)
+	end
+
+	local options = options or {}
+
+	local group = display.newGroup()
+	if options.parent then
+		options.parent:insert(group)
+	else
+		options.parent = group
+	end
+	local bg = display.newRect(
+		group, 
+		display.contentCenterX, 
+		display.contentCenterY, 
+		display.actualContentWidth, 
+		display.actualContentHeight)
+	bg:setFillColor(0.1, 0.1, 0.1, 0.5)
+	bg:addEventListener( 'touch', function(event)
+		if options.parent then
+			display.remove(options.parent)
+		end
+		return true
+	end )
+	options.x = options.x or display.contentCenterX
+	options.y = options.y or display.contentCenterY
+	local cellHeight = 60
+	local frameHeight = #items * cellHeight
+	local frameHeightPlusMargin = frameHeight + 30
+	local frame = display.newRoundedRect(
+		group, 
+		options.x,
+		options.y,
+		400, frameHeightPlusMargin, 30)
+	frame:setFillColor(0.2, 0.3, 0,6)
+	local posY = options.y - frameHeight / 2 
+	local posX = options.x
+	for i, item in ipairs(items) do
+		local btn = createButton(0, posY + (i - 1) * cellHeight, item, options)
+		btn.x = posX
+		group:insert(btn)
+	end
+end
+
 function M:input(parent, title, x, y, inputType, default, onEvent)
 	local group = display.newGroup()
 	if parent then
@@ -172,7 +229,7 @@ function M:input(parent, title, x, y, inputType, default, onEvent)
 		display.contentCenterY, 
 		display.actualContentWidth, 
 		display.actualContentHeight)
-	bg:setFillColor(0.1, 0.1, 0.1)
+	bg:setFillColor(0.1, 0.1, 0.1, 0.5)
 	bg:addEventListener( 'touch', function(event)
 		return true
 	end )
