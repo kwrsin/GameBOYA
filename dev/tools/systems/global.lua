@@ -22,6 +22,7 @@ RELATIONS_MAKER = 'dev.tools.scenes.RelationsMaker'
 MULTI_SELECTOR = 'dev.tools.scenes.MultiSelector'
 TEST_PUBSUB = 'dev.tools.scenes.tests.TestPubSub'
 ARRAY_MAKER = 'dev.tools.scenes.ArrayMaker'
+WALL_MAKER = 'dev.tools.scenes.ObjectMakers.WallMaker'
 
 IMAGES_PATH = '../../../assets/images'
 IMAGES_BASE_PATH = 'assets/images/'
@@ -118,6 +119,13 @@ function utils.gotoFilePicker(options)
 	utils.gotoScene(FILE_PICKER, options)
 end
 
+function utils.gotoWallMaker(options)
+	local options  = options or {}
+	options.effect = 'fromLeft' 
+	options.time = 400
+	utils.gotoScene(WALL_MAKER, options)
+end
+
 function utils.gotoTestPubSub(options)
 	utils.gotoScene(TEST_PUBSUB, options)
 end
@@ -164,7 +172,8 @@ end
 system.setTapDelay( 0.2 )
 
 -- utils.gotoTop()
-utils.gotoGameObjectMaker()
+-- utils.gotoGameObjectMaker()
+utils.gotoWallMaker()
 -- utils.gotoRelationsMaker()
 -- utils.gotoDataMaker()
 -- utils.gotoTestPubSub()

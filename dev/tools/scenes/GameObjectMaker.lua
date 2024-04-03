@@ -13,6 +13,7 @@ end
 function scene:show(event)
 	local sceneGroup = self.view
 	if event.phase == 'will' then
+		canvas:show(event.params)
 	elseif event.phase == 'did' then
 	end
 end
@@ -20,6 +21,7 @@ end
 function scene:hide(event)
 	if event.phase == 'will' then
 	elseif event.phase == 'did' then
+		canvas:release()
 	end
 end
 
