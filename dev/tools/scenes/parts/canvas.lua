@@ -268,6 +268,30 @@ function mode.MODE_SET:toggleMenu(params)
 				end
 			end)
 		end,},
+		scaleX={type=TYPE_BUTTON, fn=function(event)
+			local target = mode:getTarget()
+			if target.numChildren < 1 then return end
+			local obj = target[1]
+			local xs = string.format( '%d' , obj.xScale )
+			uiLib:input(nil, 'Input xScale', CX, CY, 'phone', xs, function(event)
+				if event.phase == "ended" or event.phase == "submitted" then
+					obj.xScale = tonumber( event.target.text )
+					mode:hide()
+				end
+			end)
+		end,},
+		scaleY={type=TYPE_BUTTON, fn=function(event)
+			local target = mode:getTarget()
+			if target.numChildren < 1 then return end
+			local obj = target[1]
+			local ys = string.format( '%d' , obj.yScale )
+			uiLib:input(nil, 'Input yScale', CX, CY, 'phone', ys, function(event)
+				if event.phase == "ended" or event.phase == "submitted" then
+					obj.yScale = tonumber( event.target.text )
+					mode:hide()
+				end
+			end)
+		end,},
 	}
 	if mode.shapes and #mode.shapes > 0 then
 		for i, shape in ipairs(mode.shapes) do
