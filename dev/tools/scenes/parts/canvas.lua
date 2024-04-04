@@ -256,6 +256,18 @@ function mode.MODE_SET:toggleMenu(params)
 			mode.canvas:modeColCircle()
 			mode:openEditing(event)
 		end,},
+		rotation={type=TYPE_BUTTON, fn=function(event)
+			local target = mode:getTarget()
+			if target.numChildren < 1 then return end
+			local obj = target[1]
+			local rot = string.format( '%d' , obj.rotation )
+			uiLib:input(nil, 'Input Rotation', CX, CY, 'number', rot, function(event)
+				if event.phase == "ended" or event.phase == "submitted" then
+					obj.rotation = tonumber( event.target.text )
+					mode:hide()
+				end
+			end)
+		end,},
 	}
 	if mode.shapes and #mode.shapes > 0 then
 		for i, shape in ipairs(mode.shapes) do
