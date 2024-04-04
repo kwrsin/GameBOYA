@@ -379,6 +379,7 @@ end
 function M:setMode(state)
 	self.mode = mode[state]
 	mode.canvas = self
+	self.mode.state = state
 	return self.mode
 end
 
@@ -402,6 +403,11 @@ function M:createObject(structure, sheetNumber)
 	-- lbl:setFillColor( 0.5, 0.6, 0.7, 0.8 )
 	self.isMouseMoving = false
 	group:addEventListener( 'touch', function(event)
+		if self.mode.state == MODE_COL_POLY or
+			self.mode.state == MODE_COL_RECT or
+			self.mode.state == MODE_COL_CIRCLE then
+			return true
+		end
 		if event.phase == 'began' then
 			group:scale(1.2, 1.2)
 			self.isMouseMoving = false
