@@ -176,6 +176,56 @@ function mode:toggleMenu(params)
 	end
 end
 
+function mode:renderCollisions()
+	if self.shapes then else return end
+	local target = self:getTarget( )
+	if target.numChildren <= 0 then return end
+	local obj = target[1]
+	physics.removeBody( obj )
+	local polygons, rects, circles = {}, {}, {}
+	for i, shape in ipairs(self.shapes) do
+		if shape.type == 'polygon' then
+			polygons[#polygons + 1] = {shape=shape.data}
+		elseif shape.type == 'rect' then
+			rects[#rects + 1] = shape.data
+		elseif shape.type == 'circle' then
+			circles[#circles + 1] = shape.data
+		end
+	end
+	if #polygons > 0 then
+		physics.addBody( obj, 'static', unpack(polygons) )
+	end
+	for i, r in ipairs(rects) do
+		physics.addBody( obj, 'static', {box=r} )
+	end
+	for i, c in ipairs(circles) do
+		physics.addBody( obj, 'static', {radius=c} )
+	end
+end
+
+function mode:clearShapes(excludes)
+	local function contain(shape)
+		for i=1,#excludes do
+			if excludes[i] == shape.type then
+				return true
+			end
+		end
+		return false
+	end
+	if not self.shapes or #self.shapes <= 0 then return end
+	for i=#self.shapes,1,-1 do
+		local prevent = false
+		if excludes then
+			if contain(self.shapes[i]) then
+				prevent = true
+			end
+		end
+		if not prevent then
+			table.remove(self.shapes, i)
+		end
+	end
+end
+
 mode[MODE_APPEND] = {}
 --TODO: load GOs with Levelmaker
 function mode.MODE_APPEND:toggleMenu(params)
@@ -292,14 +342,37 @@ function mode.MODE_SET:toggleMenu(params)
 				end
 			end)
 		end,},
+		anchorX={type=TYPE_BUTTON, fn=function(event)
+			local target = mode:getTarget()
+			if target.numChildren < 1 then return end
+			local obj = target[1]
+			local xa = string.format( '%f' , obj.anchorX )
+			uiLib:input(nil, 'Input anchorX', CX, CY, 'decimal', xa, function(event)
+				if event.phase == "ended" or event.phase == "submitted" then
+					obj.anchorX = tonumber( event.target.text )
+					mode:hide()
+				end
+			end)
+		end,},
+		anchorY={type=TYPE_BUTTON, fn=function(event)
+			local target = mode:getTarget()
+			if target.numChildren < 1 then return end
+			local obj = target[1]
+			local ya = string.format( '%f' , obj.anchorY )
+			uiLib:input(nil, 'Input anchorY', CX, CY, 'decimal', ya, function(event)
+				if event.phase == "ended" or event.phase == "submitted" then
+					obj.anchorY = tonumber( event.target.text )
+					mode:hide()
+				end
+			end)
+		end,},
 	}
 	if mode.shapes and #mode.shapes > 0 then
 		for i, shape in ipairs(mode.shapes) do
 			local title = string.format('delete shape_%i', i)
 			params.items[title]={type=TYPE_BUTTON, fn=function(event)
-				local s = table.remove(mode.shapes, i)
-				display.remove(s)
-				s = nil
+				table.remove(mode.shapes, i)
+				mode:renderCollisions()
 			end}
 		end
 	end
@@ -316,20 +389,21 @@ end
 function mode.MODE_COL_POLY:refrect()
 	local go = mode:getTarget( )
 	if not go then return end
+	mode:clearShapes({'polygon'})
+	if go.numChildren <= 0 then return end
+	local obj = go[1]
 	if #mode.pointers < 2 then return end
 	local lPos = {}
 	for i, p in ipairs(mode.pointers) do
-		lPos[#lPos + 1] = p.x - go.x
-		lPos[#lPos + 1] = p.y - go.y 
+		lPos[#lPos + 1] = p.x - go.x - obj.x
+		lPos[#lPos + 1] = p.y - go.y - obj.y 
 	end
 	lPos[#lPos + 1] = lPos[1]
 	lPos[#lPos + 1] = lPos[2]
-	local poly = display.newLine( go, unpack(lPos) )
-	poly:setStrokeColor( 1, 0, 0, 1 )
-	poly.strokeWidth = 8
 	local shapes = mode.shapes or {}
-	shapes[#shapes + 1] = poly
+	shapes[#shapes + 1] = {type='polygon', data=lPos}
 	mode.shapes = shapes
+	mode:renderCollisions()
 end
 
 mode[MODE_COL_RECT] = {}
@@ -339,23 +413,25 @@ end
 function mode.MODE_COL_RECT:refrect()
 	local go = mode:getTarget( )
 	if not go then return end
-	local x, y, width, height
+	if go.numChildren <= 0 then return end
+	mode:clearShapes()
+	local obj = go[1]
+	local rect = {}
 	if #mode.pointers <= 0 then
-		x, y = 0, 0
-		width, height = go.width, go.height
+		rect.x, rect.y = 0, 0
+		rect.halfWidth, rect.halfHeight = obj.width / 2, obj.height / 2
 	elseif #mode.pointers <= 1 then
-		x, y = 0, 0
-		width = math.abs((mode.pointers[1].x - CX) * 2)
-		height = math.abs((mode.pointers[1].y - CY) * 2)
-	elseif #mode.pointers <= 2 then
-		x, y = mode.pointers[1].x - go.x, mode.pointers[1].y - go.y
-		width, height = math.abs((mode.pointers[1].x - mode.pointers[2].x) * 2), math.abs((mode.pointers[1].y - mode.pointers[2].y) * 2)
+		rect.x, rect.y = 0, 0
+		rect.halfWidth = math.abs(mode.pointers[1].x - go.x - obj.x)
+		rect.halfHeight = math.abs(mode.pointers[1].y - go.y - obj.y)
+	elseif #mode.pointers >= 2 then
+		rect.x, rect.y = mode.pointers[1].x - obj.x - go.x, mode.pointers[1].y - obj.y - go.y
+		rect.halfWidth, rect.halfHeight = math.abs(mode.pointers[1].x - mode.pointers[2].x), math.abs(mode.pointers[1].y - mode.pointers[2].y)
 	end
-	local rect = display.newRect(go, x, y, width, height)
-	rect:setFillColor( 1, 0, 0, 0.4 )
 	local shapes = mode.shapes or {}
-	shapes[#shapes + 1] = rect
+	shapes[#shapes + 1] = {type='rect', data=rect}
 	mode.shapes = shapes
+	mode:renderCollisions()
 end
 
 mode[MODE_COL_CIRCLE] = {}
@@ -365,25 +441,20 @@ end
 function mode.MODE_COL_CIRCLE:refrect()
 	local go = mode:getTarget( )
 	if not go then return end
-	local x, y, radius
+	if go.numChildren <= 0 then return end
+	mode:clearShapes()
+	local obj = go[1]
+	local radius
 	if #mode.pointers <= 0 then
-		x, y = 0, 0
-		radius = go.width / 2
-	elseif #mode.pointers <= 1 then
-		x, y = 0, 0
-		radius = math.abs(mode.pointers[1].x - CX)
-	elseif #mode.pointers <= 2 then
-		x, y = mode.pointers[1].x - go.x, mode.pointers[1].y - go.y
-		radius = math.abs(mode.pointers[1].x - mode.pointers[2].x)
+		radius = obj.width / 2
+	elseif #mode.pointers >= 1 then
+		radius = math.abs(mode.pointers[1].x - go.x - obj.x)
 	end
-	local circle = display.newCircle( go, x, y, radius )
-	circle:setFillColor( 1, 0, 0, 0.4 )
 	local shapes = mode.shapes or {}
-	shapes[#shapes + 1] = circle
+	shapes[#shapes + 1] = {type='circle', data=radius}
 	mode.shapes = shapes
+	mode:renderCollisions()
 end
-
-
 
 local M = {}
 
@@ -428,36 +499,37 @@ function M:createObject(structure, sheetNumber)
 	local group = display.newGroup( )
 	group.x = CX
 	group.y = CY
+	local gobj
 	self.objectManager:insert(group)
 	if self.data.type == 'image' then
-		local img = createImage(structure, sheetNumber)
-		group:insert(img)
+		gobj = createImage(structure, sheetNumber)
+		group:insert(gobj)
 	end
 	-- local icon = display.newRoundedRect( group, 0, 0, 80, 80, 24 )
 	-- icon:setFillColor( 1, 0.3, 0.3, 0.6 )
 	-- local lbl = display.newText( group, 'G', 0, 0 , native.systemFontBold, 48 )
 	-- lbl:setFillColor( 0.5, 0.6, 0.7, 0.8 )
 	self.isMouseMoving = false
-	group:addEventListener( 'touch', function(event)
+	gobj:addEventListener( 'touch', function(event)
 		if self.mode.state == MODE_COL_POLY or
 			self.mode.state == MODE_COL_RECT or
 			self.mode.state == MODE_COL_CIRCLE then
 			return true
 		end
 		if event.phase == 'began' then
-			group:scale(1.2, 1.2)
+			-- gobj:scale(1.2, 1.2)
 			self.isMouseMoving = false
 		elseif event.phase == 'moved' then
-			group.x = event.x
-			group.y = event.y
+			gobj.x = event.x - group.x
+			gobj.y = event.y - group.y
 			self.isMouseMoving = true
 		elseif event.phase == 'ended' or event.phase == 'canceled' then
 			if self.isMouseMoving then else
 				self:modeSet():toggleMenu{x=event.x, y=event.y}
 			end
-			-- group:scale(1.0, 1.0)
-			group.xScale = 1.0
-			group.yScale = 1.0
+			-- gobj:scale(1.0, 1.0)
+			-- gobj.xScale = 1.0
+			-- gobj.yScale = 1.0
 		end
 		return true
 	end )
@@ -476,11 +548,13 @@ function M:show(params)
 	M.data = params.data
 	M.callback = params.callback
 	loadStructure()
-
+	physics.start()
+	physics.setDrawMode( "hybrid" )
 end
 
 function M:release()
-
+	physics.stop()
+	physics.setDrawMode( "normal" )
 end
 
 function M:create(params)
