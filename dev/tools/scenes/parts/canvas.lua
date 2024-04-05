@@ -448,7 +448,11 @@ function mode.MODE_COL_CIRCLE:refrect()
 	if #mode.pointers <= 0 then
 		radius = obj.width / 2
 	elseif #mode.pointers >= 1 then
-		radius = math.abs(mode.pointers[1].x - go.x - obj.x)
+		local w = mode.pointers[1].x - go.x - obj.x
+		local h = mode.pointers[1].y - go.y - obj.y
+		local sqrt = math.sqrt( w * w + h * h )
+		radius = math.abs(sqrt)
+		-- radius = math.abs(mode.pointers[1].x - go.x - obj.x)
 	end
 	local shapes = mode.shapes or {}
 	shapes[#shapes + 1] = {type='circle', data=radius}
