@@ -46,6 +46,7 @@ end
 
 function M:writeTable(path, tbl)
 	local strTbl = utils.serializeTable(tbl)
+	strTbl = 'return ' .. strTbl 
 	local file, error = io.open(path, 'w')
 	if not file then
 		print('Error: ', error)

@@ -585,8 +585,9 @@ function M:createGenBtn()
 		props.yScale = gobj.yScale
 		props.anchorX = gobj.anchorX
 		props.anchorY = gobj.anchorY
+		local path = self.data.structurePath.text
 		return {
-			path=self.data.structurePath.text,
+			path=path:gsub('/', '.'):gsub('.lua', ''),
 			frameNum=tonumber(self.data.sheetNumber.text),
 			props = props,
 			colliders = mode.shapes,
