@@ -18,6 +18,10 @@ function M:isDir(path)
   return path:sub(-1) == "/" or lfs.attributes(path, "mode") == "directory"
 end
 
+function M:baseDir()
+	return system.pathForFile( '', nil)
+end
+
 function M:writeString(path, str)
 	local file, error = io.open(path, 'w')
 	if not file then
@@ -36,6 +40,17 @@ function M:write(path, tbl)
 		print('Error: ', error)
 	else
 		file:write(jText)
+		io.close( file )
+	end
+end
+
+function M:writeTable(path, tbl)
+	local strTbl = utils.serializeTable(tbl)
+	local file, error = io.open(path, 'w')
+	if not file then
+		print('Error: ', error)
+	else
+		file:write(strTbl)
 		io.close( file )
 	end
 end

@@ -561,6 +561,58 @@ function M:release()
 	physics.setDrawMode( "normal" )
 end
 
+function M:createGenBtn()
+	local function getPath(dir, data)
+		local baseDir = storage:baseDir()
+		local parentDir = 
+			string.format('%ssrc/structures/gos', baseDir)
+		local path = nil
+		if storage:isDir(parentDir) then
+			path =
+				string.format('%s/%s.lua', parentDir, self.data.fileName.text)
+		end
+		return path
+	end
+	local function toData()
+		local props = {}
+		local target = mode:getTarget( )
+		local gobj
+		if target.numChildren > 0 then
+			gobj = target[1]
+		end
+		props.potation = gobj.rotation
+		props.xScale = gobj.xScale
+		props.yScale = gobj.yScale
+		props.anchorX = gobj.anchorX
+		props.anchorY = gobj.anchorY
+		return {
+			path=self.data.structurePath.text,
+			frameNum=tonumber(self.data.sheetNumber.text),
+			props = props,
+			colliders = mode.shapes,
+		}
+	end
+	local function write(path, data)
+		if storage:exists(path) then
+			return
+		end
+		storage:writeTable(path, data)
+	end
+	local function generate()
+		local path = getPath()
+		if not path then return end
+		local data = toData()
+		if not data then return end
+		write(path, data)
+	end
+	local genBtn = uiLib:createButton('Generate', 0, CH - 60, function(event)
+		if event.phase == 'ended' then
+			generate()
+		end
+	end)
+	self.HUD:insert(genBtn)
+end
+
 function M:create(params)
 	self:setup()
 
@@ -575,6 +627,7 @@ function M:create(params)
 	self:createContentBorder()
 	self:createCenterAixs()
 	self:startMouseEvent()
+	self:createGenBtn()
 end
 
 function M:createContentBorder()
