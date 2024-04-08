@@ -565,7 +565,7 @@ function M:createGenBtn()
 	local function getPath(dir, data)
 		local baseDir = storage:baseDir()
 		local parentDir = 
-			string.format('%ssrc/structures/gos', baseDir)
+			string.format('%ssrc/structures/gos/meta', baseDir)
 		local path = nil
 		if storage:isDir(parentDir) then
 			path =
@@ -592,18 +592,35 @@ function M:createGenBtn()
 			colliders = mode.shapes,
 		}
 	end
-	local function write(path, data)
+	local function createCustomfile()
+		local baseDir = storage:baseDir()
+		local parentDir = 
+			string.format('%ssrc/structures/gos/custom', baseDir)
+		local path = nil
+		if storage:isDir(parentDir) then
+			path = 
+				string.format('%s/%s_custom.lua', parentDir, self.data.fileName.text)
+		end
+		if not path then return end
+		local content = ''
+		content = content .. "require 'src.structures.gos.meta." .. self.data.fileName.text .. "'\n\n"
+		content = content .. "local M = {}\n\n"
+		content = content .. "return M\n"
+		storage:writeString(path, content)
+	end
+	local function writeProps(path, props)
 		if storage:exists(path) then
 			return
 		end
-		storage:writeTable(path, data)
+		storage:writeTable(path, props)
 	end
 	local function generate()
 		local path = getPath()
 		if not path then return end
-		local data = toData()
-		if not data then return end
-		write(path, data)
+		local props = toData()
+		if not props then return end
+		writeProps(path, props)
+		createCustomfile()
 	end
 	local genBtn = uiLib:createButton('Generate', 0, CH - 60, function(event)
 		if event.phase == 'ended' then
