@@ -7,6 +7,7 @@ local data = {
 	fileName=nil,
 	structurePath=nil,
 	sheetNumber=nil,
+	group='walls',
 }
 local sv
 local imSheet
@@ -163,8 +164,8 @@ local function createPreview()
 			uiLib:createButton('Preview', 0, 0, function(event)
 				if event.phase == 'ended' then
 					if #data.structurePath.text <= 0 then return end
+					if #data.fileName.text <= 0 then return end
 					utils.gotoGameObjectMaker{params={data=data, callback=function()
-
 					end}}
 				end
 			end)

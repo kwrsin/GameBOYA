@@ -595,7 +595,7 @@ function M:createGenBtn()
 	local function createCustomfile()
 		local baseDir = storage:baseDir()
 		local parentDir = 
-			string.format('%ssrc/structures/gos/custom', baseDir)
+			string.format('%ssrc/gos/%s', baseDir, self.data.group)
 		local path = nil
 		if storage:isDir(parentDir) then
 			path = 
