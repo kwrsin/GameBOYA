@@ -626,9 +626,15 @@ function M:createGenBtn()
 		if not path then return end
 		-- TODO: contents for each game object type
 		local content = ''
-		content = content .. "require 'src.structures.gos.meta." .. self.data.fileName.text .. "'\n\n"
-		content = content .. "local M = {}\n\n"
+		content = content .. "local params = require 'src.structures.gos.meta." .. self.data.fileName.text .. "'\n\n"
+		if self.data.group == 'walls' then
+			content = content .. "local generator = require 'src.gos.actors.actor_base'\n"
+		elseif self.data.group == 'actors' then
+			content = content .. "local generator = require 'src.gos.walls.wall_base'\n"
+		end
+		content = content .. "local M = generator(params)\n\n"
 		content = content .. "return M\n"
+
 		storage:writeString(path, content)
 	end
 	local function writeProps(path, props)
