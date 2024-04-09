@@ -23,6 +23,7 @@ MULTI_SELECTOR = 'dev.tools.scenes.MultiSelector'
 TEST_PUBSUB = 'dev.tools.scenes.tests.TestPubSub'
 ARRAY_MAKER = 'dev.tools.scenes.ArrayMaker'
 WALL_MAKER = 'dev.tools.scenes.ObjectMakers.WallMaker'
+ACTOR_MAKER = 'dev.tools.scenes.ObjectMakers.ActorMaker'
 
 IMAGES_PATH = '../../../assets/images'
 IMAGES_BASE_PATH = 'assets/images/'
@@ -126,6 +127,13 @@ function utils.gotoWallMaker(options)
 	utils.gotoScene(WALL_MAKER, options)
 end
 
+function utils.gotoActorMaker(options)
+	local options  = options or {}
+	options.effect = 'fromLeft' 
+	options.time = 400
+	utils.gotoScene(ACTOR_MAKER, options)
+end
+
 function utils.gotoTestPubSub(options)
 	utils.gotoScene(TEST_PUBSUB, options)
 end
@@ -173,7 +181,7 @@ system.setTapDelay( 0.2 )
 
 -- utils.gotoTop()
 -- utils.gotoGameObjectMaker()
-utils.gotoWallMaker()
+utils.gotoActorMaker()
 -- utils.gotoRelationsMaker()
 -- utils.gotoDataMaker()
 -- utils.gotoTestPubSub()

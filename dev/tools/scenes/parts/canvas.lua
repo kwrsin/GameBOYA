@@ -494,19 +494,30 @@ function M:setMode(state)
 	return self.mode
 end
 
-local function createImage(structure, sheetNumber)
+local function createImage(structure, data)
 	local sheet = graphics.newImageSheet( structure.path, structure.sheetParams )
-	return display.newImage( sheet, sheetNumber )
+	return display.newImage( sheet, tonumber(data.sheetNumber.text) )
 end
 
-function M:createObject(structure, sheetNumber)
+local function createSprite(structure, data)
+	local sheet = graphics.newImageSheet( structure.path, structure.sheetParams )
+	local spt =  display.newSprite( sheet, structure.sequences )
+	spt:setSequence( data.seqName.text )
+	spt:play()
+	return spt
+end
+
+function M:createObject(structure, data)
 	local group = display.newGroup( )
 	group.x = CX
 	group.y = CY
 	local gobj
 	self.objectManager:insert(group)
 	if self.data.type == 'image' then
-		gobj = createImage(structure, sheetNumber)
+		gobj = createImage(structure, data)
+		group:insert(gobj)
+	elseif self.data.type == 'sprite' then
+		gobj = createSprite(structure, data)
 		group:insert(gobj)
 	end
 	-- local icon = display.newRoundedRect( group, 0, 0, 80, 80, 24 )
@@ -546,7 +557,7 @@ function M:show(params)
 		local path = data.structurePath.text
 		if #path <= 0 then return end
 		local structure = require(path:gsub('/', '.'):gsub('.lua', ''))
-		local go = self:createObject(structure, tonumber(data.sheetNumber.text))
+		local go = self:createObject(structure, data)
 
 	end
 	M.data = params.data
@@ -586,12 +597,22 @@ function M:createGenBtn()
 		props.anchorX = gobj.anchorX
 		props.anchorY = gobj.anchorY
 		local path = self.data.structurePath.text
-		return {
-			path=path:gsub('/', '.'):gsub('.lua', ''),
-			frameNum=tonumber(self.data.sheetNumber.text),
-			props = props,
-			colliders = mode.shapes,
-		}
+		path=path:gsub('/', '.'):gsub('.lua', '')
+		if self.data.type == 'sprite' then
+			return {
+				path=path,
+				default=self.data.seqName.text,
+				props = props,
+				colliders = mode.shapes,
+			}
+		elseif self.data.type == 'image' then
+			return {
+				path=path,
+				frameNum=tonumber(self.data.sheetNumber.text),
+				props = props,
+				colliders = mode.shapes,
+			}
+		end
 	end
 	local function createCustomfile()
 		local baseDir = storage:baseDir()
@@ -603,6 +624,7 @@ function M:createGenBtn()
 				string.format('%s/%s_custom.lua', parentDir, self.data.fileName.text)
 		end
 		if not path then return end
+		-- TODO: contents for each game object type
 		local content = ''
 		content = content .. "require 'src.structures.gos.meta." .. self.data.fileName.text .. "'\n\n"
 		content = content .. "local M = {}\n\n"
