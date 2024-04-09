@@ -14,7 +14,7 @@ local imSheet
 local img
 local numFrames
 local SHEETNUMBER_DEFAULT = '1'
-local CURRENTDIR_HOME = '../../../../src/structures/gos'
+local CURRENTDIR_HOME = 'src/structures/gos'
 
 local function clearViewer()
 	if img then
@@ -32,10 +32,10 @@ local function loadImage()
 	if not path or #path <= 0 then return end
 	clearViewer()
 	local structure = require(path:gsub('/', '.'):gsub('.lua', ''))
+	data.sheetNumber.text = SHEETNUMBER_DEFAULT
+	numFrames = structure.sheetParams.numFrames
 	imSheet = graphics.newImageSheet( structure.path, structure.sheetParams )
 	img = display.newImage( sv, imSheet, tonumber(data.sheetNumber.text) )
-	numFrames = structure.sheetParams.numFrames
-	data.sheetNumber.text = SHEETNUMBER_DEFAULT
 end
 
 local function showImage()
@@ -76,7 +76,7 @@ local function sheetSelection()
 			data.structurePath,
 			uiLib:createButton('Edit', 0, 0, function(event)
 				if event.phase == 'ended' then
-					utils.gotoFilePicker{params={currentDir=CURRENTDIR_HOME, selectType='file', numOfSelections=1, callback=function(values, parentDir)
+					utils.gotoFilePicker{params={currentDir=storage:baseDir() .. CURRENTDIR_HOME, selectType='file', numOfSelections=1, callback=function(values, parentDir)
 							local file
 							for i, v in ipairs(values) do
 								if v.selected then
@@ -86,7 +86,7 @@ local function sheetSelection()
 							end
 							data.structurePath.text = ''
 							if file then
-								local dir = parentDir:gsub('^[\.\.\/]+', '')
+								local dir = parentDir:gsub(storage:baseDir(), ''):gsub('/', '.')
 								data.structurePath.text =
 									string.format( '%s.%s', dir, file)
 									loadImage()
