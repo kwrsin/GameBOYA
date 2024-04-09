@@ -179,9 +179,9 @@ end
 
 system.setTapDelay( 0.2 )
 
--- utils.gotoTop()
+utils.gotoTop()
 -- utils.gotoGameObjectMaker()
-utils.gotoActorMaker()
+-- utils.gotoActorMaker()
 -- utils.gotoRelationsMaker()
 -- utils.gotoDataMaker()
 -- utils.gotoTestPubSub()

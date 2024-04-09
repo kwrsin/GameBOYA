@@ -1,34 +1,45 @@
 local composer = require 'composer'
 local scene = composer.newScene( )
-local root = display.newGroup( )
+-- local root = display.newGroup( )
+
+local function createTitle()
+	local title = display.newText( 'Game Creator', 0, 0, native.systemFont, 24 )
+	return uiLib:layout{
+		background=display.newRect( 0, 0, display.actualContentWidth, HEADER_HEIGHT),
+		evenCols={
+			title,
+		},
+		bgcolor={1, 0, 0, 0.6}		
+	}
+end
 
 local function createMenu(sceneGroup)
-	root = display.newGroup( )
-	sceneGroup:insert(root)
-	local button = uiLib:createButton('DataMaker', 0, -120, function(event)
-		if event.phase == 'ended' then
-			utils.gotoDataMaker(options)
-		end
-	end)
-	button.anchorX = 1
-	root:insert(button)
-	button = uiLib:createButton('Relations', 0, -0, function(event)
-		if event.phase == 'ended' then
-			utils.gotoRelationsMaker(options)
-		end
-	end)
-	button.anchorX = 1
-	root:insert(button)
-	button = uiLib:createButton('GOS', 0, 120, function(event)
-		if event.phase == 'ended' then
-			print('GOS')
-		end
-	end)
-	button.anchorX = 1
-	root:insert(button)
-
-	root.x = CX
-	root.y = CY
+	uiLib:layout{
+		parent=sceneGroup,
+		evenRows={
+			createTitle(),			
+			uiLib:createButton('Data Maker', 0, 0, function(event)
+				if event.phase == 'ended' then
+					utils.gotoDataMaker(options)
+				end
+			end),
+			uiLib:createButton('Relations', 0, 0, function(event)
+				if event.phase == 'ended' then
+					utils.gotoRelationsMaker(options)
+				end
+			end),	
+			uiLib:createButton('Wall Maker', 0, 0, function(event)
+				if event.phase == 'ended' then
+					utils.gotoWallMaker()
+				end
+			end),				
+			uiLib:createButton('Actor Maker', 0, 0, function(event)
+				if event.phase == 'ended' then
+					utils.gotoActorMaker()
+				end
+			end),				
+		}
+	}
 end
 
 function scene:create(event)
