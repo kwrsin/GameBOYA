@@ -9,12 +9,70 @@ return function(params)
   M.messages={}
   M.buttons={}
 
+  function M:createSprite(params)
+    local function lastWord(path)
+      return string.match( path, '[^.]+$' )
+    end
+    local structure = require(params.path)
+    local key = lastWord(params.path)
+    self.go = display.newSprite( params.parent, gImageSheets[key], structure.sequences )
+    physics.addBody( self.go, 'static', self:getColliders(params) )
+    self.go.x, self.go.y = params.x, params.y
+    self.go.gravityScale = 1
+    self.go.isFixedRotation = true
+    self.go.class = params.class
+    self.go.rotation = params.props.rotation
+    self.go.xScale = params.props.xScale
+    self.go.yScale = params.props.yScale
+    self.go.anchorX = params.props.anchorX
+    self.go.anchorY = params.props.anchorY
+    
+    self:setSequence( params.default )
+  end
+
+  function M:getColliders(params)
+    local colliders = params.colliders
+    if not colliders then return end
+    local relation = params.relation or {}
+    local filters = {}
+    for k1, col in pairs(colliders) do
+      local body = {density=1, bounce=0, friction=1, filter=relation,}
+      if col.data then
+        if col.type == 'polygon' then
+          local shapes = {}
+          local length = 0
+          for k2, shape in pairs(col.data) do
+            length = length + 1
+          end
+          if length > 0 then
+            for i=1,length do
+              local keyName = string.format( 'key_%d', i )
+              shapes[#shapes + 1] = col.data[keyName]
+            end
+            body.shape = shapes
+            filters[#filters + 1] = body
+          end
+        elseif col.type == 'rect' then
+          body.box = col.data
+          filters[#filters + 1] = body
+          break
+        elseif col.type == 'circle' then
+          body.radius = col.data
+          filters[#filters + 1] = body
+          break
+        end
+      end
+    end
+    return unpack(filters)
+  end
+
   function M:play(sequence, delay)
     if self.go.currentSequence == sequence then
       return
     end
     self.delay = delay or 0
     self:setSequence(sequence)
+    if not self.go.play then return end
     self.go:play()
   end
 
@@ -29,6 +87,7 @@ return function(params)
 
   function M:setSequence(sequence)
     self.go.currentSequence = sequence
+    if not self.go.setSequence then return end
     self.go:setSequence(sequence)
   end
 

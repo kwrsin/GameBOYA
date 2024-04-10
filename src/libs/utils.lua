@@ -138,7 +138,13 @@ local function serializeTable(val, name, skipnewlines, depth)
 
     local tmp = string.rep(" ", depth)
 
-    if name then tmp = tmp .. name .. " = " end
+    if name then
+	    if type(name) == "number" then
+	    	tmp = tmp .. string.format('key_%d', name)  .. " = " 
+	    else 
+	    	tmp = tmp .. name .. " = " 
+	    end
+    end
 
     if type(val) == "table" then
         tmp = tmp .. "{" .. (not skipnewlines and "\n" or "")

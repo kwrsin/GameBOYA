@@ -591,7 +591,7 @@ function M:createGenBtn()
 		if target.numChildren > 0 then
 			gobj = target[1]
 		end
-		props.potation = gobj.rotation
+		props.rotation = gobj.rotation
 		props.xScale = gobj.xScale
 		props.yScale = gobj.yScale
 		props.anchorX = gobj.anchorX
@@ -604,6 +604,7 @@ function M:createGenBtn()
 				default=self.data.seqName.text,
 				props = props,
 				colliders = mode.shapes,
+				class=self.data.fileName.text
 			}
 		elseif self.data.type == 'image' then
 			return {
@@ -611,6 +612,7 @@ function M:createGenBtn()
 				frameNum=tonumber(self.data.sheetNumber.text),
 				props = props,
 				colliders = mode.shapes,
+				class=self.data.fileName.text,
 			}
 		end
 	end
@@ -626,14 +628,17 @@ function M:createGenBtn()
 		if not path then return end
 		-- TODO: contents for each game object type
 		local content = ''
-		content = content .. "local params = require 'src.structures.gos.meta." .. self.data.fileName.text .. "'\n\n"
+		content = content .. "local params = require 'src.structures.gos.meta." .. self.data.fileName.text .. "'\n"
 		if self.data.group == 'walls' then
-			content = content .. "local generator = require 'src.gos.actors.actor_base'\n"
+			content = content .. "local generator = require 'src.gos.walls.wall_base'\n\n"
 		elseif self.data.group == 'actors' then
-			content = content .. "local generator = require 'src.gos.walls.wall_base'\n"
+			content = content .. "local generator = require 'src.gos.actors.actor_base'\n\n"
 		end
-		content = content .. "local M = generator(params)\n\n"
-		content = content .. "return M\n"
+		content = content .. "return function(options)\n"
+		content = content .. "	local params = utils.merge(options or {}, params)\n"
+		content = content .. "	local M = generator(params)\n\n"
+		content = content .. "	return M\n"
+		content = content .. "end\n"
 
 		storage:writeString(path, content)
 	end

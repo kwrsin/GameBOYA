@@ -21,6 +21,7 @@ FILE_PICKER = 'dev.tools.scenes.FilePicker'
 RELATIONS_MAKER = 'dev.tools.scenes.RelationsMaker'
 MULTI_SELECTOR = 'dev.tools.scenes.MultiSelector'
 TEST_PUBSUB = 'dev.tools.scenes.tests.TestPubSub'
+PLAYGROUND = 'dev.tools.scenes.tests.playground'
 ARRAY_MAKER = 'dev.tools.scenes.ArrayMaker'
 WALL_MAKER = 'dev.tools.scenes.ObjectMakers.WallMaker'
 ACTOR_MAKER = 'dev.tools.scenes.ObjectMakers.ActorMaker'
@@ -138,6 +139,10 @@ function utils.gotoTestPubSub(options)
 	utils.gotoScene(TEST_PUBSUB, options)
 end
 
+function utils.gotoPlayground(options)
+	utils.gotoScene(PLAYGROUND, options)
+end
+
 function utils.hideFileSelector(options)
 	-- composer.hideOverlay( "fade", 400 )
 	utils.previous(options)
@@ -180,6 +185,7 @@ end
 system.setTapDelay( 0.2 )
 
 utils.gotoTop()
+-- utils.gotoPlayground()
 -- utils.gotoGameObjectMaker()
 -- utils.gotoActorMaker()
 -- utils.gotoRelationsMaker()
