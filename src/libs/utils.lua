@@ -167,6 +167,10 @@ local function serializeTable(val, name, skipnewlines, depth)
     return tmp
 end
 
+local function lastWord(path)
+  return string.match( path, '[^.]+$' )
+end
+
 M.dotPath = dotPath
 M.gotoScene = gotoScene
 M.removeScene = removeScene
@@ -180,6 +184,7 @@ M.merge = merge
 M.getImageSheets = getImageSheets
 M.normalize = normalize
 M.clamp = clamp
+M.lastWord = lastWord
 M.startCountdown = startCountdown
 M.resumeCountdown = resumeCountdown
 M.pauseCountdown = pauseCountdown

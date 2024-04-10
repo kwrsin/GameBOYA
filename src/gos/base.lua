@@ -1,3 +1,4 @@
+
 return function(params)
   local M = {}
   M.params = params
@@ -9,14 +10,7 @@ return function(params)
   M.messages={}
   M.buttons={}
 
-  function M:createSprite(params)
-    local function lastWord(path)
-      return string.match( path, '[^.]+$' )
-    end
-    local structure = require(params.path)
-    local key = lastWord(params.path)
-    self.go = display.newSprite( params.parent, gImageSheets[key], structure.sequences )
-    physics.addBody( self.go, 'static', self:getColliders(params) )
+  function M:setProperies(params)
     self.go.x, self.go.y = params.x, params.y
     self.go.gravityScale = 1
     self.go.isFixedRotation = true
@@ -26,8 +20,23 @@ return function(params)
     self.go.yScale = params.props.yScale
     self.go.anchorX = params.props.anchorX
     self.go.anchorY = params.props.anchorY
-    
+  end
+
+  function M:createSprite(params)
+    local structure = require(params.path)
+    local key = utils.lastWord(params.path)
+    self.go = display.newSprite( params.parent, gImageSheets[key], structure.sequences )
     self:setSequence( params.default )
+    physics.addBody( self.go, params.bodyType or 'dynamic', self:getColliders(params) )
+    self:setProperies(params)
+  end
+
+  function M:createImage(params)
+    local structure = require(params.path)
+    local key = utils.lastWord(params.path)
+    self.go = display.newImage( params.parent, gImageSheets[key], params.frameNum or 1  )    
+    physics.addBody( self.go, params.bodyType or 'static', self:getColliders(params) )
+    self:setProperies(params)
   end
 
   function M:getColliders(params)

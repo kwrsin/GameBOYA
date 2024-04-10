@@ -598,23 +598,18 @@ function M:createGenBtn()
 		props.anchorY = gobj.anchorY
 		local path = self.data.structurePath.text
 		path=path:gsub('/', '.'):gsub('.lua', '')
+		local dt = {
+			path=path,
+			props = props,
+			colliders = mode.shapes,
+			class=self.data.fileName.text
+		}
 		if self.data.type == 'sprite' then
-			return {
-				path=path,
-				default=self.data.seqName.text,
-				props = props,
-				colliders = mode.shapes,
-				class=self.data.fileName.text
-			}
+			dt.default=self.data.seqName.text
 		elseif self.data.type == 'image' then
-			return {
-				path=path,
-				frameNum=tonumber(self.data.sheetNumber.text),
-				props = props,
-				colliders = mode.shapes,
-				class=self.data.fileName.text,
-			}
+			dt.frameNum=tonumber(self.data.sheetNumber.text)
 		end
+		return dt
 	end
 	local function createCustomfile()
 		local baseDir = storage:baseDir()

@@ -182,6 +182,10 @@ function utils.merge(params, options)
 	return options
 end
 
+function utils.lastWord(path)
+  return string.match( path, '[^.]+$' )
+end
+
 system.setTapDelay( 0.2 )
 
 utils.gotoTop()
