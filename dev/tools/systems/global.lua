@@ -25,6 +25,7 @@ PLAYGROUND = 'dev.tools.scenes.tests.playground'
 ARRAY_MAKER = 'dev.tools.scenes.ArrayMaker'
 WALL_MAKER = 'dev.tools.scenes.ObjectMakers.WallMaker'
 ACTOR_MAKER = 'dev.tools.scenes.ObjectMakers.ActorMaker'
+LEVEL_MAKER = 'dev.tools.scenes.ObjectMakers.LevelMaker'
 
 IMAGES_PATH = '../../../assets/images'
 IMAGES_BASE_PATH = 'assets/images/'
@@ -135,6 +136,13 @@ function utils.gotoActorMaker(options)
 	utils.gotoScene(ACTOR_MAKER, options)
 end
 
+function utils.gotoLevelMaker(options)
+	local options  = options or {}
+	options.effect = 'fromLeft' 
+	options.time = 400
+	utils.gotoScene(LEVEL_MAKER, options)
+end
+
 function utils.gotoTestPubSub(options)
 	utils.gotoScene(TEST_PUBSUB, options)
 end
@@ -188,7 +196,8 @@ end
 
 system.setTapDelay( 0.2 )
 
-utils.gotoTop()
+-- utils.gotoTop()
+utils.gotoLevelMaker(options)
 -- utils.gotoPlayground()
 -- utils.gotoGameObjectMaker()
 -- utils.gotoActorMaker()
