@@ -190,6 +190,28 @@ function M:store()
 	end
 end
 
+function M:readAllImageSheets(dir, parent)
+	local dirpath = self:path(dir, parent)
+	local sheets = nil
+	if not self:isDir(dirpath) then return sheets end
+	local files = self:files(dirpath)
+	if not files or #files <= 0 then return sheets end
+	for i = #files, 1, -1 do
+		if files[i]:match( '.lua$' ) then else
+			table.remove( files, i )
+		end
+	end
+	sheets = {}
+	for i, f in ipairs(files) do
+		local key = f:gsub('.lua$', '')
+		local dotpath = string.format( '%s.%s', dir:gsub('/', '.'), key )
+		local structure = require(dotpath)
+		local imageSheet = graphics.newImageSheet( structure.path, structure.sheetParams )
+		sheets[key] = imageSheet
+	end
+	return sheets
+end
+
 --[[
 	TEST CODE
 ]]--

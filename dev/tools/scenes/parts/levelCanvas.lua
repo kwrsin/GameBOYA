@@ -13,6 +13,7 @@ local canvasScale = 1
 local gridSize = 32
 local MODE_GLOBAL = 'MODE_GLOBAL'
 local MODE_LOCAL = 'MODE_LOCAL'
+gImageSheets = {}
 
 local CURRENTDIR_HOME = 'src/gos'
 
@@ -243,6 +244,12 @@ local function content(sceneGroup)
 	background()
 end
 
+local function loadAllStructures()
+	gImageSheets = 
+		storage:readAllImageSheets(
+			'src/structures/gos', storage:baseDir())
+end
+
 function M:mouse(event)
 	if event.type == "move" then
 		mode:move(event)
@@ -275,6 +282,7 @@ end
 
 function M:create(sceneGroup)
 	physics.start( )
+	loadAllStructures()
 	content(sceneGroup)
 	Runtime:addEventListener( 'mouse', self )
 	Runtime:addEventListener( 'key', self )
