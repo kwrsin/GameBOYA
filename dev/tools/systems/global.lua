@@ -196,8 +196,8 @@ end
 
 system.setTapDelay( 0.2 )
 
--- utils.gotoTop()
-utils.gotoLevelMaker(options)
+utils.gotoTop()
+-- utils.gotoLevelMaker(options)
 -- utils.gotoPlayground()
 -- utils.gotoGameObjectMaker()
 -- utils.gotoActorMaker()

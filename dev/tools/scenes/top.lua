@@ -38,6 +38,11 @@ local function createMenu(sceneGroup)
 					utils.gotoActorMaker()
 				end
 			end),				
+			uiLib:createButton('Level Maker', 0, 0, function(event)
+				if event.phase == 'ended' then
+					utils.gotoLevelMaker()
+				end
+			end),				
 		}
 	}
 end
