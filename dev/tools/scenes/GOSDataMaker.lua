@@ -350,7 +350,7 @@ local function createGOSData()
 	str = str .. string.format('\tpath="%s",\n', filename.text)
 	str = str .. string.format(
 		'\tsheetParams = { numFrames = %s, height = %s, sheetContentHeight = %s, sheetContentWidth = %s, width = %s },\n' ,
-		numFrames.text, spriteHeight.text, imageHeight.text, spriteWidth.text, imageWidth.text )
+		numFrames.text, spriteHeight.text, imageHeight.text, imageWidth.text, spriteWidth.text )
 	str = str .. '\tsequences = {\n'
 	str = str .. getStrItems(sequences)
 	str = str .. '\t},\n'
