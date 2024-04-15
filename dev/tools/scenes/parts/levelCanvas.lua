@@ -506,6 +506,7 @@ function M:key(event)
 						createGizmo(gObj.go, generator)
 					else
 						local gObj = generator{parent=canvasObjects, x=originPoint.x + distX, y=originPoint.y + distY}
+						gObj.go.rotation = originPoint.targetGO.rotation
 						createGizmo(gObj.go, generator)
 					end
 				end
