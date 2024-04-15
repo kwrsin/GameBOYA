@@ -20,10 +20,28 @@ local onLeftShiftKey = false
 local onLeftAltKey = false
 local onXAxisKey = true
 local onYAxisKey = true
+local seq = 0
 
 gImageSheets = {}
 
 local CURRENTDIR_HOME = 'src/gos'
+
+local function getSequence()
+	seq = seq + 1
+	return seq
+end
+
+local function lastSelection()
+	local lastSeq = -1
+	local lastSel = nil
+	for k, sel in pairs(selections) do
+		if lastSeq < sel.sequence then
+			lastSeq = sel.sequence
+			lastSel = sel
+		end
+	end
+	return lastSel
+end
 
 local function eulerAngle(src)
 	local dashX, dashY = 0, 0
@@ -32,11 +50,13 @@ local function eulerAngle(src)
 	return dashX, dashY
 end
 
-local function createGizmo(targetGO)
+local function createGizmo(targetGO, generator)
 	local root = display.newGroup( )
 	root.targetGO = targetGO
 	canvasGizmos:insert(root)
 	root.x, root.y = root.targetGO.x, root.targetGO.y
+	root.generator = generator
+
 	local radius = 
 		math.round(
 			math.sqrt( (targetGO.width * targetGO.width) / 2 + (targetGO.height * targetGO.height) / 2)) * 1.2
@@ -50,6 +70,7 @@ local function createGizmo(targetGO)
 	function root:select()
 		self.selected = true
 		self:selectedColor()
+		self.sequence = getSequence()
 		selections[self.targetGO] = self
 	end
 	function root:unselect()
@@ -57,8 +78,7 @@ local function createGizmo(targetGO)
 		self:unselectedColor()
 		selections[self.targetGO] = nil
 	end
-	root:unselect()
-	root.rot = 0
+	root.rot = root.targetGO.rotation
 	root.localAxis = nil
 	root:select()
 
@@ -194,7 +214,7 @@ local function modeOrigin(name)
 				local path = string.format( '%s.%s', dir, file:gsub('.lua', ''))
 				local generator = require(path)
 				local gObj = generator{parent=canvasObjects, x=CX, y=CY}
-				origin.gizmo = createGizmo(gObj.go)
+				origin.gizmo = createGizmo(gObj.go, generator)
 			end
 		end}}
 	end
@@ -443,10 +463,10 @@ function M:key(event)
 	local reverse = onLeftAltKey and -1 or 1
 	if event.phase == 'up' then
 		if event.keyName == 'l' then
-			if mode.name == 'MODE_GLOBAL' then
-				switch('MODE_LOCAL')
+			if mode.name == MODE_GLOBAL then
+				switch(MODE_LOCAL)
 			else
-				switch('MODE_GLOBAL')
+				switch(MODE_GLOBAL)
 			end
 		elseif event.keyName == 'escape' then
 			mode:reset()
@@ -467,11 +487,34 @@ function M:key(event)
 		elseif event.keyName == 'y' then
 			onYAxisKey = not onYAxisKey
 			mode:update()
+		elseif event.keyName == 'd' then
+			if onLeftShiftKey then
+				local originPoint = lastSelection()
+				if originPoint then
+					local distX, distY = 0, 0
+					if onXAxisKey then
+						distX = originPoint.width / 2
+					end
+					if onYAxisKey then
+						distY = originPoint.height / 2
+					end
+					local generator = originPoint.generator
+					if mode.name == MODE_LOCAL then
+						distX, distY = eulerAngle{x=distX, y=distY, rotation=originPoint.targetGO.rotation}
+						local gObj = generator{parent=canvasObjects, x=originPoint.x + distX, y=originPoint.y + distY}
+						gObj.go.rotation = originPoint.targetGO.rotation
+						createGizmo(gObj.go, generator)
+					else
+						local gObj = generator{parent=canvasObjects, x=originPoint.x + distX, y=originPoint.y + distY}
+						createGizmo(gObj.go, generator)
+					end
+				end
+			end
 		end
 	elseif event.phase == 'down' then
 		if event.keyName == 'left' then
 			for i, sel in pairs(selections) do
-				if mode.name == 'MODE_LOCAL' then
+				if mode.name == MODE_LOCAL then
 					local eX, eY = eulerAngle({x=-speed, y=0, rotation=sel.targetGO.rotation})
 					sel.x = sel.x + eX
 					sel.y = sel.y + eY
@@ -482,7 +525,7 @@ function M:key(event)
 		end
 		if event.keyName == 'right' then
 			for k, sel in pairs(selections) do
-				if mode.name == 'MODE_LOCAL' then
+				if mode.name == MODE_LOCAL then
 					local eX, eY = eulerAngle({x=speed, y=0, rotation=sel.targetGO.rotation})
 					sel.x = sel.x + eX
 					sel.y = sel.y + eY
@@ -493,7 +536,7 @@ function M:key(event)
 		end
 		if event.keyName == 'up' then
 			for k, sel in pairs(selections) do
-				if mode.name == 'MODE_LOCAL' then
+				if mode.name == MODE_LOCAL then
 					local eX, eY = eulerAngle({x=0, y=-speed, rotation=sel.targetGO.rotation})
 					sel.x = sel.x + eX
 					sel.y = sel.y + eY
@@ -504,7 +547,7 @@ function M:key(event)
 		end
 		if event.keyName == 'down' then
 			for k, sel in pairs(selections) do
-				if mode.name == 'MODE_LOCAL' then
+				if mode.name == MODE_LOCAL then
 					local eX, eY = eulerAngle({x=0, y=speed, rotation=sel.targetGO.rotation})
 					sel.x = sel.x + eX
 					sel.y = sel.y + eY
