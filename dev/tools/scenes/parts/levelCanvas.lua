@@ -25,6 +25,13 @@ gImageSheets = {}
 
 local CURRENTDIR_HOME = 'src/gos'
 
+local function eulerAngle(src)
+	local dashX, dashY = 0, 0
+	dashX = math.cos( math.rad(src.rotation) ) * src.x +  -math.sin( math.rad(src.rotation) ) * src.y + 0 * 1
+	dashY = math.sin( math.rad(src.rotation) ) * src.x + math.cos( math.rad(src.rotation) ) * src.y + 0 * 1
+	return dashX, dashY
+end
+
 local function createGizmo(targetGO)
 	local root = display.newGroup( )
 	root.targetGO = targetGO
@@ -464,22 +471,46 @@ function M:key(event)
 	elseif event.phase == 'down' then
 		if event.keyName == 'left' then
 			for i, sel in pairs(selections) do
-				sel.x = sel.x - speed
+				if mode.name == 'MODE_LOCAL' then
+					local eX, eY = eulerAngle({x=-speed, y=0, rotation=sel.targetGO.rotation})
+					sel.x = sel.x + eX
+					sel.y = sel.y + eY
+				else
+					sel.x = sel.x - speed
+				end
 			end
 		end
 		if event.keyName == 'right' then
 			for k, sel in pairs(selections) do
-				sel.x = sel.x + speed
+				if mode.name == 'MODE_LOCAL' then
+					local eX, eY = eulerAngle({x=speed, y=0, rotation=sel.targetGO.rotation})
+					sel.x = sel.x + eX
+					sel.y = sel.y + eY
+				else
+					sel.x = sel.x + speed
+				end
 			end
 		end
 		if event.keyName == 'up' then
 			for k, sel in pairs(selections) do
-				sel.y = sel.y - speed
+				if mode.name == 'MODE_LOCAL' then
+					local eX, eY = eulerAngle({x=0, y=-speed, rotation=sel.targetGO.rotation})
+					sel.x = sel.x + eX
+					sel.y = sel.y + eY
+				else
+					sel.y = sel.y - speed
+				end
 			end
 		end
 		if event.keyName == 'down' then
 			for k, sel in pairs(selections) do
-				sel.y = sel.y + speed
+				if mode.name == 'MODE_LOCAL' then
+					local eX, eY = eulerAngle({x=0, y=speed, rotation=sel.targetGO.rotation})
+					sel.x = sel.x + eX
+					sel.y = sel.y + eY
+				else
+					sel.y = sel.y + speed
+				end
 			end
 		end
 		if event.keyName == 'r' then
