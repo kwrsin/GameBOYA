@@ -7,15 +7,122 @@ local status
 local buttons
 local canvasBackground
 local canvasObjects
+local canvasGizmos
+local viewEditor
 local canvasWidth = CW
 local canvasHeight = CH
 local canvasScale = 1
 local gridSize = 32
 local MODE_GLOBAL = 'MODE_GLOBAL'
 local MODE_LOCAL = 'MODE_LOCAL'
+local selections = {}
+local onLeftShiftKey = false
+local onLeftAltKey = false
+local onXAxisKey = true
+local onYAxisKey = true
+
 gImageSheets = {}
 
 local CURRENTDIR_HOME = 'src/gos'
+
+local function createGizmo(targetGO)
+	local root = display.newGroup( )
+	root.targetGO = targetGO
+	canvasGizmos:insert(root)
+	root.x, root.y = root.targetGO.x, root.targetGO.y
+	local radius = 
+		math.round(
+			math.sqrt( (targetGO.width * targetGO.width) / 2 + (targetGO.height * targetGO.height) / 2)) * 1.2
+	root.pointCircle = display.newCircle( root, 0, 0, radius )
+	function root:selectedColor()
+		root.pointCircle:setFillColor( 0.5, 0.5, 0.5, 0.3 )
+	end
+	function root:unselectedColor()
+		root.pointCircle:setFillColor( 0.9, 0.9, 0.9, 0.3 )
+	end
+	function root:select()
+		self.selected = true
+		self:selectedColor()
+		selections[self.targetGO] = self
+	end
+	function root:unselect()
+		self.selected = false
+		self:unselectedColor()
+		selections[self.targetGO] = nil
+	end
+	root:unselect()
+	root.rot = 0
+	root.localAxis = nil
+	root:select()
+
+	function root:createAxis()
+		root.localAxis = display.newGroup( )
+		root:insert(root.localAxis)
+		if onXAxisKey then
+			local xLine = display.newLine( root.localAxis, 0, 0, 48, 0 )
+			xLine:setStrokeColor( 1, 0, 0 )
+			root.localAxis:insert(xLine)
+		end
+		if onYAxisKey then
+			local yLine = display.newLine( root.localAxis, 0, 0, 0, 48)
+			root.localAxis:insert(yLine)
+			yLine:setStrokeColor( 1, 0, 0 )
+		end
+	end
+
+	function root:deleteAxis()
+		local la = display.remove(root.localAxis)
+		la = nil
+	end
+
+	function root:toggleLocalAxis(isShown)
+		if isShown then
+			if not root.localAxis then
+				self:createAxis()
+			end
+		else
+			if root.localAxis then
+				self:deleteAxis()
+			end
+		end
+
+	end
+	root:toggleLocalAxis(true)
+
+	-- physics.addBody( root, 'static', {isSensor=true, radius=30, filter={ categoryBits=2, maskBits=1 }} )
+	-- root.collision = function collision(self, event)
+	-- 	if event.phase == 'began' then
+	-- 		root:select()
+	-- 	elseif event.phase == 'ended' then
+	-- 		root:unselect()
+	-- 	end
+	-- end
+	-- root:addEventListener( 'collision' )
+	root:addEventListener('touch', function(event)
+		if event.phase == 'begain' then
+		elseif event.phase == 'moved' then
+		elseif event.phase == 'ended' or event.phase == 'canceled' then
+		end
+		if event.phase == 'ended' then
+			root.selected = not root.selected
+			if root.selected then
+				root:select()
+			else
+				root:unselect()
+			end
+		end
+		return true
+	end)
+	function root:enterFrame(event)
+		self.targetGO.x, self.targetGO.y = self.x, self.y
+		self.rot = self.rot % 360
+		self.targetGO.rotation = self.rot	
+		if self.localAxis then
+			self.localAxis.rotation = self.rot
+		end
+	end
+	return root
+end
 
 local function modeOrigin(name)
 	local origin = { 
@@ -66,6 +173,31 @@ local function modeOrigin(name)
 	function origin:getMenuItems()
 		return self:_getMenuItems()
 	end
+	function origin:addObject()
+		utils.gotoFilePicker{params={currentDir=storage:baseDir() .. CURRENTDIR_HOME, selectType='file', numOfSelections=1, callback=function(values, parentDir)
+			local file
+			for i, v in ipairs(values) do
+				if v.selected then
+					file = v.name
+					break
+				end
+			end
+			if file then
+				local dir = parentDir:gsub(storage:baseDir(), ''):gsub('/', '.')
+				local path = string.format( '%s.%s', dir, file:gsub('.lua', ''))
+				local generator = require(path)
+				local gObj = generator{parent=canvasObjects, x=CX, y=CY}
+				origin.gizmo = createGizmo(gObj.go)
+			end
+		end}}
+	end
+	function origin:update()
+		for k, sel in pairs(selections) do
+			sel:deleteAxis()
+			sel:createAxis()
+		end
+	end
+
 	return origin
 end
 local globalMode = modeOrigin(MODE_GLOBAL)
@@ -116,23 +248,23 @@ function globalMode:_getMenuItems()
 			title='ADD A OBJECT',
 			fn=function(event)
 				if event.phase == 'ended' then
-					utils.gotoFilePicker{params={currentDir=storage:baseDir() .. CURRENTDIR_HOME, selectType='file', numOfSelections=1, callback=function(values, parentDir)
-						local file
-						for i, v in ipairs(values) do
-							if v.selected then
-								file = v.name
-								break
-							end
-						end
-						if file then
-							local dir = parentDir:gsub(storage:baseDir(), ''):gsub('/', '.')
-							local path = string.format( '%s.%s', dir, file:gsub('.lua', ''))
-							local generator = require(path)
-							local gObj = generator{parent=canvasObjects, x=CX, y=CY}
-
-						end
-					self:toggleMenu()
-					end}}
+					-- utils.gotoFilePicker{params={currentDir=storage:baseDir() .. CURRENTDIR_HOME, selectType='file', numOfSelections=1, callback=function(values, parentDir)
+					-- 	local file
+					-- 	for i, v in ipairs(values) do
+					-- 		if v.selected then
+					-- 			file = v.name
+					-- 			break
+					-- 		end
+					-- 	end
+					-- 	if file then
+					-- 		local dir = parentDir:gsub(storage:baseDir(), ''):gsub('/', '.')
+					-- 		local path = string.format( '%s.%s', dir, file:gsub('.lua', ''))
+					-- 		local generator = require(path)
+					-- 		local gObj = generator{parent=canvasObjects, x=CX, y=CY}
+					-- 		createGizmo(gObj.go)
+					-- 	end
+					-- self:toggleMenu()
+					-- end}}
 				end
 				return true
 			end,
@@ -149,7 +281,28 @@ function globalMode:_getMenuItems()
 		},
 	}
 end
+
+local function invalidRect()
+	if viewEditor.numChildren <= 0 then return end
+	for i=viewEditor.numChildren, 1, -1 do
+		local obj = display.remove( viewEditor[i] )
+		obj = nil
+	end
+end
+
+local function drawRect(topleft, bottomright)
+	local r = display.newRect( viewEditor, topleft.x, topleft.y, bottomright.x - topleft.x, bottomright.y - topleft.y )
+	r.anchorX, r.anchorY = 0, 0
+	r:setFillColor( 1, 0, 0, 0.2 )
+end
+
+local function renderRect(topleft, bottomright)
+	invalidRect()
+	drawRect(topleft, bottomright)
+end
+
 local localMode = modeOrigin(MODE_LOCAL)
+localMode.startPos = {x=nil, y=nil}
 function localMode:_open()
 	print('now ' .. self.name)
 end
@@ -158,12 +311,22 @@ end
 function localMode:_move(event)
 end
 function localMode:_drag(event)
+	if event.isPrimaryButtonDown then
+		renderRect(self.startPos, event)
+		print('start')
+	end
 end
 function localMode:_scroll(event)
 end
 function localMode:_up(event)
+	self.startPos.x, self.startPos.y = nil, nil
+	invalidRect()
+	print('end')
 end
 function localMode:_down(event)
+	if event.isPrimaryButtonDown then
+		self.startPos.x, self.startPos.y = event.x, event.y
+	end
 end
 function localMode:_reset(event)
 end
@@ -189,7 +352,7 @@ local function switch(kind)
 	end
 end
 
-local function aixs(parent, x1, y1, x2, y2, color)
+local function axis(parent, x1, y1, x2, y2, color)
 	local ax = display.newLine(parent, x1, y1, x2, y2 )
 	ax:setStrokeColor(unpack(color))
 end
@@ -199,10 +362,10 @@ local function grid()
 	local cols = math.round(canvasWidth / gridSize)
 	local gridColor = {0.2, 0.2, 0.2}
 	for i=1,cols do
-		aixs(canvasBackground, (i-1) * gridSize, 0, (i-1) * gridSize, canvasHeight, gridColor)
+		axis(canvasBackground, (i-1) * gridSize, 0, (i-1) * gridSize, canvasHeight, gridColor)
 	end
 	for i=1,rows do
-		aixs(canvasBackground, 0, (i-1) * gridSize, canvasWidth, (i-1) * gridSize, gridColor)
+		axis(canvasBackground, 0, (i-1) * gridSize, canvasWidth, (i-1) * gridSize, gridColor)
 	end
 end
 
@@ -219,9 +382,9 @@ end
 local function background()
 	clearCanvasBackground()
 	grid()
-	local aixsColor = {0, 1, 0}
-	aixs(canvasBackground, 0, -canvasHeight, 0, canvasHeight, aixsColor)
-	aixs(canvasBackground, -canvasWidth, 0, canvasWidth, 0, aixsColor)
+	local axisColor = {0, 1, 0}
+	axis(canvasBackground, 0, -canvasHeight, 0, canvasHeight, axisColor)
+	axis(canvasBackground, -canvasWidth, 0, canvasWidth, 0, axisColor)
 	canvas:scale( canvasScale, canvasScale )
 end
 
@@ -233,6 +396,8 @@ local function content(sceneGroup)
 	canvas:insert(canvasBackground)
 	canvasObjects = display.newGroup( )
 	canvas:insert(canvasObjects)
+	canvasGizmos = display.newGroup( )
+	canvas:insert(canvasGizmos)
 	HUD = display.newGroup( )
 	sceneGroup:insert(HUD)
 	status = display.newGroup( )
@@ -241,6 +406,8 @@ local function content(sceneGroup)
 	HUD:insert(buttons)
 	menu = display.newGroup( )
 	HUD:insert(menu)
+	viewEditor = display.newGroup( )
+	HUD:insert(viewEditor)
 	background()
 end
 
@@ -265,8 +432,10 @@ function M:mouse(event)
 end
 
 function M:key(event)
+	local speed = onLeftShiftKey and 10 or 1
+	local reverse = onLeftAltKey and -1 or 1
 	if event.phase == 'up' then
-		if event.keyName == 'x' then
+		if event.keyName == 'l' then
 			if mode.name == 'MODE_GLOBAL' then
 				switch('MODE_LOCAL')
 			else
@@ -276,7 +445,55 @@ function M:key(event)
 			mode:reset()
 		elseif event.keyName == 'space' then
 			mode:toggleMenu()
+		elseif event.keyName == 'leftShift' then
+			onLeftShiftKey = false
+		elseif event.keyName == 'leftAlt' then
+			onLeftAltKey = false
+		elseif event.keyName == 'a' then
+			if onLeftShiftKey then
+				mode:addObject()
+			else
+			end
+		elseif event.keyName == 'x' then
+			onXAxisKey = not onXAxisKey
+			mode:update()
+		elseif event.keyName == 'y' then
+			onYAxisKey = not onYAxisKey
+			mode:update()
 		end
+	elseif event.phase == 'down' then
+		if event.keyName == 'left' then
+			for i, sel in pairs(selections) do
+				sel.x = sel.x - speed
+			end
+		end
+		if event.keyName == 'right' then
+			for k, sel in pairs(selections) do
+				sel.x = sel.x + speed
+			end
+		end
+		if event.keyName == 'up' then
+			for k, sel in pairs(selections) do
+				sel.y = sel.y - speed
+			end
+		end
+		if event.keyName == 'down' then
+			for k, sel in pairs(selections) do
+				sel.y = sel.y + speed
+			end
+		end
+		if event.keyName == 'r' then
+			for k, sel in pairs(selections) do
+				sel.rot = sel.rot + speed * reverse
+			end
+		end
+		if event.keyName == 'leftShift' then
+			onLeftShiftKey = true
+		end
+		if event.keyName == 'leftAlt' then
+			onLeftAltKey = true
+		end
+
 	end
 end
 
@@ -288,9 +505,20 @@ function M:create(sceneGroup)
 	Runtime:addEventListener( 'key', self )
 end
 
+local function enterFrame(event)
+	for k, sel in pairs(selections) do
+		sel:enterFrame(even)
+	end
+end
+
 function M:show()
 	print('lvl show')
 	switch(MODE_GLOBAL)
+	Runtime:addEventListener('enterFrame', enterFrame)
+end
+
+function M:hide()
+	Runtime:removeEventListener('enterFrame', enterFrame)
 end
 
 function M:destory()

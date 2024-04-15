@@ -18,6 +18,7 @@ end
 
 function scene:hide(event)
 	if event.phase == 'will' then
+		levelCanvas:hide()
 	elseif event.phase == 'did' then
 	end
 end
