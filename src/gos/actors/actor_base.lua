@@ -3,7 +3,7 @@ local generator = require 'src.gos.base'
 
 return function(params)
 	local M = generator(params)
-	M.go = M:createSprite(params)
+	M:createSprite(params)
 	M.defaultStatus = params.default
 	return M
 end
