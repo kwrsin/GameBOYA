@@ -1,8 +1,8 @@
 -- levelCanvas.lua
 --[[ TASKS
--- labels displaying
+-- label displaying
 -- z index
--- anchro switch
+-- anchor switch
 -- add relations
 -- generate level
 ]]--
@@ -42,6 +42,16 @@ local CURRENTDIR_HOME = 'src/gos'
 local function getSequence()
 	seq = seq + 1
 	return seq
+end
+
+local function removeObjects()
+	for k, sel in pairs(selections) do
+		selections[k] = nil
+		sel:removeSelf( )
+		sel = nil
+		k:removeSelf( )
+		k = nil
+	end
 end
 
 local function unselectAll()
@@ -674,6 +684,10 @@ function M:key(event)
 			end
 			if onYAxisKey then
 				arrangeYEvenly()
+			end
+		elseif event.keyName == 'deleteBack' then
+			if onLeftShiftKey then
+				removeObjects()
 			end
 		end
 	elseif event.phase == 'down' then
