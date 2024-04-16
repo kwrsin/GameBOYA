@@ -23,6 +23,8 @@ local onYAxisKey = true
 local onCenterKey = false
 local onLeftBracket = false
 local onRightBracket = false
+local onBigger = false
+local onSmaller = false
 local seq = 0
 
 gImageSheets = {}
@@ -44,6 +46,56 @@ local function lastSelection()
 		end
 	end
 	return lastSel
+end
+
+local function toXSortedSelections()
+	local sortedSelections = {}
+	local function insert(sel)
+		if #sortedSelections <= 0 then
+			sortedSelections[#sortedSelections + 1] = sel
+		else
+			local inserted = false
+			for i=1,#sortedSelections do
+				if sortedSelections[i].x > sel.x then
+					table.insert( sortedSelections, i , sel)
+					inserted = true
+					break
+				end 
+			end
+			if not inserted then
+				sortedSelections[#sortedSelections + 1] = sel
+			end
+		end
+	end
+	for k, sel in pairs(selections) do
+		insert(sel)
+	end
+	return sortedSelections
+end
+
+local function toYSortedSelections()
+	local sortedSelections = {}
+	local function insert(sel)
+		if #sortedSelections <= 0 then
+			sortedSelections[#sortedSelections + 1] = sel
+		else
+			local inserted = false
+			for i=1,#sortedSelections do
+				if sortedSelections[i].y > sel.y then
+					table.insert( sortedSelections, i , sel)
+					inserted = true
+					break
+				end 
+			end
+			if not inserted then
+				sortedSelections[#sortedSelections + 1] = sel
+			end
+		end
+	end
+	for k, sel in pairs(selections) do
+		insert(sel)
+	end
+	return sortedSelections
 end
 
 local function eulerAngle(src)
@@ -545,6 +597,30 @@ function M:key(event)
 				end
 			end
 			onRightBracket = false
+		elseif event.keyName == '.' then
+			if onXAxisKey then
+				for i, sel in ipairs(toXSortedSelections(selections)) do
+					sel.x = sel.x + (i-1) * speed
+				end
+			end
+			if onYAxisKey then
+				for i, sel in ipairs(toYSortedSelections(selections)) do
+					sel.y = sel.y + (i-1) * speed
+				end
+			end
+			onBigger = false
+		elseif event.keyName == ',' then
+			if onXAxisKey then
+				for i, sel in ipairs(toXSortedSelections(selections)) do
+					sel.x = sel.x - (i-1) * speed
+				end
+			end
+			if onYAxisKey then
+				for i, sel in ipairs(toYSortedSelections(selections)) do
+					sel.y = sel.y - (i-1) * speed
+				end
+			end
+			onSmaller = false
 		end
 	elseif event.phase == 'down' then
 		if event.keyName == 'left' then
@@ -610,6 +686,12 @@ function M:key(event)
 		end
 		if event.keyName == ']' then
 			onRightBracket = true
+		end
+		if event.keyName == '.' then
+			onBigger = true
+		end
+		if event.keyName == ',' then
+			onSmaller = true
 		end
 	end
 end
