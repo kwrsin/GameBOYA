@@ -20,6 +20,7 @@ local onLeftShiftKey = false
 local onLeftAltKey = false
 local onXAxisKey = true
 local onYAxisKey = true
+local onCenterKey = false
 local seq = 0
 
 gImageSheets = {}
@@ -511,6 +512,17 @@ function M:key(event)
 					end
 				end
 			end
+		elseif event.keyName == 'c' then
+			local centerX, centerY = canvasWidth / 2, canvasHeight / 2
+			for k, sel in pairs(selections) do
+				if onXAxisKey then
+					sel.x = centerX
+				end
+				if onYAxisKey then
+					sel.y = centerY
+				end
+			end
+			onCenterKey = false
 		end
 	elseif event.phase == 'down' then
 		if event.keyName == 'left' then
@@ -568,7 +580,9 @@ function M:key(event)
 		if event.keyName == 'leftAlt' then
 			onLeftAltKey = true
 		end
-
+		if event.keyName == 'c' then
+			onCenterKey = true
+		end
 	end
 end
 
@@ -597,6 +611,7 @@ function M:hide()
 end
 
 function M:destory()
+	seq=0
 	print('lvl end')
 end
 
