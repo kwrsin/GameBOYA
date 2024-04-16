@@ -3,8 +3,6 @@
 -- labels displaying
 -- z index
 -- anchro switch
--- unselecting
--- arrange even
 -- add relations
 -- generate level
 ]]--
@@ -121,9 +119,29 @@ local function toYSortedSelections()
 	return sortedSelections
 end
 
+local function arrangeXEvenly()
+	local sortedSelections = toXSortedSelections()
+	if #sortedSelections < 3 then return end
+	local length = sortedSelections[#sortedSelections].x - sortedSelections[1].x
+	local diff = length / (#sortedSelections - 1)
+	for i=2, (#sortedSelections - 1) do
+		sortedSelections[i].x = sortedSelections[i-1].x + diff
+	end
+end
+
+local function arrangeYEvenly()
+	local sortedSelections = toYSortedSelections()
+	if #sortedSelections < 3 then return end
+	local length = sortedSelections[#sortedSelections].y - sortedSelections[1].y
+	local diff = length / (#sortedSelections - 1)
+	for i=2, (#sortedSelections - 1) do
+		sortedSelections[i].y = sortedSelections[i-1].y + diff
+	end
+end
+
 local function eulerAngle(src)
 	local dashX, dashY = 0, 0
-	dashX = math.cos( math.rad(src.rotation) ) * src.x +  -math.sin( math.rad(src.rotation) ) * src.y + 0 * 1
+	dashX = math.cos( math.rad(src.rotation) ) * src.x + -math.sin( math.rad(src.rotation) ) * src.y + 0 * 1
 	dashY = math.sin( math.rad(src.rotation) ) * src.x + math.cos( math.rad(src.rotation) ) * src.y + 0 * 1
 	return dashX, dashY
 end
@@ -649,6 +667,13 @@ function M:key(event)
 				unselectAll()
 			else
 				selectAll()
+			end
+		elseif event.keyName == 'i' then
+			if onXAxisKey then
+				arrangeXEvenly()
+			end
+			if onYAxisKey then
+				arrangeYEvenly()
 			end
 		end
 	elseif event.phase == 'down' then
