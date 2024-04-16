@@ -1,7 +1,6 @@
 -- levelCanvas.lua
 --[[ TASKS
 -- label displaying
--- z index
 -- anchor switch
 -- add relations
 -- generate level
@@ -42,6 +41,20 @@ local CURRENTDIR_HOME = 'src/gos'
 local function getSequence()
 	seq = seq + 1
 	return seq
+end
+
+local function toFront()
+	for k, sel in pairs(selections) do
+		sel:toFront()
+		k:toFront()
+	end
+end
+
+local function toBack()
+	for k, sel in pairs(selections) do
+		sel:toBack()
+		k:toBack()
+	end
 end
 
 local function removeObjects()
@@ -688,6 +701,12 @@ function M:key(event)
 		elseif event.keyName == 'deleteBack' then
 			if onLeftShiftKey then
 				removeObjects()
+			end
+		elseif event.keyName == 'z' then
+			if onLeftShiftKey then
+				toBack()
+			else
+				toFront()
 			end
 		end
 	elseif event.phase == 'down' then
