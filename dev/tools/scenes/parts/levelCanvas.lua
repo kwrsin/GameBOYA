@@ -1,4 +1,14 @@
 -- levelCanvas.lua
+--[[ TASKS
+-- labels displaying
+-- z index
+-- anchro switch
+-- unselecting
+-- arrange even
+-- add relations
+-- generate level
+]]--
+
 local M = {}
 local canvas
 local HUD
@@ -34,6 +44,19 @@ local CURRENTDIR_HOME = 'src/gos'
 local function getSequence()
 	seq = seq + 1
 	return seq
+end
+
+local function unselectAll()
+	for k, sel in pairs(selections) do
+		sel:unselect()
+	end
+end
+
+local function selectAll()
+	if canvasGizmos.numChildren <= 0 then return end
+	for i = 1, canvasGizmos.numChildren  do
+	 	canvasGizmos[i]:select()
+	 end 
 end
 
 local function lastSelection()
@@ -621,6 +644,12 @@ function M:key(event)
 				end
 			end
 			onSmaller = false
+		elseif event.keyName == 'u' then
+			if onLeftShiftKey then
+				unselectAll()
+			else
+				selectAll()
+			end
 		end
 	elseif event.phase == 'down' then
 		if event.keyName == 'left' then
