@@ -21,6 +21,8 @@ local onLeftAltKey = false
 local onXAxisKey = true
 local onYAxisKey = true
 local onCenterKey = false
+local onLeftBracket = false
+local onRightBracket = false
 local seq = 0
 
 gImageSheets = {}
@@ -523,6 +525,26 @@ function M:key(event)
 				end
 			end
 			onCenterKey = false
+		elseif event.keyName == '[' then
+			for k, sel in pairs(selections) do
+				if onXAxisKey then
+					sel.x = 0
+				end
+				if onYAxisKey then
+					sel.y = 0
+				end
+			end
+			onLeftBracket = false
+		elseif event.keyName == ']' then
+			for k, sel in pairs(selections) do
+				if onXAxisKey then
+					sel.x = canvasWidth
+				end
+				if onYAxisKey then
+					sel.y = canvasHeight
+				end
+			end
+			onRightBracket = false
 		end
 	elseif event.phase == 'down' then
 		if event.keyName == 'left' then
@@ -582,6 +604,12 @@ function M:key(event)
 		end
 		if event.keyName == 'c' then
 			onCenterKey = true
+		end
+		if event.keyName == '[' then
+			onLeftBracket = true
+		end
+		if event.keyName == ']' then
+			onRightBracket = true
 		end
 	end
 end
