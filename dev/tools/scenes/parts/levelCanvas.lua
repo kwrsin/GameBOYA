@@ -2,7 +2,7 @@
 --[[ TASKS
 -- label displaying
 -- anchor switch
--- add relations
+-- change canvas size
 -- generate level
 ]]--
 
@@ -37,6 +37,36 @@ local seq = 0
 gImageSheets = {}
 
 local CURRENTDIR_HOME = 'src/gos'
+local RELEATION_PATH = 'src/structures/relations.lua'
+local ITEM_SELECTOR = 'FILTER SELECTOR'
+
+publisher:observe(BIND_SELECTEDITEM, {})
+local relations
+
+local function removeRelations()
+	for k, sel in pairs(selections) do
+		sel.selectedFilters = nil
+		sel.label1.text = ''
+	end
+end
+
+local function openRelations()
+	local p = string.format('%s%s', storage:baseDir(), RELEATION_PATH)
+	if not storage:exists(p) then return end
+	local dotPath = RELEATION_PATH:gsub('.lua', ''):gsub('/', '.')
+	relations = require(dotPath)
+	local filterNames = {}
+	for k, r in pairs(relations) do
+		filterNames[#filterNames + 1] = k
+	end
+	if #filterNames <= 0 then return end
+	utils.gotoFileSelector{
+		params={
+			title=ITEM_SELECTOR, 
+			items=filterNames
+		}
+	}
+end
 
 local function getSequence()
 	seq = seq + 1
@@ -197,8 +227,15 @@ local function createGizmo(targetGO, generator)
 		self:unselectedColor()
 		selections[self.targetGO] = nil
 	end
+	function root:createLabels()
+		local labels = display.newGroup( )
+		root:insert(labels)
+		root.label1 = display.newText( labels, '', 0, -20 , native.systemFont, 24 )
+		root.label1:setFillColor( 0, 1, 1 )
+	end
 	root.rot = root.targetGO.rotation
 	root.localAxis = nil
+	root:createLabels()
 	root:select()
 
 	function root:createAxis()
@@ -231,7 +268,6 @@ local function createGizmo(targetGO, generator)
 				self:deleteAxis()
 			end
 		end
-
 	end
 	root:toggleLocalAxis(true)
 
@@ -708,6 +744,12 @@ function M:key(event)
 			else
 				toFront()
 			end
+		elseif event.keyName == 'b' then
+			if onLeftShiftKey then
+				removeRelations()
+			else
+				openRelations()
+			end
 		end
 	elseif event.phase == 'down' then
 		if event.keyName == 'left' then
@@ -782,6 +824,19 @@ function M:key(event)
 		end
 	end
 end
+
+local selectedItem = {}
+function selectedItem.update(obj, event)
+	if relations == nil then return end
+	for k, sel in pairs(selections) do
+		sel.selectedFilters = {}
+		sel.selectedFilters[event.value.selectedItem] =
+			relations[event.value.selectedItem]
+		sel.label1.text = event.value.selectedItem
+	end
+end
+publisher:subscribe(BIND_SELECTEDITEM, selectedItem)
+
 
 function M:create(sceneGroup)
 	physics.start( )

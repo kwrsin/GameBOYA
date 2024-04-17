@@ -191,7 +191,7 @@ function M:store()
 end
 
 function M:readAllImageSheets(dir, parent)
-	local dirpath = self:path(dir, parent)
+	local dirpath = string.format('%s%s', parent, dir)
 	local sheets = nil
 	if not self:isDir(dirpath) then return sheets end
 	local files = self:files(dirpath)

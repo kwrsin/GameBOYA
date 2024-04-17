@@ -81,7 +81,9 @@ end
 
 local function createClose(sceneGroup)
 	local btn = uiLib:createButton('Close', CX, 900, function(event)
-		utils.hideFileSelector()
+		if event.phase == 'ended' then
+			utils.hideFileSelector()
+		end
 	end)
 	btn.anchorX = 1
 	sceneGroup:insert(btn)
