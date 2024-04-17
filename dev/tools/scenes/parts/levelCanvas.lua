@@ -754,6 +754,27 @@ function M:key(event)
 			else
 				openRelations()
 			end
+		elseif event.keyName == 'g' then
+			uiLib:input(nil, 'GRID SIZE', CX, CY, 'number', gridSize, function(event)
+				if event.phase == "ended" or event.phase == "submitted" then
+					gridSize = tonumber( event.target.text )
+					canvas:renderBG()
+				end
+			end)
+		elseif event.keyName == 'w' then
+			uiLib:input(nil, 'CANVAS WIDTH', CX, CY, 'number', canvasWidth, function(event)
+				if event.phase == "ended" or event.phase == "submitted" then
+					canvasWidth = tonumber( event.target.text )
+					canvas:renderBG()
+				end
+			end)
+		elseif event.keyName == 'h' then
+			uiLib:input(nil, 'CANVAS HEIGHT', CX, CY, 'number', canvasHeight, function(event)
+				if event.phase == "ended" or event.phase == "submitted" then
+					canvasHeight = tonumber( event.target.text )
+					canvas:renderBG()
+				end
+			end)
 		end
 	elseif event.phase == 'down' then
 		if event.keyName == 'left' then
