@@ -3,7 +3,8 @@
 -- label displaying
 -- anchor switch
 -- change canvas size
--- generate level
+-- help
+-- generate level + filename
 ]]--
 
 local M = {}
@@ -230,8 +231,10 @@ local function createGizmo(targetGO, generator)
 	function root:createLabels()
 		local labels = display.newGroup( )
 		root:insert(labels)
-		root.label1 = display.newText( labels, '', 0, -20 , native.systemFont, 24 )
+		root.label1 = display.newText( labels, '', 0, -40 , native.systemFont, 24 )
 		root.label1:setFillColor( 0, 1, 1 )
+		root.label2 = display.newText( labels, '', 0, 0 , native.systemFont, 12 )
+		root.label2:setFillColor( 0, 1, 0 )
 	end
 	root.rot = root.targetGO.rotation
 	root.localAxis = nil
@@ -302,6 +305,7 @@ local function createGizmo(targetGO, generator)
 		if self.localAxis then
 			self.localAxis.rotation = self.rot
 		end
+		self.label2.text = string.format( '%d, %d', math.round(self.targetGO.x), math.round(self.targetGO.y) )
 	end
 	return root
 end
@@ -614,7 +618,7 @@ function M:mouse(event)
 end
 
 function M:key(event)
-	local speed = onLeftShiftKey and 10 or 1
+	local speed = onLeftShiftKey and gridSize or 1
 	local reverse = onLeftAltKey and -1 or 1
 	if event.phase == 'up' then
 		if event.keyName == 'l' then
