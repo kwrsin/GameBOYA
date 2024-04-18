@@ -1,3 +1,4 @@
+logger = require 'src.systems.logger'
 publisher = require 'src.libs.bindings.publisher'
 storage = require 'src.libs.storage'
 uiLib = require 'src.libs.uiLib'
