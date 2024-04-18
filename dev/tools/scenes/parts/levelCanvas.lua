@@ -1,8 +1,6 @@
 -- levelCanvas.lua
 --[[ TASKS
--- label displaying
 -- anchor switch
--- change canvas size
 -- help
 -- generate level + filename
 ]]--
@@ -14,9 +12,11 @@ local menu
 local status
 local buttons
 local canvasBackground
-local canvasObjects
+local layers
 local canvasGizmos
 local viewEditor
+local currentLayerLabel
+local currentLayer
 local canvasWidth = CW
 local canvasHeight = CH
 local canvasScale = 1
@@ -107,7 +107,9 @@ end
 local function selectAll()
 	if canvasGizmos.numChildren <= 0 then return end
 	for i = 1, canvasGizmos.numChildren  do
-	 	canvasGizmos[i]:select()
+		if currentLayer == canvasGizmos[i].targetGO.parent then
+		 	canvasGizmos[i]:select()
+		end
 	 end 
 end
 
@@ -289,6 +291,7 @@ local function createGizmo(targetGO, generator)
 		elseif event.phase == 'ended' or event.phase == 'canceled' then
 		end
 		if event.phase == 'ended' then
+			if currentLayer == root.targetGO.parent then else return end
 			root.selected = not root.selected
 			if root.selected then
 				root:select()
@@ -372,7 +375,7 @@ local function modeOrigin(name)
 				local dir = parentDir:gsub(storage:baseDir(), ''):gsub('/', '.')
 				local path = string.format( '%s.%s', dir, file:gsub('.lua', ''))
 				local generator = require(path)
-				local gObj = generator{parent=canvasObjects, x=CX, y=CY}
+				local gObj = generator{parent=currentLayer, x=CX, y=CY}
 				origin.gizmo = createGizmo(gObj.go, generator)
 			end
 		end}}
@@ -446,7 +449,7 @@ function globalMode:_getMenuItems()
 					-- 		local dir = parentDir:gsub(storage:baseDir(), ''):gsub('/', '.')
 					-- 		local path = string.format( '%s.%s', dir, file:gsub('.lua', ''))
 					-- 		local generator = require(path)
-					-- 		local gObj = generator{parent=canvasObjects, x=CX, y=CY}
+					-- 		local gObj = generator{parent=currentLayer, x=CX, y=CY}
 					-- 		createGizmo(gObj.go)
 					-- 	end
 					-- self:toggleMenu()
@@ -574,20 +577,92 @@ local function background()
 	canvas:scale( canvasScale, canvasScale )
 end
 
+local function layerVisibility( flag )
+	currentLayer.isVisible = flag
+	if currentLayerLabel then
+		currentLayerLabel.text = currentLayer.name
+		if currentLayer.isVisible then
+			currentLayerLabel:setFillColor( 1, 0, 0 )
+		else
+			currentLayerLabel:setFillColor( 0, 1, 0, 0.5 )
+		end
+	end
+	unselectAll()
+end
+
+local function appendLayer( name )
+	unselectAll()
+	local layer = display.newGroup( )
+	layers:insert(layer)
+	if name then
+		layer.name = name
+	else
+		local date = os.date( "*t" )
+		layer.name = string.format( 'LAYER_%d%d%d_%d%d%d', date.year, date.month, date.day, date.hour, date.min, date.sec)
+	end
+	currentLayer = layer
+	layerVisibility(currentLayer.isVisible)
+end
+
+local function changeLayer( direction )
+	if layers.numChildren <= 1 then return end
+	local num = 0
+	for i=1,layers.numChildren do
+		if layers[i].name == currentLayer.name then
+			num = i
+			break;
+		end
+	end
+	if num <= 0 then return end
+	local idx = num - 1 + (direction and -1 or 1)
+	idx = (idx % layers.numChildren) + 1
+	if idx < 1 or idx > layers.numChildren then return end
+	unselectAll()
+	currentLayer = layers[idx]
+	layerVisibility(currentLayer.isVisible)
+end
+
+local function deleteLayer( )
+	if layers.numChildren <= 1 then return end
+	unselectAll()
+	for i=1,canvasGizmos.numChildren do
+		local giz = canvasGizmos[i]
+		for j=1,currentLayer.numChildren do
+			local go = currentLayer[j]
+			if giz.targetGO == go then
+				giz:removeSelf()
+				giz = nil
+			end
+		end
+	end
+	local l = currentLayer:removeSelf( )
+	l = nil
+	currentLayer = layers[layers.numChildren]
+	currentLayerLabel.text = currentLayer.name
+	layerVisibility(currentLayer.isVisible)
+end
+
+local function createCLLabel()
+	currentLayerLabel = display.newText(status, currentLayer.name, CX, 80, native.systemFont, 24)
+	layerVisibility(true)
+end
+
 local function content(sceneGroup)
 	canvas = display.newGroup( )
 	canvas.renderBG = background
 	sceneGroup:insert(canvas)
 	canvasBackground = display.newGroup( )
 	canvas:insert(canvasBackground)
-	canvasObjects = display.newGroup( )
-	canvas:insert(canvasObjects)
+	layers = display.newGroup( )
+	canvas:insert(layers)
+	appendLayer("Background")
 	canvasGizmos = display.newGroup( )
 	canvas:insert(canvasGizmos)
 	HUD = display.newGroup( )
 	sceneGroup:insert(HUD)
 	status = display.newGroup( )
 	HUD:insert(status)
+	createCLLabel()
 	buttons = display.newGroup( )
 	HUD:insert(buttons)
 	menu = display.newGroup( )
@@ -660,11 +735,11 @@ function M:key(event)
 					local generator = originPoint.generator
 					if mode.name == MODE_LOCAL then
 						distX, distY = eulerAngle{x=distX, y=distY, rotation=originPoint.targetGO.rotation}
-						local gObj = generator{parent=canvasObjects, x=originPoint.x + distX, y=originPoint.y + distY}
+						local gObj = generator{parent=currentLayer, x=originPoint.x + distX, y=originPoint.y + distY}
 						gObj.go.rotation = originPoint.targetGO.rotation
 						createGizmo(gObj.go, generator)
 					else
-						local gObj = generator{parent=canvasObjects, x=originPoint.x + distX, y=originPoint.y + distY}
+						local gObj = generator{parent=currentLayer, x=originPoint.x + distX, y=originPoint.y + distY}
 						gObj.go.rotation = originPoint.targetGO.rotation
 						createGizmo(gObj.go, generator)
 					end
@@ -809,6 +884,20 @@ function M:key(event)
 					sel.y = sel.y - speed
 				end
 			end
+		elseif event.keyName == 'k' then
+			if onLeftShiftKey then
+				uiLib:input(nil, 'LAYER NAME', CX, CY, 'string', 'LAYER ', function(event)
+					if event.phase == "ended" or event.phase == "submitted" then
+						appendLayer(#event.target.text > 0 and event.target.text or nil)
+					end
+				end)
+			elseif onLeftAltKey then
+				deleteLayer()
+			else
+				changeLayer()
+			end
+		elseif event.keyName == 'v' then
+			layerVisibility(not currentLayer.isVisible)
 		end
 		if event.keyName == 'down' then
 			for k, sel in pairs(selections) do
