@@ -625,9 +625,9 @@ end
 local function deleteLayer( )
 	if layers.numChildren <= 1 then return end
 	unselectAll()
-	for i=1,canvasGizmos.numChildren do
+	for i=canvasGizmos.numChildren, 1, -1 do
 		local giz = canvasGizmos[i]
-		for j=1,currentLayer.numChildren do
+		for j=currentLayer.numChildren, 1, -1 do
 			local go = currentLayer[j]
 			if giz.targetGO == go then
 				giz:removeSelf()
