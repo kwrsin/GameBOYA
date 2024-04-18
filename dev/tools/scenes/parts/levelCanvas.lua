@@ -1,7 +1,6 @@
 -- levelCanvas.lua
 --[[ TASKS
 -- anchor switcher
--- layer moving
 -- help
 -- generate level + filename
 ]]--
@@ -17,6 +16,7 @@ local layers
 local canvasGizmos
 local viewEditor
 local currentLayerLabel
+local modeStateLabel
 local currentLayer
 local canvasWidth = CW
 local canvasHeight = CH
@@ -540,6 +540,7 @@ local function switch(kind)
 		mode = globalMode
 		mode:open()
 	end
+	modeStateLabel.text = mode.name
 end
 
 local function axis(parent, x1, y1, x2, y2, color)
@@ -648,6 +649,11 @@ local function createCLLabel()
 	layerVisibility(true)
 end
 
+local function createModeStateLabel()
+	modeStateLabel = display.newText(status, mode.name, CX, 120, native.systemFont, 24)
+	modeStateLabel:setFillColor( 0, 1, 0 )
+end
+
 local function content(sceneGroup)
 	canvas = display.newGroup( )
 	canvas.renderBG = background
@@ -664,6 +670,7 @@ local function content(sceneGroup)
 	status = display.newGroup( )
 	HUD:insert(status)
 	createCLLabel()
+	createModeStateLabel()
 	buttons = display.newGroup( )
 	HUD:insert(buttons)
 	menu = display.newGroup( )
@@ -819,10 +826,18 @@ function M:key(event)
 				removeObjects()
 			end
 		elseif event.keyName == 'z' then
-			if onLeftShiftKey then
-				toBack()
+			if mode.name == MODE_LOCAL then
+				if onLeftShiftKey then
+					toBack()
+				else
+					toFront()
+				end
 			else
-				toFront()
+				if onLeftShiftKey then
+					currentLayer:toBack( )
+				else
+					currentLayer:toFront( )
+				end
 			end
 		elseif event.keyName == 'b' then
 			if onLeftShiftKey then
