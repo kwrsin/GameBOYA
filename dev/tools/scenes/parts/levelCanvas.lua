@@ -1,6 +1,7 @@
 -- levelCanvas.lua
 --[[ TASKS
--- anchor switch
+-- anchor switcher
+-- layer moving
 -- help
 -- generate level + filename
 ]]--
@@ -850,6 +851,20 @@ function M:key(event)
 					canvas:renderBG()
 				end
 			end)
+		elseif event.keyName == 'k' then
+			if onLeftShiftKey then
+				uiLib:input(nil, 'LAYER NAME', CX, CY, 'string', 'LAYER ', function(event)
+					if event.phase == "ended" or event.phase == "submitted" then
+						appendLayer(#event.target.text > 0 and event.target.text or nil)
+					end
+				end)
+			elseif onLeftAltKey then
+				deleteLayer()
+			else
+				changeLayer()
+			end
+		elseif event.keyName == 'v' then
+			layerVisibility(not currentLayer.isVisible)
 		end
 	elseif event.phase == 'down' then
 		if event.keyName == 'left' then
@@ -884,20 +899,6 @@ function M:key(event)
 					sel.y = sel.y - speed
 				end
 			end
-		elseif event.keyName == 'k' then
-			if onLeftShiftKey then
-				uiLib:input(nil, 'LAYER NAME', CX, CY, 'string', 'LAYER ', function(event)
-					if event.phase == "ended" or event.phase == "submitted" then
-						appendLayer(#event.target.text > 0 and event.target.text or nil)
-					end
-				end)
-			elseif onLeftAltKey then
-				deleteLayer()
-			else
-				changeLayer()
-			end
-		elseif event.keyName == 'v' then
-			layerVisibility(not currentLayer.isVisible)
 		end
 		if event.keyName == 'down' then
 			for k, sel in pairs(selections) do
