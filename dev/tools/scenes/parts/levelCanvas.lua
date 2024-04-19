@@ -862,15 +862,19 @@ function M:key(event)
 					end
 					local generator = originPoint.generator
 					local goPath = originPoint.goPath
+					local giz
 					if mode.name == MODE_LOCAL then
 						distX, distY = eulerAngle{x=distX, y=distY, rotation=originPoint.targetGO.rotation}
 						local gObj = generator{parent=currentLayer, x=originPoint.x + distX, y=originPoint.y + distY}
 						gObj.go.rotation = originPoint.targetGO.rotation
-						createGizmo(gObj, generator, goPath)
+						giz = createGizmo(gObj, generator, goPath)
 					else
 						local gObj = generator{parent=currentLayer, x=originPoint.x + distX, y=originPoint.y + distY}
 						gObj.go.rotation = originPoint.targetGO.rotation
-						createGizmo(gObj, generator, goPath)
+						giz = createGizmo(gObj, generator, goPath)
+					end
+					if giz and originPoint.selectedFilters then
+						giz.selectedFilters = utils.deepcopy(originPoint.selectedFilters)
 					end
 				end
 			end
