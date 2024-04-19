@@ -1,6 +1,7 @@
 -- levelCanvas.lua
 --[[ TASKS
 -- anchor switcher
+-- add musics and sounds
 -- help
 -- generate level + filename
 ]]--
@@ -203,16 +204,18 @@ local function eulerAngle(src)
 	return dashX, dashY
 end
 
-local function createGizmo(targetGO, generator)
+local function createGizmo(obj, generator, goPath)
 	local root = display.newGroup( )
-	root.targetGO = targetGO
+	root.targetGO = obj.go
 	canvasGizmos:insert(root)
 	root.x, root.y = root.targetGO.x, root.targetGO.y
 	root.generator = generator
+	root.params = obj.params or {}
+	root.goPath = goPath
 
 	local radius = 
 		math.round(
-			math.sqrt( (targetGO.width * targetGO.width) / 2 + (targetGO.height * targetGO.height) / 2)) * 1.2
+			math.sqrt( (root.targetGO.width * root.targetGO.width) / 2 + (root.targetGO.height * root.targetGO.height) / 2)) * 1.2
 	root.pointCircle = display.newCircle( root, 0, 0, radius )
 	function root:selectedColor()
 		root.pointCircle:setFillColor( 0.5, 0.5, 0.5, 0.3 )
@@ -377,7 +380,7 @@ local function modeOrigin(name)
 				local path = string.format( '%s.%s', dir, file:gsub('.lua', ''))
 				local generator = require(path)
 				local gObj = generator{parent=currentLayer, x=CX, y=CY}
-				origin.gizmo = createGizmo(gObj.go, generator)
+				origin.gizmo = createGizmo(gObj, generator, path)
 			end
 		end}}
 	end
@@ -451,7 +454,7 @@ function globalMode:_getMenuItems()
 					-- 		local path = string.format( '%s.%s', dir, file:gsub('.lua', ''))
 					-- 		local generator = require(path)
 					-- 		local gObj = generator{parent=currentLayer, x=CX, y=CY}
-					-- 		createGizmo(gObj.go)
+					-- 		createGizmo(gObj)
 					-- 	end
 					-- self:toggleMenu()
 					-- end}}
@@ -686,6 +689,97 @@ local function loadAllStructures()
 			'src/structures/gos', storage:baseDir())
 end
 
+local function getGizmo(go)
+	for i=canvasGizmos.numChildren,1, -1 do
+		if canvasGizmos[i].targetGO == go then
+			return canvasGizmos[i]
+		end
+	end
+	return nil
+end
+
+local function generateLevel(name)
+	local function structuresParagraph()
+		local result = 'M.structures={\n'
+		result = result .. '  names={\n'
+		for i=1,canvasGizmos.numChildren do
+			local giz = canvasGizmos[i]
+			local p = giz.params.path
+			if p then
+				local key = utils.lastWord(p)
+				result = result .. string.format( "    '%s'," , key )
+			end
+		end
+		result = result .. '  },\n'
+		result = result .. "  structPath=utils.dotPath('gos.', dot_structures)\n"
+		result = result .. '}\n'
+		return result
+	end
+	local function musicsParagraph()
+		local result = 'M.musics={\n'
+
+		result = result .. '}\n'
+		return result
+	end
+	local function soundsParagraph()
+		local result = 'M.sounds={\n'
+
+		result = result .. '}\n'
+		return result
+	end
+	local function goPathParagraph(go)
+		local result = '			{ '
+		local giz = getGizmo(go)
+		if giz then
+			local goPath = giz.goPath or ''
+			result = result .. string.format("class='%s',", goPath)
+		end
+		result = result .. ' },\n'
+		return result
+	end
+	local function gosParagralph()
+		local result = 'M.levels={\n'
+		if layers.numChildren > 0 then
+			for i = 1, layers.numChildren do
+				local layer = layers[i]
+				result = result .. '	{\n'
+				result = result .. '		gos={\n'
+				for j = 1, layer.numChildren do
+					local go = layer[j]
+					if go then
+						result = result .. goPathParagraph(go)
+					end
+				end
+				result = result .. '		},\n'
+				result = result .. '		level={\n'
+				result = result .. string.format("			name='%s',\n", layer.name)
+				result = result .. string.format("			alpha=%f,\n", layer.alpha)
+				result = result .. '		},\n'
+				result = result .. '	},\n'
+			end
+		end
+		result = result .. '}\n'
+		return result
+	end
+
+	local path = string.format('%s%s%s.lua',
+			storage:baseDir(), 'src/structures/levels/', name)
+	if storage:exists(path) then 
+		logger.info(
+			'Generation Error', 
+			string.format('"%s" already exist!', name))
+		return 
+	end
+	local result = 'local M = {}\n\n'
+	result = result .. structuresParagraph()
+	result = result .. musicsParagraph()
+	result = result .. soundsParagraph()
+	result = result .. gosParagralph()
+	result = result .. '\nreturn M\n'
+
+	storage:writeString(path, result)
+end
+
 function M:mouse(event)
 	if event.type == "move" then
 		mode:move(event)
@@ -741,15 +835,16 @@ function M:key(event)
 						distY = originPoint.height / 2
 					end
 					local generator = originPoint.generator
+					local goPath = originPoint.goPath
 					if mode.name == MODE_LOCAL then
 						distX, distY = eulerAngle{x=distX, y=distY, rotation=originPoint.targetGO.rotation}
 						local gObj = generator{parent=currentLayer, x=originPoint.x + distX, y=originPoint.y + distY}
 						gObj.go.rotation = originPoint.targetGO.rotation
-						createGizmo(gObj.go, generator)
+						createGizmo(gObj, generator, goPath)
 					else
 						local gObj = generator{parent=currentLayer, x=originPoint.x + distX, y=originPoint.y + distY}
 						gObj.go.rotation = originPoint.targetGO.rotation
-						createGizmo(gObj.go, generator)
+						createGizmo(gObj, generator, goPath)
 					end
 				end
 			end
@@ -880,6 +975,16 @@ function M:key(event)
 			end
 		elseif event.keyName == 'v' then
 			layerVisibility(not currentLayer.isVisible)
+		elseif event.keyName == 'o' then
+			if onLeftShiftKey and onLeftAltKey then
+				uiLib:input(nil, 'LEVEL NAME', CX, CY, 'string', 'level_ ', function(event)
+					if event.phase == "ended" or event.phase == "submitted" then
+						local name = event.target.text
+						if not name or #name <= 0 then return end
+						generateLevel(name)
+					end
+				end)
+			end
 		end
 	elseif event.phase == 'down' then
 		if event.keyName == 'left' then
