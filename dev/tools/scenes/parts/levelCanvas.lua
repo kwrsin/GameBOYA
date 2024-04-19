@@ -727,11 +727,28 @@ local function generateLevel(name)
 		result = result .. '}\n\n'
 		return result
 	end
+	local function relationParagraph(giz)
+		local result = ''
+		if giz.selectedFilters then
+			result = result .. string.format('					filter={\n')
+			result = result .. '						'
+			for name, bits in pairs(giz.selectedFilters) do
+				for title, bit in pairs(bits) do
+					result = result .. string.format('%s=%s, ', title, bit)
+				end
+			end
+			result = result .. '\n'
+			result = result .. string.format('					},\n')
+		end
+		return result
+	end
 	local function paramsParagraph(go, giz)
 		local result = '{\n'
 
 		result = result .. string.format('					x=%f,\n', go.x)
 		result = result .. string.format('					y=%f,\n', go.y)
+		result = result .. string.format('					rotation=%f,\n', go.rotation)
+		result = result .. relationParagraph(giz)
 		result = result .. '				},\n'
 		return result
 	end
