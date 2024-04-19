@@ -712,29 +712,38 @@ local function generateLevel(name)
 		end
 		result = result .. '  },\n'
 		result = result .. "  structPath=utils.dotPath('gos.', dot_structures)\n"
-		result = result .. '}\n'
+		result = result .. '}\n\n'
 		return result
 	end
 	local function musicsParagraph()
 		local result = 'M.musics={\n'
 
-		result = result .. '}\n'
+		result = result .. '}\n\n'
 		return result
 	end
 	local function soundsParagraph()
 		local result = 'M.sounds={\n'
 
-		result = result .. '}\n'
+		result = result .. '}\n\n'
+		return result
+	end
+	local function paramsParagraph(go, giz)
+		local result = '{\n'
+
+		result = result .. string.format('					x=%f,\n', go.x)
+		result = result .. string.format('					y=%f,\n', go.y)
+		result = result .. '				},\n'
 		return result
 	end
 	local function goPathParagraph(go)
-		local result = '			{ '
+		local result = '			{\n'
 		local giz = getGizmo(go)
 		if giz then
 			local goPath = giz.goPath or ''
-			result = result .. string.format("class='%s',", goPath)
+			result = result .. string.format("				class='%s',\n", goPath)
+			result = result .. string.format("				params=%s", paramsParagraph(go, giz))
 		end
-		result = result .. ' },\n'
+		result = result .. '			},\n'
 		return result
 	end
 	local function gosParagralph()
@@ -753,7 +762,7 @@ local function generateLevel(name)
 				result = result .. '		},\n'
 				result = result .. '		level={\n'
 				result = result .. string.format("			name='%s',\n", layer.name)
-				result = result .. string.format("			alpha=%f,\n", layer.alpha)
+				result = result .. string.format("			visible=%s,\n", layer.isVisible and 'true' or 'false')
 				result = result .. '		},\n'
 				result = result .. '	},\n'
 			end
