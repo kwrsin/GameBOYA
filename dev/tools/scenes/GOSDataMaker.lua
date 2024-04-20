@@ -51,7 +51,8 @@ local function fileField()
 	parent:insert(filename)
 	local btn = uiLib:createButton('Open', 80, -24, function(event)
 		if event.phase == 'ended' then
-			local files = storage:files(IMAGES_PATH)
+			local p = string.format('%s%s', storage:baseDir(), IMAGES_PATH)
+			local files = storage:files(p)
 			local items = {}
 			for i, file in ipairs(files) do
 				items[#items + 1] = string.format( '%s%s', IMAGES_BASE_PATH, file )
@@ -225,7 +226,8 @@ end
 local function soundNameField()
 	local addSoundBtn = uiLib:createButton('Add', 0, 0, function(event)
 		if event.phase == 'ended' then
-		local files = storage:files(SOUNDS_PATH)
+		local p = string.format( '%s%s', storage:baseDir(), SOUNDS_PATH )
+		local files = storage:files(p)
 		local items = {}
 		for i, file in ipairs(files) do
 			items[#items + 1] = string.format( '%s%s', SOUNDS_BASE_PATH, file )
@@ -364,7 +366,7 @@ end
 
 local function saveGosData(filename)
 	local str = createGOSData()
-	local path = string.format( '%s/%s.lua' , GOS_DATA_PATH, filename )
+	local path = string.format( '%s%s/%s.lua', storage:baseDir() , GOS_DATA_PATH, filename )
 	storage:writeString(path, str)
 end
 

@@ -252,7 +252,8 @@ local function createRelations()
 		evenCols={
 			uiLib:createButton('Generate', 0, 0, function(event)
 				if event.phase == 'ended' then
-					storage:writeString(RELATIONS_PATH, relations())
+					local p = string.format('%s%s', storage:baseDir(), RELATIONS_PATH)
+					storage:writeString(p, relations())
 				end
 			end)
 		}

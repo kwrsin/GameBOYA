@@ -28,12 +28,12 @@ WALL_MAKER = 'dev.tools.scenes.ObjectMakers.WallMaker'
 ACTOR_MAKER = 'dev.tools.scenes.ObjectMakers.ActorMaker'
 LEVEL_MAKER = 'dev.tools.scenes.ObjectMakers.LevelMaker'
 
-IMAGES_PATH = '../../../assets/images'
+IMAGES_PATH = 'assets/images'
 IMAGES_BASE_PATH = 'assets/images/'
-SOUNDS_PATH = '../../../assets/sounds'
+SOUNDS_PATH = 'assets/sounds'
 SOUNDS_BASE_PATH = 'assets/sounds/'
-GOS_DATA_PATH = '../../../src/structures/gos'
-RELATIONS_PATH = '../../../src/structures/relations_.lua'
+GOS_DATA_PATH = 'src/structures/gos'
+RELATIONS_PATH = 'src/structures/relations_.lua'
 
 HEADER_HEIGHT = 64
 
