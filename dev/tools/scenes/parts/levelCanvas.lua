@@ -1,9 +1,9 @@
 -- levelCanvas.lua
 --[[ TASKS
 -- anchor switcher
--- add musics and sounds
--- help
--- generate level + filename
+-- add musics and sounds.
+-- add isPlayer prop to a Object.
+-- display help.
 ]]--
 
 local M = {}
@@ -699,8 +699,8 @@ local function getGizmo(go)
 end
 
 local function generateLevel(name)
-	local function versionParagraph()
-		return 'M.edition=1\n\n'
+	local function editionParagraph(edition)
+		return string.format('M.edition=%d\n\n', edition)
 	end
 	local function structuresParagraph()
 		local result = 'M.structures={\n'
@@ -714,7 +714,7 @@ local function generateLevel(name)
 			end
 		end
 		result = result .. '  },\n'
-		result = result .. "  structPath=utils.dotPath('gos.', dot_structures)\n"
+		result = result .. "  structPath='src.structures.gos.'\n"
 		result = result .. '}\n\n'
 		return result
 	end
@@ -747,7 +747,6 @@ local function generateLevel(name)
 	end
 	local function paramsParagraph(go, giz)
 		local result = '{\n'
-
 		result = result .. string.format('					x=%f,\n', go.x)
 		result = result .. string.format('					y=%f,\n', go.y)
 		result = result .. string.format('					rotation=%f,\n', go.rotation)
@@ -800,7 +799,7 @@ local function generateLevel(name)
 		return 
 	end
 	local result = 'local M = {}\n\n'
-	result = result .. versionParagraph()
+	result = result .. editionParagraph(1)
 	result = result .. structuresParagraph()
 	result = result .. musicsParagraph()
 	result = result .. soundsParagraph()
