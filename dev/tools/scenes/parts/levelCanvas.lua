@@ -749,7 +749,9 @@ local function generateLevel(name)
 		local result = '{\n'
 		result = result .. string.format('					x=%f,\n', go.x)
 		result = result .. string.format('					y=%f,\n', go.y)
-		result = result .. string.format('					rotation=%f,\n', go.rotation)
+		result = result .. '					props={\n'
+		result = result .. string.format('						rotation=%f,\n', go.rotation)
+		result = result .. '					},\n'
 		result = result .. relationParagraph(giz)
 		result = result .. '				},\n'
 		return result

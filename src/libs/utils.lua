@@ -31,6 +31,21 @@ local function merge(params, options)
 	return options
 end
 
+local function fastCopy(src, dest)
+	for k, v in pairs(src) do
+		if type(v) == 'table' then
+			if k == 'parent' then
+				dest[k] = v
+			else
+				fastCopy(v, dest[k])
+			end
+		else
+			dest[k] = v
+		end
+	end
+	return dest
+end
+
 local function getImageSheets(resources)
 	local imageSheets = {}
 	for i, filename in ipairs(resources.names) do
@@ -181,6 +196,7 @@ M.toTable = toTable
 M.request = request
 M.toKeys = toKeys
 M.merge = merge
+M.fastCopy = fastCopy
 M.getImageSheets = getImageSheets
 M.normalize = normalize
 M.clamp = clamp

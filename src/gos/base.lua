@@ -21,6 +21,7 @@ return function(params)
     self.go.yScale = params.props.yScale
     self.go.anchorX = params.props.anchorX
     self.go.anchorY = params.props.anchorY
+    self.go.rotation = params.props.rotation
   end
 
   function M:createSprite(params)

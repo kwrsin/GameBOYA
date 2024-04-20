@@ -630,7 +630,7 @@ function M:createGenBtn()
 			content = content .. "local generator = require 'src.gos.actors.actor_base'\n\n"
 		end
 		content = content .. "return function(options)\n"
-		content = content .. "	local params = utils.merge(options or {}, params)\n"
+		content = content .. "	local params = utils.fastCopy(options or {}, params)\n"
 		content = content .. "	local M = generator(params)\n\n"
 		content = content .. "	return M\n"
 		content = content .. "end\n"
