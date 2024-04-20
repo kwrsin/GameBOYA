@@ -180,6 +180,21 @@ function utils.deepcopy(orig)
     return copy
 end
 
+function utils.fastCopy(src, dest)
+	for k, v in pairs(src) do
+		if type(v) == 'table' then
+			if k == 'parent' then
+				dest[k] = v
+			else
+				utils.fastCopy(v, dest[k])
+			end
+		else
+			dest[k] = v
+		end
+	end
+	return dest
+end
+
 
 function utils.merge(params, options)
 	if params == nil then
