@@ -23,6 +23,9 @@ local MODE_COL_CIRCLE = 'MODE_COL_CIRCLE'
 local TYPE_LABEL = 0
 local TYPE_BUTTON = 1
 local TYPE_TEXT = 2
+local objectManagerScale = 1
+local	oldX
+local	oldY
 
 local mode = {}
 function mode:getTarget()
@@ -32,8 +35,10 @@ function mode:getTarget()
 end
 
 function mode:key(event)
-	if event.phase == 'up' and event.keyName == 'enter' then
-		self:closeEditing()
+	if event.phase == 'up' then
+		if event.keyName == 'enter' then
+			self:closeEditing()
+		end
 	end
 end
 
@@ -141,7 +146,7 @@ function mode:createButtons(params)
 		if item.type == TYPE_TEXT then 
 
 		else
-			local btn = uiLib:createButton(key, params.x - 60, (i - 1) * 60 + params.y - menusPos, function(event)
+			local btn = uiLib:createButton(key, CX - 60, (i - 1) * 60 + CY - menusPos, function(event)
 				if event.phase == 'ended' then
 					item.fn(event)
 					mode:hide() 
@@ -168,7 +173,7 @@ function mode:toggleMenu(params)
 		end
 		params.itemsNum = itemsNum
 		local frameHeigth = itemsNum * 60  + 12
-		local frame = display.newRoundedRect( self.canvas.menuGroup, params.x, params.y, 400, frameHeigth, 30 )
+		local frame = display.newRoundedRect( self.canvas.menuGroup, CX, CY, 400, frameHeigth, 30 )
 		frame:setFillColor( 1, 0, 0, 0.7 )
 		mode:createButtons(params)
 	else
@@ -520,31 +525,14 @@ function M:createObject(structure, data)
 		gobj = createSprite(structure, data)
 		group:insert(gobj)
 	end
-	-- local icon = display.newRoundedRect( group, 0, 0, 80, 80, 24 )
-	-- icon:setFillColor( 1, 0.3, 0.3, 0.6 )
-	-- local lbl = display.newText( group, 'G', 0, 0 , native.systemFontBold, 48 )
-	-- lbl:setFillColor( 0.5, 0.6, 0.7, 0.8 )
-	self.isMouseMoving = false
 	gobj:addEventListener( 'touch', function(event)
 		if self.mode.state == MODE_COL_POLY or
 			self.mode.state == MODE_COL_RECT or
 			self.mode.state == MODE_COL_CIRCLE then
 			return true
 		end
-		if event.phase == 'began' then
-			-- gobj:scale(1.2, 1.2)
-			self.isMouseMoving = false
-		elseif event.phase == 'moved' then
-			gobj.x = event.x - group.x
-			gobj.y = event.y - group.y
-			self.isMouseMoving = true
-		elseif event.phase == 'ended' or event.phase == 'canceled' then
-			if self.isMouseMoving then else
-				self:modeSet():toggleMenu{x=event.x, y=event.y}
-			end
-			-- gobj:scale(1.0, 1.0)
-			-- gobj.xScale = 1.0
-			-- gobj.yScale = 1.0
+		if event.phase == 'ended' or event.phase == 'canceled' then
+			self:modeSet():toggleMenu{x=event.x, y=event.y}
 		end
 		return true
 	end )
@@ -664,10 +652,10 @@ function M:create(params)
 
 	M.root = display.newGroup( )
 	params.parent:insert(M.root)
-	M.HUD = display.newGroup( )
-	params.parent:insert(M.HUD)
 	M.objectManager = display.newGroup( )
 	params.parent:insert(M.objectManager)
+	M.HUD = display.newGroup( )
+	params.parent:insert(M.HUD)
 	M.marks = display.newGroup()
 	params.parent:insert(M.marks)
 	self:createContentBorder()
@@ -700,5 +688,67 @@ function M:startMouseEvent()
 		end
 	end )
 end
+
+local function drag(event)
+	if event.isPrimaryButtonDown then
+		if not oldX then oldX = event.x end
+		if not oldY then oldY = event.y end
+		local x, y = 0, 0
+		local diffX = event.x - oldX
+		local diffY = event.y - oldY
+		M.objectManager.x = M.objectManager.x + diffX
+		M.objectManager.y = M.objectManager.y + diffY
+		M.root.x = M.root.x + diffX
+		M.root.y = M.root.y + diffY
+		oldX = event.x
+		oldY = event.y
+	elseif event.isSecondaryButtonDown then
+		print('right')
+	end
+end
+
+local function scroll(event)
+	if event.scrollY > 0 then
+		objectManagerScale = 1 + 0.01
+	elseif event.scrollY < 0 then
+		objectManagerScale = 1 - 0.01
+	end
+	M.objectManager:scale( objectManagerScale, objectManagerScale )
+	M.root:scale( objectManagerScale, objectManagerScale )
+end
+
+local function reset(event)
+	M.objectManager.x = 0
+	M.objectManager.y = 0
+	M.root.x = 0
+	M.root.y = 0
+	M.objectManagerScale = 1
+	M.objectManager.xScale = 1
+	M.objectManager.yScale = 1
+	M.root.xScale = 1
+	M.root.yScale = 1
+	-- M.objectManager:scale( objectManagerScale, objectManagerScale )
+end
+
+Runtime:addEventListener( 'mouse', function(event)
+	if event.type == 'drag' then
+		drag(event)
+	elseif event.type == 'up' then
+		oldX, oldY = nil, nil
+	elseif event.type == 'scroll' then
+		scroll(event)
+	end
+end )
+Runtime:addEventListener( 'key', function(event)
+	if event.phase == 'up' then
+		if event.keyName == 'escape' then
+			reset()
+		elseif event.keyName == 'space' then
+			M:modeSet():toggleMenu{x=event.x, y=event.y}
+		end
+	end
+end )
+
+
 
 return M
