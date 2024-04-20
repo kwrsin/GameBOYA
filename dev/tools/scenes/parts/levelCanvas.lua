@@ -733,7 +733,7 @@ local function generateLevel(name)
 	local function relationParagraph(giz)
 		local result = ''
 		if giz.selectedFilters then
-			result = result .. string.format('					filter={\n')
+			result = result .. string.format('					relation={\n')
 			result = result .. '						'
 			for name, bits in pairs(giz.selectedFilters) do
 				for title, bit in pairs(bits) do

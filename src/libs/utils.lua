@@ -37,6 +37,7 @@ local function fastCopy(src, dest)
 			if k == 'parent' then
 				dest[k] = v
 			else
+				dest[k] = dest[k] or {}
 				fastCopy(v, dest[k])
 			end
 		else
