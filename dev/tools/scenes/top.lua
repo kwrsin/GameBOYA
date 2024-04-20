@@ -18,12 +18,12 @@ local function createMenu(sceneGroup)
 		parent=sceneGroup,
 		evenRows={
 			createTitle(),			
-			uiLib:createButton('Data Maker', 0, 0, function(event)
+			uiLib:createButton('Structure Maker', 0, 0, function(event)
 				if event.phase == 'ended' then
 					utils.gotoDataMaker(options)
 				end
 			end),
-			uiLib:createButton('Relations', 0, 0, function(event)
+			uiLib:createButton('Relation Maker', 0, 0, function(event)
 				if event.phase == 'ended' then
 					utils.gotoRelationsMaker(options)
 				end
