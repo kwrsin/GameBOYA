@@ -207,6 +207,7 @@ end
 local function createGizmo(obj, generator, goPath)
 	local root = display.newGroup( )
 	root.targetGO = obj.go
+	root.targetGO.gravityScale = 0
 	canvasGizmos:insert(root)
 	root.x, root.y = root.targetGO.x, root.targetGO.y
 	root.generator = generator
@@ -703,6 +704,7 @@ local function generateLevel(name)
 		return string.format('M.edition=%d\n\n', edition)
 	end
 	local function structuresParagraph()
+		local done = {}
 		local result = 'M.structures={\n'
 		result = result .. '  names={\n'
 		for i=1,canvasGizmos.numChildren do
@@ -710,7 +712,17 @@ local function generateLevel(name)
 			local p = giz.params.path
 			if p then
 				local key = utils.lastWord(p)
-				result = result .. string.format( "    '%s',\n" , key )
+				local multiple = false
+				for i, v in ipairs(done) do
+					if v == key then
+						multiple = true
+						break
+					end
+				end
+				if not multiple then
+					result = result .. string.format( "    '%s',\n" , key )
+					done[#done + 1] = key
+				end
 			end
 		end
 		result = result .. '  },\n'
