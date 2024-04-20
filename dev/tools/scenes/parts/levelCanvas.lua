@@ -699,6 +699,9 @@ local function getGizmo(go)
 end
 
 local function generateLevel(name)
+	local function versionParagraph()
+		return 'M.edition=1\n\n'
+	end
 	local function structuresParagraph()
 		local result = 'M.structures={\n'
 		result = result .. '  names={\n'
@@ -764,7 +767,7 @@ local function generateLevel(name)
 		return result
 	end
 	local function gosParagralph()
-		local result = 'M.levels={\n'
+		local result = 'M.layers={\n'
 		if layers.numChildren > 0 then
 			for i = 1, layers.numChildren do
 				local layer = layers[i]
@@ -777,7 +780,7 @@ local function generateLevel(name)
 					end
 				end
 				result = result .. '		},\n'
-				result = result .. '		level={\n'
+				result = result .. '		props={\n'
 				result = result .. string.format("			name='%s',\n", layer.name)
 				result = result .. string.format("			visible=%s,\n", layer.isVisible and 'true' or 'false')
 				result = result .. '		},\n'
@@ -797,6 +800,7 @@ local function generateLevel(name)
 		return 
 	end
 	local result = 'local M = {}\n\n'
+	result = result .. versionParagraph()
 	result = result .. structuresParagraph()
 	result = result .. musicsParagraph()
 	result = result .. soundsParagraph()

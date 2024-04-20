@@ -1,5 +1,6 @@
 -- content.lua
 local tileLoader = require 'src.libs.tileLoader'
+local levelLoader = require 'src.libs.levelLoader'
 local uiLib = require 'src.libs.uiLib'
 
 local M = require('src.scenes.contents.base')()
@@ -25,6 +26,20 @@ end
 
 local function removeEventListeners()
 	Runtime:removeEventListener( 'enterFrame', enterFrame )
+end
+
+local function loadLevel()
+  content = levelLoader{
+    level=selectedLevel, 
+    register=function(obj, params)
+      if obj.isActor then
+        M:entry(obj)
+      end
+      if params.isPlayer then
+        player = obj
+      end
+    end
+  }
 end
 
 local function createGameObject(params)
@@ -111,7 +126,11 @@ function M:create(parent, callback)
   actors = {}
 	gotoNext = callback
 	selectedLevel = require(storage:get('selectedLevel'))
-	tiled()
+  if selectedLevel.edition then
+    loadLevel()
+  else
+  	tiled()
+  end
   parent:insert(content)
 
 	addEventListeners()

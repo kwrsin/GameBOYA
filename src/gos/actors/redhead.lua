@@ -13,6 +13,7 @@ end
 
 return function(params)
 	local M = base(params)
+	M.isActor=true
 	M.speed = 2
 	M.go = createSprite(params)
 	M:play('down')
@@ -33,6 +34,12 @@ return function(params)
 		self.go.x = self.go.x + pos.x 
 		self.go.y = self.go.y + pos.y 
 	end
+
+  function M:getButtonStatus()
+  	if player == self then
+	    self:move(buttonStatus)	
+	  end
+  end
 
 	return M
 end

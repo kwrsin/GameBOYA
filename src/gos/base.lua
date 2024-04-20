@@ -9,6 +9,7 @@ return function(params)
   M.delay=0
   M.messages={}
   M.buttons={}
+  M.isActor=false
 
   function M:setProperies(params)
     self.go.x, self.go.y = params.x, params.y
