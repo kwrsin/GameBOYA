@@ -1010,7 +1010,7 @@ function M:key(event)
 			end)
 		elseif event.keyName == 'k' then
 			if onLeftShiftKey then
-				uiLib:input(nil, 'LAYER NAME', CX, CY, 'string', 'LAYER ', function(event)
+				uiLib:input(nil, 'LAYER NAME', CX, CY, 'string', 'LAYER', function(event)
 					if event.phase == "ended" or event.phase == "submitted" then
 						appendLayer(#event.target.text > 0 and event.target.text or nil)
 					end
@@ -1024,7 +1024,7 @@ function M:key(event)
 			layerVisibility(not currentLayer.isVisible)
 		elseif event.keyName == 'o' then
 			if onLeftShiftKey and onLeftAltKey then
-				uiLib:input(nil, 'LEVEL NAME', CX, CY, 'string', 'level_ ', function(event)
+				uiLib:input(nil, 'LEVEL NAME', CX, CY, 'string', 'level_', function(event)
 					if event.phase == "ended" or event.phase == "submitted" then
 						local name = event.target.text
 						if not name or #name <= 0 then return end
