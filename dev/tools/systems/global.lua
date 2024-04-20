@@ -186,6 +186,7 @@ function utils.fastCopy(src, dest)
 			if k == 'parent' then
 				dest[k] = v
 			else
+				dest[k] = dest[k] or {}
 				utils.fastCopy(v, dest[k])
 			end
 		else
