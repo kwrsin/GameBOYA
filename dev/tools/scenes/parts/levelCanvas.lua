@@ -710,7 +710,7 @@ local function generateLevel(name)
 			local p = giz.params.path
 			if p then
 				local key = utils.lastWord(p)
-				result = result .. string.format( "    '%s'," , key )
+				result = result .. string.format( "    '%s',\n" , key )
 			end
 		end
 		result = result .. '  },\n'
