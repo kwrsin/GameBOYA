@@ -1,3 +1,4 @@
+require 'src.systems.debug'
 logger = require 'src.systems.logger'
 publisher = require 'src.libs.bindings.publisher'
 storage = require 'src.libs.storage'

@@ -1,4 +1,7 @@
 -- global.lua
+require 'src.systems.debug'
+require 'src.systems.const'
+logger = require 'src.systems.logger'
 utils = require 'src.libs.utils'
 storage = require 'src.libs.storage'
 controller = require 'src.libs.controller'
@@ -21,3 +24,6 @@ buttonStatus = {
 	left=0,
 	btnA=0,
 }
+
+require 'src.systems.system'
+utils.gotoScene(loader_scene)
