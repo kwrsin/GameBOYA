@@ -3,14 +3,8 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
-require 'src.systems.debug'
--- require 'src.systems.const'
+--[ Game Main ]
 -- require 'src.systems.global'
--- require 'src.systems.system'
--- utils.gotoScene(loader_scene)
 
-
---[[
-	Development Tools
-]]--
+--[ Development Tools ]
 require 'dev.tools.systems.global' 
