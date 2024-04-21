@@ -11,6 +11,7 @@ DOT_CONTENTS = 'src.scenes.contents'
 DOT_STRUCTURES = 'src.structures'
 PATH_IMAGE = 'assets/images'
 
+INITIAL_LEVEL = 'levels.level01'
 
 GAME_SCENE = 'game'
 TITLE_SCENE = 'title'
@@ -22,6 +23,9 @@ CONTENT_X = 48
 CONTENT_Y = CY - 256 - 24
 FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
+
+QUEST_FLAGS = 'flags'
+SAVE_FILENAME = 'data1.js'
 
 TAG_TIMER = 'timer'
 TAG_TRANSITION = 'trans'

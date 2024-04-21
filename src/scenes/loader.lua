@@ -6,11 +6,11 @@ local scene = composer.newScene()
 -- }
 
 local function loadData()
-  local selectedData = 'data1.js'
+  local selectedData = SAVE_FILENAME
   return storage:open(selectedData, {
     name=selectedData, 
-    selectedLevel=utils.dotPath('levels.level01', DOT_STRUCTURES),
-    flags=require(utils.dotPath('flags', DOT_STRUCTURES))})
+    selectedLevel=utils.dotPath(INITIAL_LEVEL, DOT_STRUCTURES),
+    flags=require(utils.dotPath(QUEST_FLAGS, DOT_STRUCTURES))})
 end
 
 local function loadAssets(level)

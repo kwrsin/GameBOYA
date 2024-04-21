@@ -5,7 +5,7 @@ local structure = require 'src.structures.gos.cask'
 local function collision(self, event)
 	if event.phase == 'began' then
 		if event.other.class == 'player' then
-			content:stopTheWorld()
+			contentManager:stopTheWorld()
 			player:hit()
 		end
 	end

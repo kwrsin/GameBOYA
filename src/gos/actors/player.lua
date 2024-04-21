@@ -26,8 +26,8 @@ return function(params)
 
 	function M:advanceToGoal(destX)
 		if self.disabled then return end
-		-- content:disableActors()
-		content:stopTheWorld()
+		-- contentManager:disableActors()
+		contentManager:stopTheWorld()
 
 		local wrapped
 		wrapped = coroutine.wrap(function()
@@ -38,7 +38,7 @@ return function(params)
 				self.go.alpha = 1
 			end, 1)
 			coroutine.yield()
-			content:restartTheWorld()
+			contentManager:restartTheWorld()
 			self:disable()
 
 			local direction = destX - sprite.x
@@ -58,12 +58,12 @@ return function(params)
 			end,  count )
 			coroutine.yield()
 			sound:effect('lblclear')
-			content:disappearAll()
+			contentManager:disappearAll()
 			timer.performWithDelay( 1000, function(e)
 				wrapped()
 			end, 1 )
 			coroutine.yield()
-			content:result()
+			contentManager:result()
 		end)
 		wrapped()
 
@@ -78,7 +78,7 @@ return function(params)
   	self:play('lose')
   	sound:effect('aboyaHit')
 		timer.performWithDelay( 1000, function()
-			content:restartTheWorld()
+			contentManager:restartTheWorld()
 			self:fall() 
 		end, 1 )
   end
@@ -93,7 +93,7 @@ return function(params)
 		self.go.isFixedRotation = true
 		sound:effect('aboyaFall')
 		timer.performWithDelay( 2000, function()
-			content:result()
+			contentManager:result()
 		end ,1 )
   end
 
