@@ -31,10 +31,10 @@ return function(params)
 
 		local wrapped
 		wrapped = coroutine.wrap(function()
-			transition.blink( self.go, { time=300, tag=tagBlink })
+			transition.blink( self.go, { time=300, tag=TAG_BLINK })
 			timer.performWithDelay( 600, function(event)
 				wrapped()
-				transition.cancel( tagBlink )
+				transition.cancel( TAG_BLINK )
 				self.go.alpha = 1
 			end, 1)
 			coroutine.yield()

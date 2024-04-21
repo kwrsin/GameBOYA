@@ -23,6 +23,10 @@ CONTENT_Y = CY - 256 - 24
 FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
 
+TAG_TIMER = 'timer'
+TAG_TRANSITION = 'trans'
+TAG_BLINK = 'blink'
+
 VC_POS = {x=-CX+120, y=CY - 120}
 VBA_POS = {x=CX-120, y=CY - 120}
 

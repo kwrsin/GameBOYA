@@ -13,9 +13,6 @@ gImageSheets = nil
 player = nil
 
 mRatio = 2
-tagTimer = 'timer'
-tagTransition = 'trans'
-tagBlink = 'blink'
 
 buttonStatus = {
 	up=0,

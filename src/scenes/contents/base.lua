@@ -98,8 +98,8 @@ return function()
 
 	function M:stopTheWorld()
 	  physics.pause()
-	  timer.pause(tagTimer)
-	  transition.pause(tagTransition)
+	  timer.pause(TAG_TIMER)
+	  transition.pause(TAG_TRANSITION)
 	  for i, actor in ipairs(actors) do
 	    if actor then
 	      actor:freez()
@@ -109,8 +109,8 @@ return function()
 
 	function M:restartTheWorld()
 	  physics.start()
-	  timer.resume(tagTimer)
-	  transition.resume(tagTransition)
+	  timer.resume(TAG_TIMER)
+	  transition.resume(TAG_TRANSITION)
 	  for i, actor in ipairs(actors) do
 	    if actor then
 	      actor:restart()
