@@ -1,4 +1,4 @@
--- content.lua
+-- contentManager.lua
 local M = require('src.scenes.contents.base')()
 
 function M:result()
@@ -6,9 +6,7 @@ function M:result()
   storage:put('selectedLevel', utils.dotPath('levels.level01', DOT_STRUCTURES))
   storage:store()
   player = nil
-  if self.gotoNext then
-    self.gotoNext()
-  end
+  self:gotoNext()
 end
 
 function M:start()

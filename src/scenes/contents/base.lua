@@ -8,7 +8,6 @@ local actors
 
 return function()
 	local M = {}
-	M.gotoNext = nil
 
 	local function enterFrame(event)
 	  if player then
@@ -69,9 +68,8 @@ return function()
 	  return content  
 	end
 
-	function M:create(parent, callback)
+	function M:create(parent)
 	  actors = {}
-		M.gotoNext = callback
 		selectedLevel = require(storage:get('selectedLevel'))
 	  if selectedLevel.edition then
 	    loadLevel()
@@ -138,6 +136,10 @@ return function()
 	function M:destroy()
 		removeEventListeners()
 	  sound:reset(true)
+	end
+
+	function M:gotoNext()
+		utils.gotoScene('intermid')
 	end
 
 	return M

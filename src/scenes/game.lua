@@ -4,9 +4,7 @@ local scene = composer.newScene( )
 
 function scene:create(event)
 	local sceneGroup = self.view
-	contentManager:create(sceneGroup, function()
-		utils.gotoScene('intermid')
-	end)
+	contentManager:create(sceneGroup)
 end
 
 function scene:show(event)
