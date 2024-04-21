@@ -93,8 +93,8 @@ sceneGroup
 ]]--
 function M:create(parent, options)
   local layers = options.layers
-  viewWidth = options.viewWidth or cw
-  viewHeight = options.viewHeight or ch
+  viewWidth = options.viewWidth or CW
+  viewHeight = options.viewHeight or CH
   contentWidth = viewWidth
   contentHeight = viewHeight
 

@@ -26,4 +26,4 @@ buttonStatus = {
 }
 
 require 'src.systems.system'
-utils.gotoScene(loader_scene)
+utils.gotoScene(LOADER_SCENE)

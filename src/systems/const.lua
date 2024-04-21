@@ -1,28 +1,28 @@
 -- const.lua
 
-cx=display.contentCenterX
-cy=display.contentCenterY
-cw=display.contentWidth
-ch=display.contentHeight
+CX=display.contentCenterX
+CY=display.contentCenterY
+CW=display.contentWidth
+CH=display.contentHeight
 
-dot_scenes = 'src.scenes'
-dot_go = 'src.gos'
-dot_contents = 'src.scenes.contents'
-dot_structures = 'src.structures'
-path_image = 'assets/images'
+DOT_SCENES = 'src.scenes'
+DOT_GO = 'src.gos'
+DOT_CONTENTS = 'src.scenes.contents'
+DOT_STRUCTURES = 'src.structures'
+PATH_IMAGE = 'assets/images'
 
 
-game_scene = 'game'
-title_scene = 'title'
-loader_scene = 'loader'
-score_scene = 'score_scene'
-view_width = 480
-view_height = 320
-content_x = 48
-content_y = cy - 256 - 24
-frameWidth = 100
-frameHeight = 100
+GAME_SCENE = 'game'
+TITLE_SCENE = 'title'
+LOADER_SCENE = 'loader'
+SCORE_SCENE = 'SCORE_SCENE'
+VIEW_WIDTH = 480
+VIEW_HEIGHT = 320
+CONTENT_X = 48
+CONTENT_Y = CY - 256 - 24
+FRAME_WIDTH = 100
+FRAME_HEIGHT = 100
 
-vc_pos = {x=-cx+120, y=cy - 120}
-vba_pos = {x=cx-120, y=cy - 120}
+VC_POS = {x=-CX+120, y=CY - 120}
+VBA_POS = {x=CX-120, y=CY - 120}
 

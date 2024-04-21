@@ -5,21 +5,21 @@ local uiLib = require 'src.libs.uiLib'
 
 local function getContentBackground()
     local bg = display.newGroup()
-    -- local r = display.newRect(bg, cx, cy, cw, ch)
+    -- local r = display.newRect(bg, CX, CY, CW, CH)
     -- r:setFillColor(0, 0, 0)
     return bg
 end
 
 local function gameGuyBody(parent)
-	local top = display.newRect(parent, cx, -128, 640, 260)
+	local top = display.newRect(parent, CX, -128, 640, 260)
 	top:setFillColor( 0, 0, 0 )
 	top.anchorY = 0
-	local buttom = display.newRect(parent, cx, ch + 160, 640, 320)
+	local buttom = display.newRect(parent, CX, CH + 160, 640, 320)
 	buttom:setFillColor( 0, 0, 0 )
 	buttom.anchorY = 1
     local img = display.newImageRect(parent, 'assets/images/gameguy.png', 648, 1264)
-    img.x = cx
-    img.y = cy + 64
+    img.x = CX
+    img.y = CY + 64
 end
 
 local function testFrameBody(parent)
@@ -35,8 +35,8 @@ local function testFrameBody(parent)
 					} )
 	uiLib:nineslice{
 		parent=parent,
-		x=cx,
-		y=cy,
+		x=CX,
+		y=CY,
 		width=512,
 		height=512,
 		barsize=64,
@@ -51,7 +51,7 @@ local function getContentForeground()
 	-- gameGuyBody(parent)
 
     virtualControlelr:createVirtualController(parent)
-    virtualControlelr:createCursor({x=vc_pos.x, y=vc_pos.y}, function(cursor)
+    virtualControlelr:createCursor({x=VC_POS.x, y=VC_POS.y}, function(cursor)
     	if not player then return end
     	if player.disabled then return end
     	local keys = utils.toKeys(cursor)
@@ -60,7 +60,7 @@ local function getContentForeground()
     	-- buttonStatus.right = keys.right
     	-- buttonStatus.left = keys.left
     end)
-    virtualControlelr:createButton({x=vba_pos.x, y=vba_pos.y}, function(button)
+    virtualControlelr:createButton({x=VBA_POS.x, y=VBA_POS.y}, function(button)
         if not player then return end
     	if player.disabled then return end
     	-- buttonStatus.btnA = button.counter

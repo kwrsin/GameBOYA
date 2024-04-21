@@ -6,12 +6,12 @@ local scene = composer.newScene( )
 local cBanner = ''
 
 local function createCenterBanner(sceneGroup)
-	cBanner = display.newText( sceneGroup, '', cx, cy, native.systemFont, 36 )
+	cBanner = display.newText( sceneGroup, '', CX, CY, native.systemFont, 36 )
 	cBanner:setFillColor( 1, 1, 1 )
 end
 
 local function createBackground(sceneGroup)
-	local bg = display.newRect( sceneGroup, cx, cy, cw, ch )
+	local bg = display.newRect( sceneGroup, CX, CY, CW, CH )
 	bg:setFillColor( 0, 0, 0 )
 end
 
@@ -24,7 +24,7 @@ local function update()
 	local levelName = storage:get('levelName', 'none')
 	cBanner.text = string.format( 'go to %s', levelName )
 	timer.performWithDelay( 5000, function()
-		utils.gotoScene( loader_scene )
+		utils.gotoScene( LOADER_SCENE )
 	end )
 end
 
@@ -38,7 +38,7 @@ function scene:show(event)
 	if event.phase == 'will' then
 		update()
 	elseif event.phase == 'did' then
-		utils.removeScene(game_scene)
+		utils.removeScene(GAME_SCENE)
 	end
 end
 

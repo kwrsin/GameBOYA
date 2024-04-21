@@ -86,7 +86,7 @@ function M:createVirtualController(parent)
 	buttonList = {}
 	rootGroup = display.newGroup( )
 	parent:insert(rootGroup)
-	rootGroup.x, rootGroup.y = cx, cy
+	rootGroup.x, rootGroup.y = CX, CY
 end
 
 function M:moveCursor()

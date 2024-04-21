@@ -57,8 +57,8 @@ return function()
 	  content = display.newGroup()
 	  local tileSize = 64
 	  local tiles = 8
-	  content.x = (cw - tiles * tileSize) / 2
-	  content.y = (ch - tiles * tileSize) / 2
+	  content.x = (CW - tiles * tileSize) / 2
+	  content.y = (CH - tiles * tileSize) / 2
 	  tileLoader{
 	    parent=content, 
 	    level=selectedLevel, 

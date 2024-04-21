@@ -139,11 +139,11 @@ local function dotPath(file, dir)
 end
 
 local function gotoScene(name, options)
-	composer.gotoScene( dotPath(name, dot_scenes), options)
+	composer.gotoScene( dotPath(name, DOT_SCENES), options)
 end
 
 local function removeScene(name)
-	composer.removeScene( dotPath(name, dot_scenes) )
+	composer.removeScene( dotPath(name, DOT_SCENES) )
 end
 
 local function serializeTable(val, name, skipnewlines, depth)

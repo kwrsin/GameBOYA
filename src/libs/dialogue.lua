@@ -179,7 +179,7 @@ end
 function createDialogue(params)
 	root = display.newGroup( )
 	params.group:insert(root)
-	root.x, root.y = params.x or cx, params.y or cy
+	root.x, root.y = params.x or CX, params.y or CY
 	root:addEventListener( 'tap', function(event)
 		if tapped then return end
 		tapped = true

@@ -277,7 +277,7 @@ function M:nineslice(params)
 	local parent = params.parent
 	local frame = display.newGroup()
 	if parent then parent:insert(frame) end
-	local x, y = params.x or cx, params.y or cy
+	local x, y = params.x or CX, params.y or CY
 	local halfWidth = params.width / 2
 	local halfHeight = params.height / 2
 	local halfBarsize = params.barsize / 2

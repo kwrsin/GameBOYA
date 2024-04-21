@@ -2,15 +2,15 @@ local composer = require 'composer'
 local scene = composer.newScene()
 -- local structures = {
 --   names={},
---   structurePath = utils.dotPath(dot_structures, 'gameObjects.')
+--   structurePath = utils.dotPath(DOT_STRUCTURES, 'gameObjects.')
 -- }
 
 local function loadData()
   local selectedData = 'data1.js'
   return storage:open(selectedData, {
     name=selectedData, 
-    selectedLevel=utils.dotPath('levels.level01', dot_structures),
-    flags=require(utils.dotPath('flags', dot_structures))})
+    selectedLevel=utils.dotPath('levels.level01', DOT_STRUCTURES),
+    flags=require(utils.dotPath('flags', DOT_STRUCTURES))})
 end
 
 local function loadAssets(level)
@@ -21,11 +21,11 @@ local function loadAssets(level)
 end
 
 local function createTitle(sceneGroup)
-  local bg = display.newRect(sceneGroup, cx, cy, cw, ch)
+  local bg = display.newRect(sceneGroup, CX, CY, CW, CH)
   bg:setFillColor(0, 0, 0)
 
   local title = 'nowLoading...'
-  local nowLoading = display.newText(sceneGroup, title, cx, cy, native.systemFont, 36)
+  local nowLoading = display.newText(sceneGroup, title, CX, CY, native.systemFont, 36)
   nowLoading:setFillColor(1, 1, 1)
 end
 
@@ -40,7 +40,7 @@ end
 
 function scene:show(event)
   if event.phase == 'did' then
-    utils.gotoScene(game_scene)
+    utils.gotoScene(GAME_SCENE)
   end
 end
 

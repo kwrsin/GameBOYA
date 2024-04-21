@@ -43,7 +43,7 @@ end
 
 function M.sprite(params)
 	local sprite = display.newSprite( params.imageSheet, params.sequences )
-	sprite.x, sprite.y = params.x or cx, params.y or cy
+	sprite.x, sprite.y = params.x or CX, params.y or CY
 	if params.parent then
 		params.parent:insert(sprite)
 	end
