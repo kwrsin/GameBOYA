@@ -20,9 +20,9 @@ local function createContents(sceneGroup)
 	createCenterBanner(sceneGroup)
 end
 
-local function update()
-	local levelName = storage:get('levelName', 'none')
-	cBanner.text = string.format( 'go to %s', levelName )
+local function update(event)
+	local message = event.params.message or ''
+	cBanner.text = string.format( 'go to %s', message )
 	timer.performWithDelay( 5000, function()
 		utils.gotoScene( LOADER_SCENE )
 	end )
@@ -36,7 +36,7 @@ end
 function scene:show(event)
 	local sceneGroup = self.view
 	if event.phase == 'will' then
-		update()
+		update(event)
 	elseif event.phase == 'did' then
 		utils.removeScene(GAME_SCENE)
 	end

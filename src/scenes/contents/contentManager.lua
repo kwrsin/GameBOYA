@@ -2,11 +2,10 @@
 local M = require('src.scenes.contents.base')()
 
 function M:result()
-  storage:put('levelName', 'YOU WIN')
   storage:put('selectedLevel', utils.dotPath('levels.level01', DOT_STRUCTURES))
   storage:store()
   player = nil
-  self:gotoNext()
+  self:gotoNext({params={message='NEXT'}})
 end
 
 function M:start()

@@ -138,8 +138,8 @@ return function()
 	  sound:reset(true)
 	end
 
-	function M:gotoNext()
-		utils.gotoScene('intermid')
+	function M:gotoNext(options)
+		utils.gotoScene('intermid', options)
 	end
 
 	return M
