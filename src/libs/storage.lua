@@ -25,7 +25,7 @@ end
 function M:writeString(path, str)
 	local file, error = io.open(path, 'w')
 	if not file then
-		print('Error: ', error)
+		logger.info('Error: ', error)
 	else
 		file:write(str)
 		io.close( file )
@@ -37,7 +37,7 @@ function M:write(path, tbl)
 
 	local file, error = io.open(path, 'w')
 	if not file then
-		print('Error: ', error)
+		logger.info('Error: ', error)
 	else
 		file:write(jText)
 		io.close( file )
@@ -49,7 +49,7 @@ function M:writeTable(path, tbl)
 	strTbl = 'return ' .. strTbl 
 	local file, error = io.open(path, 'w')
 	if not file then
-		print('Error: ', error)
+		logger.info('Error: ', error)
 	else
 		file:write(strTbl)
 		io.close( file )
@@ -60,7 +60,7 @@ function M:read(path)
 	local data
 	local file, error = io.open(path, 'r')
 	if not file then
-		print('Error: ', error)
+		logger.info('Error: ', error)
 	else
 		local jText = file:read( "*a" )
 		data = utils.toTable(jText) or {}
@@ -83,10 +83,10 @@ function M:remove(path)
 	if not self:exists(path) then return false end
 	local result, reason = os.remove(path)
 	if result then
-    print( "Directory removed!" )
+    logger.info( "Directory removed!" )
     return true
 	else
-    print( "Removal failed: " .. reason )
+    logger.info( "Removal failed: " .. reason )
 	end
 	return false
 end

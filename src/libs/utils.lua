@@ -96,7 +96,7 @@ local function toTable(jText)
 	local result
 	local decoded, pos, msg = json.decode(jText)
 	if not decoded then
-		print(string.format( 'error at %d, %s', pos, msg ))
+		logger.info(string.format( 'error at %d, %s', pos, msg ))
 		result = ''
 	else
 		result = decoded
@@ -125,7 +125,7 @@ end
 local function request(params)
 	network.request(params.url, params.method, function(event)
 		if event.isError then
-			print('Network Error: ', event.response)
+			logger.info('Network Error: ', event.response)
 		else
 			if params.callback then
 				params.callback(event)

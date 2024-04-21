@@ -43,7 +43,7 @@ function scene:show(event)
 end
 
 function scene:destroy(event)
-	print('intermid scene destroyed')
+	logger.info('intermid scene destroyed')
 end
 
 scene:addEventListener( 'create', scene )

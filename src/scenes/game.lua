@@ -26,7 +26,7 @@ function scene:hide(event)
 end
 
 function scene:destroy(event)
-	print('game scene has destroyed')
+	logger.info('game scene has destroyed')
 	content:destroy()
 end
 

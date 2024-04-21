@@ -45,7 +45,7 @@ function scene:show(event)
 end
 
 function scene:destroy(event)
-  print('loader scene has destroyed')
+  logger.info('loader scene has destroyed')
 end
 
 scene:addEventListener('create', scene)
