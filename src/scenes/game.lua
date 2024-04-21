@@ -4,6 +4,7 @@ local scene = composer.newScene( )
 
 function scene:create(event)
 	local sceneGroup = self.view
+	contentManager = getContentManager()
 	contentManager:create(sceneGroup)
 end
 

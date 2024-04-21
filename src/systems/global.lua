@@ -7,7 +7,6 @@ storage = require 'src.libs.storage'
 controller = require 'src.libs.controller'
 virtualControlelr = require 'src.libs.virtual_controller'
 sound = require 'src.libs.sound'
-contentManager = require 'src.scenes.contents.contentManager'
 
 gImageSheets = nil
 player = nil
@@ -21,6 +20,13 @@ buttonStatus = {
 	left=0,
 	btnA=0,
 }
+
+function getContentManager()
+	local key = 
+		utils.lastWord(storage:get('selectedLevel'))
+	local dotPath = GAME_LEVELS[key] or DEFAULT_CONTENT_MANAGER
+	return require(dotPath)
+end
 
 require 'src.systems.system'
 utils.gotoScene(LOADER_SCENE)
