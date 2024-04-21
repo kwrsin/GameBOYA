@@ -3,6 +3,15 @@ local composer = require "composer"
 local physics = require 'physics'
 local uiLib = require 'src.libs.uiLib'
 
+-- GLOBAL
+function getContentManager()
+	local key = 
+		utils.lastWord(storage:get('selectedLevel'))
+	local dotPath = GAME_LEVELS[key] or DEFAULT_CONTENT_MANAGER
+	return require(dotPath)
+end
+
+-- FRONT COVER
 local function getContentBackground()
     local bg = display.newGroup()
     -- local r = display.newRect(bg, CX, CY, CW, CH)

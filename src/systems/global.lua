@@ -21,12 +21,5 @@ buttonStatus = {
 	btnA=0,
 }
 
-function getContentManager()
-	local key = 
-		utils.lastWord(storage:get('selectedLevel'))
-	local dotPath = GAME_LEVELS[key] or DEFAULT_CONTENT_MANAGER
-	return require(dotPath)
-end
-
 require 'src.systems.system'
 utils.gotoScene(LOADER_SCENE)
