@@ -11,6 +11,8 @@ sound = require 'src.libs.sound'
 gImageSheets = nil
 player = nil
 
+contentManager = nil
+
 mRatio = 2
 
 buttonStatus = {

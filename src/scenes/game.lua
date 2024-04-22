@@ -27,6 +27,7 @@ end
 function scene:destroy(event)
 	logger.info('game scene has destroyed')
 	contentManager:destroy()
+	contentManager = nil
 end
 
 scene:addEventListener( 'create', scene )
