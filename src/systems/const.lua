@@ -11,12 +11,12 @@ DOT_CONTENTS = 'src.scenes.contents'
 DOT_STRUCTURES = 'src.structures'
 PATH_IMAGE = 'assets/images'
 
-INITIAL_LEVEL = 'levels.top'
-OPENING_LEVEL = DOT_STRUCTURES .. '.levels.opeing'
-DEFAULT_CONTENT_MANAGER = 'src.scenes.contents.contentManager'
+INITIAL_LEVEL = 'levels.opening'
+OPENING_LEVEL = DOT_STRUCTURES .. '.levels.menu'
+DEFAULT_CONTENT_MANAGER = 'src.scenes.contents.contentManagerOpening'
 GAME_LEVELS = {
-	top=DEFAULT_CONTENT_MANAGER,
-	opening='src.scenes.contents.contentManager02',
+	opening=DEFAULT_CONTENT_MANAGER,
+	menu='src.scenes.contents.contentManager02',
 }
 
 GAME_SCENE = 'game'

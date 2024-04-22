@@ -7,15 +7,16 @@ local function tap(event)
 end
 
 function M:result(params)
+  local messaeg = params.message or ""
   -- storage:put(STORAGE_SELECTED_LEVEL, OPENING_LEVEL)
   -- storage:store()
   -- player = nil
   -- self:gotoNext({params={message=params.message or "Next..."}})
   publisher:put(nil, PUBSUB_PARAMETERS, {nextLevel=OPENING_LEVEL})
-  utils.gotoScene(INTERMID_SCENE, {
+  self:gotoNext{
     effect = "fade",
-    time = 800,
-    params={time=1000},})
+    time = 400,
+    params={message=messaeg, time=1000}}
 end
 
 function M:start()
