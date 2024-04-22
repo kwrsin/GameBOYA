@@ -35,8 +35,14 @@ return function(params)
   function M:createImage(params)
     local structure = require(params.path)
     local key = utils.lastWord(params.path)
+    if not gImageSheets[key] then
+      logger.info(string.format("ERROR: not found '%s' in Imagesheets", key))
+      return
+    end
     self.go = display.newImage( params.parent, gImageSheets[key], params.frameNum or 1  )    
-    physics.addBody( self.go, params.bodyType or 'static', self:getColliders(params) )
+    if params.colliders then
+      physics.addBody( self.go, params.bodyType or 'static', self:getColliders(params) )
+    end
     self:setProperties(params)
   end
 
