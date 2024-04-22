@@ -24,6 +24,7 @@ function M:start()
 end
 
 function M:destroy()
+  publisher:unsubscribeAll(PUBSUB_EVENT_TOP)
   Runtime:removeEventListener( 'tap', tap)
 end
 
