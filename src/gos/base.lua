@@ -11,17 +11,16 @@ return function(params)
   M.buttons={}
   M.isActor=false
 
-  function M:setProperies(params)
+  function M:setProperties(params)
     self.go.x, self.go.y = params.x, params.y
     self.go.gravityScale = 1
     self.go.isFixedRotation = true
     self.go.class = params.class
-    self.go.rotation = params.props.rotation
-    self.go.xScale = params.props.xScale
-    self.go.yScale = params.props.yScale
-    self.go.anchorX = params.props.anchorX
-    self.go.anchorY = params.props.anchorY
-    self.go.rotation = params.props.rotation
+    self.go.xScale = params.props.xScale or 1
+    self.go.yScale = params.props.yScale or 1
+    self.go.anchorX = params.props.anchorX or 0.5
+    self.go.anchorY = params.props.anchorY or 0.5
+    self.go.rotation = params.props.rotation or 0
   end
 
   function M:createSprite(params)
@@ -30,7 +29,7 @@ return function(params)
     self.go = display.newSprite( params.parent, gImageSheets[key], structure.sequences )
     self:setSequence( params.default )
     physics.addBody( self.go, params.bodyType or 'dynamic', self:getColliders(params) )
-    self:setProperies(params)
+    self:setProperties(params)
   end
 
   function M:createImage(params)
@@ -38,7 +37,7 @@ return function(params)
     local key = utils.lastWord(params.path)
     self.go = display.newImage( params.parent, gImageSheets[key], params.frameNum or 1  )    
     physics.addBody( self.go, params.bodyType or 'static', self:getColliders(params) )
-    self:setProperies(params)
+    self:setProperties(params)
   end
 
   function M:getColliders(params)
