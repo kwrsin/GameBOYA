@@ -24,7 +24,7 @@ local function update(event)
 	local message = event.params.message or ''
 	cBanner.text = string.format( '%s', message )
 	timer.performWithDelay( 5000, function()
-		utils.gotoScene( LOADER_SCENE )
+		utils.gotoScene( LOADER_SCENE, event.params )
 	end )
 end
 

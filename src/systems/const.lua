@@ -12,6 +12,7 @@ DOT_STRUCTURES = 'src.structures'
 PATH_IMAGE = 'assets/images'
 
 INITIAL_LEVEL = 'levels.top'
+OPENING_LEVEL = DOT_STRUCTURES .. '.levels.opeing'
 DEFAULT_CONTENT_MANAGER = 'src.scenes.contents.contentManager'
 GAME_LEVELS = {
 	top=DEFAULT_CONTENT_MANAGER,

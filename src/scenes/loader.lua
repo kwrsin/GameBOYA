@@ -30,11 +30,17 @@ local function createTitle(sceneGroup)
 end
 
 function scene:create(event)
+  local function getLevelPathFromPram()
+    if event.params and event.params.lvlPath then
+      return event.params.lvlPath
+    end
+    return nil
+  end
   local sceneGroup = self.view
   createTitle(sceneGroup)
 
   loadData()
-  local lvlPath = storage:get('selectedLevel')
+  local lvlPath = getLevelPathFromPram() or storage:get('selectedLevel')
   loadAssets(require(lvlPath))
 end
 
