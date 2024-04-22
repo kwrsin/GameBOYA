@@ -7,14 +7,15 @@ local function tap(event)
 end
 
 function M:result(params)
-  -- storage:put('selectedLevel', utils.dotPath('levels.opening', DOT_STRUCTURES))
+  -- storage:put(STORAGE_SELECTED_LEVEL, OPENING_LEVEL)
   -- storage:store()
   -- player = nil
   -- self:gotoNext({params={message=params.message or "Next..."}})
+  publisher:put(nil, PUBSUB_PARAMETERS, {nextLevel=OPENING_LEVEL})
   utils.gotoScene(INTERMID_SCENE, {
     effect = "fade",
     time = 800,
-    params={lvlPath=OPENING_LEVEL, time=1000}})
+    params={time=1000},})
 end
 
 function M:start()

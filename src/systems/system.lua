@@ -6,7 +6,7 @@ local uiLib = require 'src.libs.uiLib'
 -- GLOBAL
 function getContentManager()
 	local key = 
-		utils.lastWord(storage:get('selectedLevel'))
+		utils.lastWord(storage:get(STORAGE_SELECTED_LEVEL))
 	local dotPath = GAME_LEVELS[key] or DEFAULT_CONTENT_MANAGER
 	return require(dotPath)
 end

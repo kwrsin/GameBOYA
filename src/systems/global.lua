@@ -10,6 +10,7 @@ virtualControlelr = require 'src.libs.virtual_controller'
 sound = require 'src.libs.sound'
 
 publisher:observe(PUBSUB_TOP, {})
+publisher:observe(PUBSUB_PARAMETERS, {})
 
 gImageSheets = nil
 player = nil

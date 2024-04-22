@@ -30,17 +30,17 @@ local function createTitle(sceneGroup)
 end
 
 function scene:create(event)
-  local function getLevelPathFromPram()
-    if event.params and event.params.lvlPath then
-      return event.params.lvlPath
-    end
-    return nil
+  function getNextLevel()
+    local nextLevel = publisher:get(PUBSUB_PARAMETERS).nextLevel
+    publisher:put(nil, PUBSUB_PARAMETERS, {nextLevel=nil})
+    return nextLevel
   end
+  
   local sceneGroup = self.view
   createTitle(sceneGroup)
 
   loadData()
-  local lvlPath = getLevelPathFromPram() or storage:get('selectedLevel')
+  local lvlPath = getNextLevel() or storage:get(STORAGE_SELECTED_LEVEL)
   loadAssets(require(lvlPath))
 end
 
