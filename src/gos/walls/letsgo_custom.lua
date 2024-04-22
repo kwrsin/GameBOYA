@@ -10,6 +10,6 @@ return function(options)
 		transition.scaleTo(M.go,  { xScale=1.5, yScale=1.5, time=200, transition=easing.outBounce, tag=TAG_TRANSITION })
 		end
 	end
-	publisher:subscribe(PUBSUB_TOP, M)
+	publisher:subscribe(PUBSUB_EVENT_TOP, M)
 	return M
 end

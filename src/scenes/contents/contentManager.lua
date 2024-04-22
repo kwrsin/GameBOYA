@@ -2,7 +2,7 @@
 local M = require('src.scenes.contents.base')()
 
 local function tap(event)
-  publisher:put(nil, PUBSUB_TOP, {onDestory=true})
+  publisher:put(nil, PUBSUB_EVENT_TOP, {onDestory=true})
   contentManager:result{message="Start Game!!"}
 end
 
