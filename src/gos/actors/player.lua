@@ -63,7 +63,7 @@ return function(params)
 				wrapped()
 			end, 1 )
 			coroutine.yield()
-			contentManager:result()
+			contentManager:result{message='YOU WIN'}
 		end)
 		wrapped()
 
@@ -93,7 +93,7 @@ return function(params)
 		self.go.isFixedRotation = true
 		sound:effect('aboyaFall')
 		timer.performWithDelay( 2000, function()
-			contentManager:result()
+			contentManager:result{message='YOU LOSE'}
 		end ,1 )
   end
 

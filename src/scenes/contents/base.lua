@@ -124,7 +124,7 @@ return function()
 	  end
 	end
 
-	function M:result()
+	function M:result(params)
 	end
 
 	function M:start()
