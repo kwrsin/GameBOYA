@@ -124,22 +124,33 @@ return function()
 	  end
 	end
 
+	function M:notifyToActors(event)
+	  for i, actor in ipairs(actors) do
+	    if actor then
+	      actor:message(event)
+	    end
+	  end		
+	end
+
 	function M:result(params)
 	end
 
 	function M:start()
+		self:notifyToActors{onContent=CONTENT_START}
 	end
 
 	function M:pause()
+		self:notifyToActors{onContent=CONTENT_PAUSE}
 	end
 
 	function M:destroy()
+		self:notifyToActors{onContent=CONTENT_DESTORY}
 		removeEventListeners()
 	  sound:reset(true)
 	end
 
 	function M:gotoNext(options)
-		utils.gotoScene('intermid', options)
+		utils.gotoScene(INTERMID_SCENE, options)
 	end
 
 	return M

@@ -2,6 +2,7 @@
 local M = require('src.scenes.contents.base')()
 
 local function tap(event)
+  publisher:put(nil, PUBSUB_TOP, {onDestory=true})
   contentManager:result{message="Start Game!!"}
 end
 
@@ -10,10 +11,10 @@ function M:result(params)
   -- storage:store()
   -- player = nil
   -- self:gotoNext({params={message=params.message or "Next..."}})
-  utils.gotoScene(LOADER_SCENE, {
+  utils.gotoScene(INTERMID_SCENE, {
     effect = "fade",
     time = 800,
-    params={lvlPath=OPENING_LEVEL}})
+    params={lvlPath=OPENING_LEVEL, time=1000}})
 end
 
 function M:start()
