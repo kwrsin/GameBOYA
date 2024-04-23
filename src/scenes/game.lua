@@ -2,10 +2,25 @@
 local composer = require 'composer'
 local scene = composer.newScene( )
 
+local function getContentManager(sceneGroup)
+	local function getNextLevelPath()
+		local lvlPath = 
+			publisher:get(PUBSUB_PARAMETERS).nextLevel or 
+			storage:get(STORAGE_SELECTED_LEVEL)
+	    publisher:put(nil, PUBSUB_PARAMETERS, {nextLevel=nil})
+	    return lvlPath
+	end
+
+	local lvlPath = getNextLevelPath()
+	local dotPath = GAME_LEVELS[utils.lastWord(lvlPath)] or DEFAULT_CONTENT_MANAGER
+	local contentManager = require(dotPath)
+	contentManager:create(sceneGroup, lvlPath)
+	return contentManager
+end
+
 function scene:create(event)
 	local sceneGroup = self.view
-	contentManager = getContentManager()
-	contentManager:create(sceneGroup)
+	contentManager = getContentManager(sceneGroup)
 end
 
 function scene:show(event)

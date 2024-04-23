@@ -68,9 +68,9 @@ return function()
 	  return content  
 	end
 
-	function M:create(parent)
+	function M:create(parent, lvlPath)
 	  actors = {}
-		selectedLevel = require(storage:get(STORAGE_SELECTED_LEVEL))
+		selectedLevel = require(lvlPath)
 	  if selectedLevel.edition then
 	    loadLevel()
 	  else

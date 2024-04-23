@@ -32,7 +32,6 @@ end
 function scene:create(event)
   function getNextLevel()
     local nextLevel = publisher:get(PUBSUB_PARAMETERS).nextLevel
-    publisher:put(nil, PUBSUB_PARAMETERS, {nextLevel=nil})
     return nextLevel
   end
   
