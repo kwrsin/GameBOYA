@@ -289,11 +289,11 @@ function M:createCustomButton(params)
         width = params.width or 200,
         height = params.height or 60,
         cornerRadius = params.cornerRadius or 6,
-        fillColor = params.fillColor or { default={0.2,0.2,0.4,1}, over={1,0.1,0.7,0.4} },
-        strokeColor = params.strokeColor or { default={1,0.1,0,1}, over={0.8,0.8,1,1} },
+        fillColor = params.fillColor or { default={0.2,0.2,0.4,0.8}, over={1,0.1,0.7,0.4} },
+        strokeColor = params.strokeColor or { default={1,0.1,0,0.8}, over={0.8,0.8,1,0.8} },
         strokeWidth = params.strokeWidth or 4,
         fontSize = params.fontSize or 28,
-        labelColor = params.labelColor or { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } }
+        labelColor = params.labelColor or { default={ 1, 1, 1, 0.8 }, over={ 0, 0, 0, 0.5 } }
     }
   )
 end

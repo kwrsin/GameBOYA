@@ -13,6 +13,7 @@ uiLib = require 'src.libs.uiLib'
 language = require(string.format( '%s%s',LOCALIZATIONS_PATH, utils.lang())) 
 
 publisher:observe(PUBSUB_EVENT_TOP, {})
+publisher:observe(PUBSUB_EVENT_MENU, {})
 publisher:observe(PUBSUB_PARAMETERS, {})
 
 gImageSheets = nil

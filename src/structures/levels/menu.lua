@@ -18,6 +18,24 @@ M.layers={
 	{
 		gos={
 			{
+				class='src.gos.UIs.ui_menu_background',
+				params={
+					x=0,
+					y=0,
+					props={
+						rotation=0.000000,
+					},
+				},
+			},
+		},
+		props={
+			name='Background',
+			visible=true,
+		},
+	},
+	{
+		gos={
+			{
 				class='src.gos.UIs.ui_menu',
 				params={
 					x=320.000000,
@@ -29,7 +47,7 @@ M.layers={
 			},
 		},
 		props={
-			name='Background',
+			name='Foreground',
 			visible=true,
 		},
 	},

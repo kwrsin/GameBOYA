@@ -8,7 +8,7 @@ local function createTitle()
 		evenCols={
 			title,
 		},
-		bgcolor={0.2, 0.2, 0.2, 1}		
+		bgcolor={0.2, 0.2, 0.2, 0.8}		
 	}
 end
 
