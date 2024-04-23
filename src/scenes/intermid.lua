@@ -29,7 +29,7 @@ local function update(event)
 end
 
 function scene:create(event)
-  logger.info(SCENE_INTERMID)
+  logger.info(LABEL_INTERMID)
 	local sceneGroup = self.view
 	createContents(sceneGroup)
 end

@@ -1,6 +1,7 @@
 -- global.lua
 require 'src.systems.debug'
 require 'src.systems.const'
+require 'src.systems.labels'
 publisher = require 'src.libs.bindings.publisher'
 logger = require 'src.systems.logger'
 utils = require 'src.libs.utils'

@@ -9,7 +9,7 @@ function M:result(params)
 end
 
 function M:start()
-  logger.info(SCENE_MENU)
+  logger.info(LABEL_MENU)
 end
 
 return M

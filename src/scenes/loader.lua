@@ -34,7 +34,7 @@ function scene:create(event)
     local nextLevel = publisher:get(PUBSUB_PARAMETERS).nextLevel
     return nextLevel
   end
-  logger.info(SCENE_LOADER)
+  logger.info(LABEL_LOADER)
   
   local sceneGroup = self.view
   createTitle(sceneGroup)
