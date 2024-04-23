@@ -5,6 +5,23 @@ local composer = require 'composer'
 
 local M = {}
 
+local function lang()
+	local language = userDefinedLanguage or system.getPreference("ui", "language")
+	local device = require("src.libs.thirdParty.device")
+	if(device.isGoogle) then
+	    if(language == "English" or language == "en") then
+	        language = "en"
+	    else
+	        language = "ja"
+	    end
+	end
+	language = string.gsub(language, "(..)-..", "%1")
+	if not language or #language <= 0 then
+		language = 'en'
+	end
+	return language	
+end
+
 local function deepcopy(orig)
     local orig_type = type(orig)
     local copy
@@ -190,6 +207,7 @@ end
 M.dotPath = dotPath
 M.gotoScene = gotoScene
 M.removeScene = removeScene
+M.lang = lang
 M.deepcopy = deepcopy
 M.toJSON = toJSON
 M.serializeTable = serializeTable
