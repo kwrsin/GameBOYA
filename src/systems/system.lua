@@ -11,6 +11,10 @@ function getContentManager()
 	return require(dotPath)
 end
 
+function getText(key)
+	return language[key] or key
+end
+
 -- FRONT COVER
 local function getContentBackground()
     local bg = display.newGroup()
