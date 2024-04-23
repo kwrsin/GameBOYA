@@ -16,14 +16,14 @@ local function getContentBackground()
     return bg
 end
 
-local function gameGuyBody(parent)
+local function gameBoyaBody(parent)
 	local top = display.newRect(parent, CX, -128, 640, 260)
 	top:setFillColor( 0, 0, 0 )
 	top.anchorY = 0
 	local buttom = display.newRect(parent, CX, CH + 160, 640, 320)
 	buttom:setFillColor( 0, 0, 0 )
 	buttom.anchorY = 1
-    local img = display.newImageRect(parent, 'assets/images/gameguy.png', 648, 1264)
+    local img = display.newImageRect(parent, 'assets/images/gameboya.png', 648, 1264)
     img.x = CX
     img.y = CY + 64
 end
@@ -54,7 +54,7 @@ local function getContentForeground()
     local parent = display.newGroup()
 	
 	-- testFrameBody(parent)
-	-- gameGuyBody(parent)
+	-- gameBoyaBody(parent)
 
     virtualControlelr:createVirtualController(parent)
     virtualControlelr:createCursor({x=VC_POS.x, y=VC_POS.y}, function(cursor)

@@ -273,6 +273,31 @@ function M:createButton(title, x, y, onEvent)
 	return button
 end
 
+function M:createCustomButton(params)
+	return widget.newButton(
+    {
+        label = params.label,
+        onEvent = function(event)
+        	if event.phase == 'ended' then
+        		if params.fn then
+        			params.fn(event)
+        		end
+	        end
+      	end,
+        emboss = params.emboss or false,
+        shape = params.shape or "roundedRect",
+        width = params.width or 200,
+        height = params.height or 60,
+        cornerRadius = params.cornerRadius or 6,
+        fillColor = params.fillColor or { default={0.2,0.2,0.4,1}, over={1,0.1,0.7,0.4} },
+        strokeColor = params.strokeColor or { default={1,0.1,0,1}, over={0.8,0.8,1,1} },
+        strokeWidth = params.strokeWidth or 4,
+        fontSize = params.fontSize or 28,
+        labelColor = params.labelColor or { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } }
+    }
+  )
+end
+
 function M:nineslice(params)
 	local parent = params.parent
 	local frame = display.newGroup()
