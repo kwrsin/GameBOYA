@@ -149,8 +149,19 @@ return function()
 	  sound:reset(true)
 	end
 
-	function M:gotoNext(options)
+	function M:gotoNextLevel(options)
+	  storage:put(STORAGE_SELECTED_LEVEL, options.nextLevel)
+	  storage:store()
 		utils.gotoScene(INTERMID_SCENE, options)
+	end
+
+	function M:pushNextLevel(options)
+	  publisher:put(nil, PUBSUB_PARAMETERS, {nextLevel=options.nextLevel})
+	  utils.gotoScene(INTERMID_SCENE, {
+	    effect = options.effect or "fade",
+	    time = options.time or 400,
+	    params={message=options.message or '', time=1000}
+	  })
 	end
 
 	return M

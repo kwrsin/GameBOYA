@@ -7,16 +7,9 @@ local function tap(event)
 end
 
 function M:result(params)
-  local messaeg = params.message or ""
-  -- storage:put(STORAGE_SELECTED_LEVEL, OPENING_LEVEL)
-  -- storage:store()
   -- player = nil
-  -- self:gotoNext({params={message=params.message or "Next..."}})
-  publisher:put(nil, PUBSUB_PARAMETERS, {nextLevel=OPENING_LEVEL})
-  self:gotoNext{
-    effect = "fade",
-    time = 400,
-    params={message=messaeg, time=1000}}
+  -- self:gotoNextLevel{nextLevel=MENU_LEVEL , params={message=params.message or "Next..."}}
+  self:pushNextLevel{nextLevel=MENU_LEVEL}
 end
 
 function M:start()
