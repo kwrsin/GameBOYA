@@ -21,9 +21,9 @@ return function(params)
 			evenRows={
 				createTitle(),
 				uiLib:createCustomButton{
-					label=L('hello'),
+					label=L('toTitle'),
 					fn=function(event)
-						print('aaaadddddffff')
+						contentManager:gotoNextLevel{nextLevel=string.format('%s.%s', DOT_STRUCTURES, INITIAL_LEVEL)}
 					end
 				},
 				uiLib:createCustomButton{

@@ -13,7 +13,7 @@ function M:result(params)
 end
 
 function M:start()
-  logger.info('START TITLE')
+  logger.info(SCENE_OPENING)
   Runtime:addEventListener( 'tap', tap)
 end
 

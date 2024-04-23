@@ -1,4 +1,5 @@
 -- en.lua
 return {
-	hello='HELLO'
+	hello='HELLO',
+	toTitle='GO TITLE',	
 }

@@ -1,4 +1,5 @@
 -- ja.lua
 return {
-	hello='こんにちは'
+	hello='こんにちは',
+	toTitle='タイトルへ',
 }
