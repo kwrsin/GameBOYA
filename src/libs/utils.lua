@@ -1,4 +1,5 @@
 -- base.lua
+local utf8 = require 'plugin.utf8'
 local json = require 'json'
 local network = require 'network'
 local composer = require 'composer'
@@ -204,6 +205,16 @@ local function lastWord(path)
   return string.match( path, '[^.]+$' )
 end
 
+local function toChars(text)
+	local chars = {}
+	for i = 1, utf8.len(text) do
+   		chars[#chars + 1] = {
+   			value=utf8.sub(text, i, i)
+   		}
+	end
+	return chars
+end
+
 M.dotPath = dotPath
 M.gotoScene = gotoScene
 M.removeScene = removeScene
@@ -220,6 +231,7 @@ M.getImageSheets = getImageSheets
 M.normalize = normalize
 M.clamp = clamp
 M.lastWord = lastWord
+M.toChars = toChars
 M.startCountdown = startCountdown
 M.resumeCountdown = resumeCountdown
 M.pauseCountdown = pauseCountdown

@@ -42,6 +42,10 @@ settings =
 	--
 	plugins =
 	{
+    ["plugin.utf8"] =
+    {
+        publisherId = "com.coronalabs"
+    },
 
 	},
 
@@ -51,7 +55,7 @@ settings =
 	excludeFiles =
 	{
 		-- Exclude unnecessary files for each platform
-		all = { "Icon.png", "Icon-*dpi.png", "Images.xcassets", "dev",},
+		all = { "Icon.png", "Icon-*dpi.png", "Images.xcassets", "dev", "REPL",},
 		android = { "LaunchScreen.storyboardc", },
 	},
 }
