@@ -5,6 +5,8 @@ local getModel = require 'src.libs.UIHelpers.models.characters_model'
 return function ()
 	local M = {}
 	M.isFocus = false
+	M.originPoint = 0
+
 	function M:background(params)
 		local strWidth = self.maxLength * self.charWidth
 		local charHeight = self.charHeight
@@ -27,6 +29,7 @@ return function ()
 	end
 
 	function M:focus()
+		self:resetRelection()
 		display.getCurrentStage().stage:setFocus( self.go )
 		self.go.alpha = 1
 		self.isFocus = true	
@@ -35,11 +38,82 @@ return function ()
 	end
 
 	function M:blur()
+		self:resetRelection()
 		display.getCurrentStage().stage:setFocus( nil )
 		self.go.alpha = 0.8
 		self.isFocus = false
 		transition.pause( self.cur )	
 		self.cur.alpha = 0
+	end
+
+	function M:drawSelection(start, stop)
+		local startAt = (start-1) * self.charWidth
+		local stopAt = (stop-1) * self.charWidth
+		local width = stopAt - startAt
+		local height = self.charHeight
+		local rect = display.newRect( self.selectionLayer, startAt, 0, width, height )
+		rect:setFillColor( 0.2, 0.2, 1, 0.3 )
+		rect.anchorX = 0
+	end
+
+	function M:createSelection(start, stop)
+		self:unselecteChars()
+		self:drawSelection(start, stop)
+	end
+
+	function M:selectChars()
+		local currentPos = self.model:getCurrentPos()
+		local start
+		local stop
+
+		if currentPos - self.originPoint > 0 then
+			start = math.min(self.originPoint, self.model:size()) 
+			stop = currentPos
+			self:createSelection(start, stop)
+		elseif currentPos - self.originPoint < 0 then
+			stop = math.max(1, self.originPoint) 
+			start = currentPos
+			self:createSelection(start, stop)
+		else
+			self:unselecteChars()
+		end
+		-- if self.originPoint > 0 then
+		-- 	start = pos
+		-- 	stop = math.min(
+		-- 		pos + self.originPoint, self.model:size() + 1) 
+		-- 	self:createSelection(start, stop)
+		-- elseif self.originPoint < 0 then
+		-- 	start = math.max(
+		-- 		1, pos + self.originPoint) 
+		-- 	stop = pos
+		-- 	self:createSelection(start, stop)
+		-- else
+		-- 	self:unselecteChars()
+		-- end
+	end
+
+	function M:unselecteChars()
+		for i = self.selectionLayer.numChildren, 1, -1 do
+			local o = display.remove( self.selectionLayer[i] )
+			o = nil
+		end
+	end
+
+	function M:upscale()
+		if not self.isFocus then return end
+		self:next(true)
+		self:selectChars()
+	end
+
+	function M:downscale()
+		if not self.isFocus then return end
+		self:back(true)
+		self:selectChars()
+	end
+
+	function M:resetRelection()
+		self.originPoint = 0
+		self:unselecteChars()
 	end
 
 	function M:removeChildObjects()
@@ -111,7 +185,7 @@ return function ()
 		self:moveCursor(pos)
 
 		self:print{preventCursorMoving = true}
-
+		self:resetRelection()
 	end
 
 	function M:touch(event)
@@ -139,18 +213,28 @@ return function ()
 		end
 	end
 
-	function M:next()
+	function M:next(cancelReset)
 		-- if not self.editable then return end
 		-- if self.cursorIndex >= self.model:size() then return end
 		if not self.isFocus then return end
+		if not cancelReset then
+			self:resetRelection()
+		elseif self.originPoint <= 0 then
+			self.originPoint = self.model:getCurrentPos()
+		end
 		local pos = self.model:nextCursor()
 		self:moveCursor(pos)
 	end
 
-	function M:back()
+	function M:back(cancelReset)
 		-- if not self.editable then return end
 		-- if self.cursorIndex <= 1 then return end
 		if not self.isFocus then return end
+		if not cancelReset then
+			self:resetRelection()
+		elseif self.originPoint <= 0 then
+			self.originPoint = self.model:getCurrentPos()
+		end
 		local pos = self.model:prevCursor()
 		self:moveCursor(pos)
 	end
@@ -172,12 +256,15 @@ return function ()
 		self.cursorLayer = display.newGroup()
 		self.go:insert(self.cursorLayer)
 
+		self.selectionLayer = display.newGroup( )
+		self.go:insert(self.selectionLayer)
+
 		self.go:addEventListener( 'touch', self)
 
 		self:print()
 		self:createCursor()
 		self:blur()
-
+		self:resetRelection()
 
 		return self
 	end
