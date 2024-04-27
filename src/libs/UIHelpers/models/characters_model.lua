@@ -60,6 +60,15 @@ return function (characters)
 		end
 	end
 
+	function model:removeRangedChars(range)
+		local start = range.start
+		local stop = range.stop - 1
+		for i = stop, start, -1 do
+			local o = table.remove( self.characters, i )
+			o=nil
+		end
+	end
+
 	function model:size()
 		return #self.characters
 	end

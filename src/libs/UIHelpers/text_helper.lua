@@ -6,6 +6,22 @@ return function ()
 	local M = {}
 	M.isFocus = false
 	M.originPoint = 0
+	M.range = { start = 0, stop = 0 }
+
+	function M:emptyRange()
+		return self.range.start == 0 and self.range.stop == 0
+	end
+
+	function M:removeRange()
+		self.model:removeRangedChars(self.range)
+
+		self:moveCursor(self.range.start)
+
+		self:print{preventCursorMoving=true}
+
+		self:unselecteChars()
+		self:resetRelection()
+	end
 
 	function M:background(params)
 		local strWidth = self.maxLength * self.charWidth
@@ -46,6 +62,32 @@ return function ()
 		self.cur.alpha = 0
 	end
 
+	function M:copy()
+		if not self.isFocus then return end
+		local result = {}
+		if self.range.start + self.range.stop <= 2 then
+			return result
+		end
+		local chars = self.model:getCharacters()
+		for i=self.range.start, self.range.stop - 1 do
+			result[#result + 1] = chars[i]
+		end
+		return result
+	end
+
+	function M:paste(characters)
+		if not self.isFocus then return end
+		if #characters <= 0 then return end
+
+	end
+
+	function M:cut()
+		if not self.isFocus then return end
+		local result = self:copy()
+		self:removeRange(self.range)
+		return result
+	end
+
 	function M:drawSelection(start, stop)
 		local startAt = (start-1) * self.charWidth
 		local stopAt = (stop-1) * self.charWidth
@@ -58,6 +100,7 @@ return function ()
 
 	function M:createSelection(start, stop)
 		self:unselecteChars()
+		self.range.start, self.range.stop = start, stop
 		self:drawSelection(start, stop)
 	end
 
@@ -113,6 +156,7 @@ return function ()
 
 	function M:resetRelection()
 		self.originPoint = 0
+		self.range.start, self.range.stop = 0, 0
 		self:unselecteChars()
 	end
 
@@ -135,11 +179,16 @@ return function ()
 
 	function M:backspace()
 		if not self.isFocus then return end
-		self.model:prevCursor(function(pos)
-			self:moveCursor(pos)
-			self.model:remove()
-			self:print{preventCursorMoving=true}
-		end)
+		if self:emptyRange() then
+			self.model:prevCursor(function(pos)
+				self:moveCursor(pos)
+				self.model:remove()
+				self:print{preventCursorMoving=true}
+				self:resetRelection()
+			end)
+		else
+			self:removeRange()
+		end
 	end
 
 	-- function M:append(character)
