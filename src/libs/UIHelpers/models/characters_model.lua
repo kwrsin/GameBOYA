@@ -4,6 +4,7 @@ return function (characters)
 	local model = {}
 	model.characters = characters or {}
 	model.pos = #characters
+	if model.pos <= 0 then model.pos = 1 end
 
 	function model:getCurrentPos()
 		return model.pos

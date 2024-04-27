@@ -192,7 +192,6 @@ x- backspace
 - clear btn
 x- focus on/off
 x-		cursor show/hide
-- vertual keyboard support
 - copy/past/cut/selection
 x- uppsercase/lowercase
 
@@ -201,9 +200,6 @@ x- uppsercase/lowercase
 
 -- [EXAMPLE]
 
--- local textHelper = require ('src.libs.UIHelpers.text_helper')
-
-
 -- local th = textHelper()
 -- th:create{
 -- 	charWidth=20,
@@ -211,13 +207,13 @@ x- uppsercase/lowercase
 -- 	maxLength=20,
 -- 	x=60,
 -- 	y=display.contentCenterY,
--- 	chars=utils.toChars('abcd'),
+-- 	chars=utils.toChars(L('hello')),
 -- 	editable=true,
 -- }
 
 -- local th2 = textHelper()
 -- th2:create{
--- 	charWidth=20,
+-- 	charWidth=16,
 -- 	charHeight=26,
 -- 	maxLength=20,
 -- 	x=60,
