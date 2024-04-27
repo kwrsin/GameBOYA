@@ -79,16 +79,25 @@ return function ()
 		if not self.isFocus then return end
 		if #characters <= 0 then return end
 		
-		local pos = self.model:getCurrentPos() + #characters
+		local pos = self.model:getCurrentPos()
 		if not self:emptyRange() then
 			self:backspace()
 		end
 
-		for i, c in ipairs(characters) do
-			self.model:insert(c)
+		local overflow = (self.model:size() + #characters) - self.maxLength
+		if overflow > 0 then
+			local num = #characters - overflow
+			for i=1,num do
+				self.model:insert(characters[i])
+			end
+			self:moveCursor(pos + num)
+		else
+			for i, c in ipairs(characters) do
+				self.model:insert(c)
+			end
+			self:moveCursor(pos + #characters)
 		end
 
-		self:moveCursor(pos)
 		self:print{preventCursorMoving=true}
 		self:resetRelection()
 	end
