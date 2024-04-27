@@ -78,7 +78,19 @@ return function ()
 	function M:paste(characters)
 		if not self.isFocus then return end
 		if #characters <= 0 then return end
+		
+		local pos = self.model:getCurrentPos() + #characters
+		if not self:emptyRange() then
+			self:backspace()
+		end
 
+		for i, c in ipairs(characters) do
+			self.model:insert(c)
+		end
+
+		self:moveCursor(pos)
+		self:print{preventCursorMoving=true}
+		self:resetRelection()
 	end
 
 	function M:cut()
@@ -336,6 +348,8 @@ x- uppsercase/lowercase
 
 -- [EXAMPLE]
 
+-- local textHelper = require ('src.libs.UIHelpers.text_helper')
+
 -- local th = textHelper()
 -- th:create{
 -- 	charWidth=20,
@@ -359,14 +373,25 @@ x- uppsercase/lowercase
 -- }
 
 -- local onShiftKey = false
+-- local onCtrl = false
 -- Runtime:addEventListener( 'key', function(event)
 -- 	if event.phase == 'up' then
 -- 		if event.keyName == 'right' then
--- 			th:next()
--- 			th2:next()
+-- 			if onShiftKey then
+-- 				th:upscale()
+-- 				th2:upscale()
+-- 			else
+-- 				th:next()
+-- 				th2:next()
+-- 			end
 -- 		elseif event.keyName == 'left' then
--- 			th:back()
--- 			th2:back()
+-- 			if onShiftKey then
+-- 				th:downscale()
+-- 				th2:downscale()
+-- 			else
+-- 				th:back()
+-- 				th2:back()
+-- 			end
 -- 		elseif event.keyName == 'deleteBack' or event.keyName == 'Delete' then
 -- 			th:backspace()
 -- 			th2:backspace()
@@ -375,7 +400,22 @@ x- uppsercase/lowercase
 -- 			th2:blur()
 -- 		elseif event.keyName == 'leftShift' or event.keyName == 'rightShift' then
 -- 			onShiftKey = false
+-- 		elseif event.keyName == 'leftCtrl' or event.keyName == 'rightCtrl' or
+-- 						event.keyName == 'leftCommand' or event.keyName == 'rightCommand' then
+-- 			onCtrl = false
 -- 		elseif #event.keyName == 1 and string.match( event.keyName, '[0-9a-zA-Z+-]+' ) then
+-- 			if onCtrl and event.keyName == 'c' then
+-- 				local result = th:copy()
+-- 				logger.info(result)
+-- 				return
+-- 			elseif onCtrl and event.keyName == 'v' then
+-- 				th:paste(utils.toChars('PA'))
+-- 				return
+-- 			elseif onCtrl and event.keyName == 'x' then
+-- 				logger.info(th:cut())
+-- 				return
+-- 			end
+
 -- 			local keyName = event.keyName
 -- 			if onShiftKey then keyName = string.upper( keyName ) end
 -- 			th:input(utils.toChars(keyName)[1])
@@ -384,6 +424,9 @@ x- uppsercase/lowercase
 -- 	elseif event.phase == 'down' then
 -- 		if event.keyName == 'leftShift' or event.keyName == 'rightShift' then
 -- 			onShiftKey = true
+-- 		elseif event.keyName == 'leftControl' or event.keyName == 'rightControl' or
+-- 						event.keyName == 'leftCommand' or event.keyName == 'rightCommand' then
+-- 			onCtrl = true
 -- 		end
 -- 	end
 -- end )
