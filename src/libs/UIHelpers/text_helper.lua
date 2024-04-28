@@ -79,10 +79,10 @@ return function ()
 		if not self.isFocus then return end
 		if #characters <= 0 then return end
 		
-		local pos = self.model:getCurrentPos()
 		if not self:emptyRange() then
 			self:backspace()
 		end
+		local pos = self.model:getCurrentPos()
 
 		local overflow = (self.model:size() + #characters) - self.maxLength
 		if overflow > 0 then
@@ -249,11 +249,11 @@ return function ()
 	function M:insert(character)
 		if not self.isFocus then return end
 		if not self.editable then return end
-		if self.model:size() >= self.maxLength then return end
 
 		if not self:emptyRange() then
 			self:backspace()
 		end
+		if self.model:size() >= self.maxLength then return end
 
 		local pos = self.model:insert(character)
 		self:moveCursor(pos)
