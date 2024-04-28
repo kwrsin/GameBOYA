@@ -105,7 +105,7 @@ return function ()
 	function M:cut()
 		if not self.isFocus then return end
 		local result = self:copy()
-		self:removeRange(self.range)
+		self:removeRange()
 		return result
 	end
 
