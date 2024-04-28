@@ -125,6 +125,12 @@ return function ()
 		self:drawSelection(start, stop)
 	end
 
+	function M:allSelection()
+		local last = self.model:size() + 1
+		self:createSelection(1, last)
+		self:moveCursor(last)
+	end
+
 	function M:selectChars()
 		local currentPos = self.model:getCurrentPos()
 		local start
@@ -349,7 +355,7 @@ x- backspace
 - clear btn
 x- focus on/off
 x-		cursor show/hide
-- copy/past/cut/selection
+x- copy/past/cut/selection
 x- uppsercase/lowercase
 
 ]]--
@@ -374,7 +380,7 @@ x- uppsercase/lowercase
 -- th2:create{
 -- 	charWidth=16,
 -- 	charHeight=26,
--- 	maxLength=20,
+-- 	maxLength=7,
 -- 	x=60,
 -- 	y=display.contentCenterY + 100,
 -- 	chars=utils.toChars(''),
@@ -418,10 +424,13 @@ x- uppsercase/lowercase
 -- 				logger.info(result)
 -- 				return
 -- 			elseif onCtrl and event.keyName == 'v' then
--- 				th:paste(utils.toChars('PA'))
+-- 				th:paste(utils.toChars('PA123456789'))
 -- 				return
 -- 			elseif onCtrl and event.keyName == 'x' then
 -- 				logger.info(th:cut())
+-- 				return
+-- 			elseif onCtrl and event.keyName == 'a' then
+-- 				th:allSelection()
 -- 				return
 -- 			end
 
