@@ -127,10 +127,6 @@ return function ()
 
 	function M:selectAll()
 		if not self.isFocus then return end
-		-- local last = self.model:size() + 1
-		-- self:createSelection(1, last)
-		-- self.model:last()
-		-- self:moveCursor(last)
 		self.model:first()
 		for i=1,self.model:size() do
 			self:upscale()
