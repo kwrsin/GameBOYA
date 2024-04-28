@@ -10,6 +10,10 @@ return function (characters)
 		return model.pos
 	end
 
+	function model:first()
+		model.pos = 1
+	end
+
 	function model:insert(chracter, fn)
 		table.insert(self.characters , self.pos, chracter)
 		self:nextCursor(fn)
@@ -67,6 +71,7 @@ return function (characters)
 			local o = table.remove( self.characters, i )
 			o=nil
 		end
+		self.pos = start
 	end
 
 	function model:size()

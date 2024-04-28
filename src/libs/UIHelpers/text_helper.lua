@@ -125,10 +125,16 @@ return function ()
 		self:drawSelection(start, stop)
 	end
 
-	function M:allSelection()
-		local last = self.model:size() + 1
-		self:createSelection(1, last)
-		self:moveCursor(last)
+	function M:selectAll()
+		if not self.isFocus then return end
+		-- local last = self.model:size() + 1
+		-- self:createSelection(1, last)
+		-- self.model:last()
+		-- self:moveCursor(last)
+		self.model:first()
+		for i=1,self.model:size() do
+			self:upscale()
+		end
 	end
 
 	function M:selectChars()
@@ -147,19 +153,6 @@ return function ()
 		else
 			self:unselecteChars()
 		end
-		-- if self.originPoint > 0 then
-		-- 	start = pos
-		-- 	stop = math.min(
-		-- 		pos + self.originPoint, self.model:size() + 1) 
-		-- 	self:createSelection(start, stop)
-		-- elseif self.originPoint < 0 then
-		-- 	start = math.max(
-		-- 		1, pos + self.originPoint) 
-		-- 	stop = pos
-		-- 	self:createSelection(start, stop)
-		-- else
-		-- 	self:unselecteChars()
-		-- end
 	end
 
 	function M:unselecteChars()
@@ -257,6 +250,11 @@ return function ()
 		if not self.isFocus then return end
 		if not self.editable then return end
 		if self.model:size() >= self.maxLength then return end
+
+		if not self:emptyRange() then
+			self:backspace()
+		end
+
 		local pos = self.model:insert(character)
 		self:moveCursor(pos)
 
@@ -363,6 +361,8 @@ x- uppsercase/lowercase
 
 -- [EXAMPLE]
 
+-- require 'REPL.systems.global'
+
 -- local textHelper = require ('src.libs.UIHelpers.text_helper')
 
 -- local th = textHelper()
@@ -422,15 +422,19 @@ x- uppsercase/lowercase
 -- 			if onCtrl and event.keyName == 'c' then
 -- 				local result = th:copy()
 -- 				logger.info(result)
+-- 				onCtrl = false
 -- 				return
 -- 			elseif onCtrl and event.keyName == 'v' then
 -- 				th:paste(utils.toChars('PA123456789'))
+-- 				onCtrl = false
 -- 				return
 -- 			elseif onCtrl and event.keyName == 'x' then
 -- 				logger.info(th:cut())
+-- 				onCtrl = false
 -- 				return
 -- 			elseif onCtrl and event.keyName == 'a' then
--- 				th:allSelection()
+-- 				th:selectAll()
+-- 				onCtrl = false
 -- 				return
 -- 			end
 
