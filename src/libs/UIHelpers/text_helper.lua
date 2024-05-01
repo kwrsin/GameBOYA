@@ -87,7 +87,7 @@ return function ()
 		end
 		local pos = self.model:getCurrentPos()
 
-		local overflow = (self.model:size() + #characters) - self.maxLength
+		local overflow = (self:logicalSize() + #characters) - self.maxLength
 		if overflow > 0 then
 			local num = #characters - overflow
 			for i=1,num do
@@ -265,7 +265,7 @@ return function ()
 		if not self:emptyRange() then
 			self:backspace()
 		end
-		if self.model:size() >= self.maxLength then return end
+		if self:logicalSize() >= self.maxLength then return end
 
 		local pos = self.model:insert(character)
 		self:moveCursor(pos)
