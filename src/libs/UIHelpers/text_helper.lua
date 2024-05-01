@@ -20,32 +20,35 @@ return function ()
 		self:print{preventCursorMoving=true}
 
 		self:unselecteChars()
-		self:resetRelection()
+		self:reset()
 	end
 
 	function M:background(params)
-		local strWidth = self.maxLength * self.charWidth
-		local charHeight = self.charHeight
+		local lineWidth = self.length * self.charWidth
+		local lineHeight = self.lines * (self.charHeight + self.linePadding)
 		local bgcolor = params.bgcolor or {0.2, 0.2, 0.2, 1}
-		local r = display.newRect(M.go, 0, 0, strWidth, charHeight)
+		local r = display.newRect(M.go, 0, -(self.charHeight + self.linePadding)/2, lineWidth, lineHeight)
 		r:setFillColor( unpack(bgcolor) )
 		r.anchorX = 0
+		r.anchorY = 0
 	end
 
-	function M:charObject(character, startXPos)
+	function M:charObject(character, startXPos, startYPos, charPos)
+		if character.value == '\n' then return end
 		local font = self.params.font or native.systemFont
 		local fontSize = self.params.fontSize or self.charWidth
 		local charWidth = self.charWidth
-		local obj = display.newText( self.goChidren, character, startXPos, 0, font, fontSize )
+		local obj = display.newText( self.goChidren, character, startXPos, startYPos, font, fontSize )
 		local padding = charWidth / 2 - obj.width / 2
 		local color = self.params.color or {1, 1, 1, 1}
 		obj:setStrokeColor(color)
 		obj.x = obj.x + padding
 		obj.anchorX = 0
+		obj.charPosition = charPos
 	end
 
 	function M:focus()
-		self:resetRelection()
+		self:reset()
 		display.getCurrentStage().stage:setFocus( self.go )
 		self.go.alpha = 1
 		self.isFocus = true	
@@ -54,7 +57,7 @@ return function ()
 	end
 
 	function M:blur()
-		self:resetRelection()
+		self:reset()
 		display.getCurrentStage().stage:setFocus( nil )
 		self.go.alpha = 0.8
 		self.isFocus = false
@@ -99,7 +102,7 @@ return function ()
 		end
 
 		self:print{preventCursorMoving=true}
-		self:resetRelection()
+		self:reset()
 	end
 
 	function M:cut()
@@ -110,13 +113,24 @@ return function ()
 	end
 
 	function M:drawSelection(start, stop)
-		local startAt = (start-1) * self.charWidth
-		local stopAt = (stop-1) * self.charWidth
-		local width = stopAt - startAt
-		local height = self.charHeight
-		local rect = display.newRect( self.selectionLayer, startAt, 0, width, height )
-		rect:setFillColor( 0.2, 0.2, 1, 0.3 )
-		rect.anchorX = 0
+		local function getCharPosition(charPosition)
+			for i = 1, self.goChidren.numChildren do
+				local c = self.goChidren[i]
+				if c.charPosition == charPosition then
+					return c.x, c.y
+				end
+			end
+			return nil, nil
+		end
+
+		for i = start, stop - 1 do
+			local x, y = getCharPosition(i)
+			if x and y then
+				local rect = display.newRect( self.selectionLayer, x, y, self.charWidth, self.charHeight + self.linePadding )
+				rect:setFillColor( 0.2, 0.2, 1, 0.3 )
+				rect.anchorX = 0
+			end
+		end
 	end
 
 	function M:createSelection(start, stop)
@@ -170,7 +184,7 @@ return function ()
 		self:selectChars()
 	end
 
-	function M:resetRelection()
+	function M:reset()
 		self.originPoint = 0
 		self.range.start, self.range.stop = 0, 0
 		self:unselecteChars()
@@ -200,7 +214,7 @@ return function ()
 				self:moveCursor(pos)
 				self.model:remove()
 				self:print{preventCursorMoving=true}
-				self:resetRelection()
+				self:reset()
 			end)
 		else
 			self:removeRange()
@@ -223,8 +237,10 @@ return function ()
 
 		for i, c in ipairs(self.model:getCharacters()) do
 			if c then
-				local startXPos = (i - 1) * self.charWidth
-				self:charObject(c.value, startXPos)
+				local x, y = self.model:getXY(i)
+				local startXPos = (x - 1) * self.charWidth
+				local startYPos = (y - 1) * self.charHeight + self.linePadding
+				self:charObject(c.value, startXPos, startYPos, i)
 				if params.preventCursorMoving then else
 					self.model:nextCursor()
 				end
@@ -255,7 +271,7 @@ return function ()
 		self:moveCursor(pos)
 
 		self:print{preventCursorMoving = true}
-		self:resetRelection()
+		self:reset()
 	end
 
 	function M:touch(event)
@@ -271,15 +287,18 @@ return function ()
 
 	function M:createCursor()
 		if not self.editable then return end
-		self.cur = display.newRect( self.cursorLayer, self.model:size() * self.charWidth, 0, 2, self.charHeight*0.7 )
+		self.cur = display.newRect( self.cursorLayer, 0, 0, 2, self.charHeight*0.7 )
 		self.cur.anchorX = 0
 		self.cur:setFillColor( 1, 1, 1, 1 )
+		self:moveCursor(self.model:getCurrentPos())
 		transition.blink( self.cur, {tag='trans', time=2000} )
 	end
 
 	function M:moveCursor(pos)
+		local x, y = self.model:getXY(pos)
 		if self.cur then
-			self.cur.x = (pos - 1) * self.charWidth
+			self.cur.x = (x - 1) * self.charWidth
+			self.cur.y = (y - 1) * (self.charHeight + self.linePadding)
 		end
 	end
 
@@ -288,7 +307,7 @@ return function ()
 		-- if self.cursorIndex >= self.model:size() then return end
 		if not self.isFocus then return end
 		if not cancelReset then
-			self:resetRelection()
+			self:reset()
 		elseif self.originPoint <= 0 then
 			self.originPoint = self.model:getCurrentPos()
 		end
@@ -301,7 +320,7 @@ return function ()
 		-- if self.cursorIndex <= 1 then return end
 		if not self.isFocus then return end
 		if not cancelReset then
-			self:resetRelection()
+			self:reset()
 		elseif self.originPoint <= 0 then
 			self.originPoint = self.model:getCurrentPos()
 		end
@@ -309,11 +328,33 @@ return function ()
 		self:moveCursor(pos)
 	end
 
+	function M:logicalSize()
+		local size = 0
+		local pointer = 0
+		local characters = self.model:getCharacters()
+		for i = 1, #characters do
+			local c = characters[i]
+			if c.value == '\n' then
+				local diff = self.length - pointer
+				size = size + diff
+				pointer = 0
+			else
+				size = size + 1
+				pointer = (pointer + 1) % self.length
+			end
+		end
+		return size
+	end
+
+
 	function M:create(params)
-		self.model = getModel(params.chars or {})
+		self.length = params.length or 20
+		self.model = getModel(params.chars or {}, self.length)
 		self.charWidth = params.charWidth
 		self.charHeight = params.charHeight
-		self.maxLength = params.maxLength or 20
+		self.lines = params.lines or 1
+		self.linePadding = params.linePadding or 0
+		self.maxLength = self.lines * self.length
 		self.editable = params.editable
 		self.params = params
 
@@ -334,7 +375,7 @@ return function ()
 		self:print()
 		self:createCursor()
 		self:blur()
-		self:resetRelection()
+		self:reset()
 
 		return self
 	end
@@ -345,12 +386,14 @@ end
 
 
 --[[ TODO
+
 x- backspace
 - clear btn
 x- focus on/off
 x-		cursor show/hide
 x- copy/past/cut/selection
 x- uppsercase/lowercase
+- insert enter
 
 ]]--
 
@@ -365,7 +408,7 @@ x- uppsercase/lowercase
 -- th:create{
 -- 	charWidth=20,
 -- 	charHeight=26,
--- 	maxLength=20,
+-- 	length=20,
 -- 	x=60,
 -- 	y=display.contentCenterY,
 -- 	chars=utils.toChars(L('hello')),
@@ -376,7 +419,7 @@ x- uppsercase/lowercase
 -- th2:create{
 -- 	charWidth=16,
 -- 	charHeight=26,
--- 	maxLength=7,
+-- 	length=7,
 -- 	x=60,
 -- 	y=display.contentCenterY + 100,
 -- 	chars=utils.toChars(''),
