@@ -114,3 +114,44 @@ return function (characters, length)
 
 	return model
 end
+
+-- local characters = utils.toChars(L('hel\nlo\ngoodbyeeee\n\n\n'))
+-- local length = 5
+-- local function getXY(pos)
+-- 	local x, y = 1, 1
+-- 	local newLine = 0
+
+-- 	for i = 1, #characters do
+-- 		local c = characters[i]
+
+-- 		if newLine == 1 then
+-- 			x = 1
+-- 			y = y + 1
+-- 			newLine = 0
+-- 		end
+
+-- 		if c.value == '\n' then
+-- 			newLine = 1
+-- 		elseif x == length then
+-- 			if (i + 1) <= #characters and 
+-- 				characters[i + 1].value == '\n' then
+-- 				-- NOP	
+-- 			else
+-- 				newLine = 1		
+-- 			end
+-- 		end
+
+-- 		if i == pos then break end
+
+-- 		x = x + 1
+-- 	end
+-- 	return x, y
+-- end
+
+-- for i, c in ipairs(characters) do
+-- 	local x, y = getXY(i)
+-- 	print(string.format('x=%d,y=%d,value=%s\n', x, y , c.value))
+-- end
+-- local idx = 9
+-- local x, y = getXY(idx)
+-- print(string.format('x=%d,y=%d,value=%s\n', x, y , characters[idx].value))

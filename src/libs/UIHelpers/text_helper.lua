@@ -400,15 +400,14 @@ x- uppsercase/lowercase
 
 -- [EXAMPLE]
 
--- require 'REPL.systems.global'
-
 -- local textHelper = require ('src.libs.UIHelpers.text_helper')
 
 -- local th = textHelper()
 -- th:create{
 -- 	charWidth=20,
 -- 	charHeight=26,
--- 	length=20,
+-- 	lines=3,
+-- 	length=10,
 -- 	x=60,
 -- 	y=display.contentCenterY,
 -- 	chars=utils.toChars(L('hello')),
