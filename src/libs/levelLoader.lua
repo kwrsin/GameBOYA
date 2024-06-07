@@ -17,18 +17,47 @@ local function loadGameObjects(parent, layer)
 	end
 end
 
+local function hasGameContent(layers)
+	for i, l in ipairs(layers) do
+		if l.width and l.height then
+			return true
+		end
+	end
+	return false
+end
+
 local function loadLayers()
-	for i, layer in ipairs(level.layers) do
-		local gpLayer = display.newGroup()
-		content:insert(gpLayer)
-		gpLayer.isVisible = layer.props.visible
-		gpLayer.name = layer.props.name
-		loadGameObjects(gpLayer, layer)
+	if hasGameContent(level.layers) then
+		content.useCamera = true
+		local layerGroup = {}
+		for i, layer in ipairs(level.layers) do
+			local gpLayer = display.newGroup()
+			layerGroup[#layerGroup + 1] = gpLayer
+			gpLayer.isVisible = layer.props.visible
+			gpLayer.name = layer.props.name
+			if layer.width and layer.height then
+				gpLayer.isContent = true
+				local area = display.newRect( gpLayer, 0, 0, layer.width, layer.height )
+				area.isVisible = false
+				area.anchorX, area.anchorY = 0, 0
+			end
+			loadGameObjects(gpLayer, layer)
+		end
+		camera:create(content, {layers=layerGroup, target=player.go or {x=0, y=0}})
+	else
+		for i, layer in ipairs(level.layers) do
+			local gpLayer = display.newGroup()
+			content:insert(gpLayer)
+			gpLayer.isVisible = layer.props.visible
+			gpLayer.name = layer.props.name
+			loadGameObjects(gpLayer, layer)
+		end
 	end
 end
 
 return function(params)
 	content = display.newGroup()
+	content.useCamera = false
 	if params.parent then
 		params.parent:insert(content)
 	end

@@ -22,6 +22,7 @@ local offsetX = 0
 local offsetY = 0
 local viewWidth = nil
 local viewHeight = nil
+local enabled = false
 
 function M:setContentPosition(params)
 	if params.transition then
@@ -195,7 +196,12 @@ function M:parallax()
 	end
 end
 
+function M:enable( bool )
+	enabled = bool
+end
+
 function M:enterFrame(event)
+	if not enabled then return end
   self:update()
 	self:updatePrePosition()
 	self:shakeAction()

@@ -2,4 +2,5 @@
 return {
 	hello='こんにちは',
 	toTitle='タイトルへ',
+	cameraTest='カメラテスト',
 }

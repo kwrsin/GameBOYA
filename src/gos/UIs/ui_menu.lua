@@ -27,9 +27,9 @@ return function(params)
 					end
 				},
 				uiLib:createCustomButton{
-					label=L('hello'),
+					label=L('cameraTest'),
 					fn=function(event)
-						print('aaaadddddffff')
+						contentManager:gotoNextLevel{nextLevel=string.format('%s.%s', DOT_STRUCTURES, TEST_LEVEL)}
 					end
 				},
 				uiLib:createCustomButton{

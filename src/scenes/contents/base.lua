@@ -17,6 +17,8 @@ return function()
 	  for i, actor in ipairs(actors) do
 	    actor:enterFrame(event)
 	  end
+
+	  camera:enterFrame(event)
 	end
 
 	local function addEventListeners()
@@ -136,6 +138,9 @@ return function()
 	end
 
 	function M:start()
+		if content.useCamera then
+			camera:enable(true)
+		end
 		self:notifyToActors{onContent=CONTENT_START}
 	end
 
@@ -144,6 +149,10 @@ return function()
 	end
 
 	function M:destroy()
+		if content.useCamera then
+			camera:enable(false)
+			content.useCamera = false
+		end
 		self:notifyToActors{onContent=CONTENT_DESTORY}
 		removeEventListeners()
 	  sound:reset(true)
