@@ -21,6 +21,12 @@ GAME_LEVELS = {
 	level_02='src.scenes.contents.contentManagerLevel_02',
 }
 
+GAMESTATUS_STARTING = 'starting'
+GAMESTATUS_PLAYING = 'playing'
+GAMESTATUS_PAUSING = 'pausing'
+GAMESTATUS_ENDING = 'ending'
+GAMESTATUS_CLOSING = 'closing'
+
 GAME_SCENE = 'game'
 TITLE_SCENE = 'title'
 LOADER_SCENE = 'loader'

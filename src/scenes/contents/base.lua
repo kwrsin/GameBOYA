@@ -5,28 +5,65 @@ local levelLoader = require 'src.libs.levelLoader'
 local content
 local selectedLevel
 local actors
+local banner
 
 return function()
 	local M = {}
+	M.gameStatus = GAMESTATUS_STARTING
 
-	local function enterFrame(event)
-	  if player then
-	    controller:enterFrame(event)
-	    virtualControlelr:enterFrame(event)
-	  end
-	  for i, actor in ipairs(actors) do
-	    actor:enterFrame(event)
-	  end
-
-	  camera:enterFrame(event)
+	function M:enterFrame(event)
 	end
 
-	local function addEventListeners()
-		Runtime:addEventListener( 'enterFrame', enterFrame )
+	local function createBanner(params)
+		banner = display.newGroup( )
+		banner.alpha = 1
+		content:insert(banner)
+		banner.x, banner.y = CX, CY
+		local bg = display.newRect( banner, 0, 0, CW, 120 )
+		local color = params.color or {1, 0.8, 0}
+		bg:setFillColor( unpack(color) )
+		bg.alpha = 0.8
+		local text = display.newText( 
+			banner, 
+			params.title, 
+			0, 0, 
+			native.systemFontBold , 48 )
+		text:setFillColor( 1, 1, 1 )
+		local complete = params.complete
+		transition.to(banner, {time=500, alpha=0, tag=TAG_TRANSITION, onComplete=function()
+			display.remove(banner)
+			banner = nil
+			if complete then
+				complete()
+			end
+		end})
 	end
 
-	local function removeEventListeners()
-		Runtime:removeEventListener( 'enterFrame', enterFrame )
+	function M:startBanner()
+		createBanner{
+			title=L('startBanner'),
+			complete=function()
+				M.gameStatus = GAMESTATUS_PLAYING
+			end,
+		}
+	end
+
+	function M:endBanner()
+		M.gameStatus = GAMESTATUS_CLOSING
+		createBanner{
+			title=L('endBanner'),
+			complete=function()
+			  self:gotoNextLevel{nextLevel=MENU_LEVEL}
+			end,
+		}
+	end
+
+	function M:addEventListeners()
+		Runtime:addEventListener( 'enterFrame', self )
+	end
+
+	function M:removeEventListeners()
+		Runtime:removeEventListener( 'enterFrame', self )
 	end
 
 	local function loadLevel()
@@ -70,6 +107,10 @@ return function()
 	  return content  
 	end
 
+	function M:getActors()
+		return actors
+	end
+
 	function M:create(parent, lvlPath)
 	  actors = {}
 		selectedLevel = require(lvlPath)
@@ -80,7 +121,7 @@ return function()
 	  end
 	  parent:insert(content)
 
-		addEventListeners()
+		self:addEventListeners()
 	end
 
 	function M:entry(actor)
@@ -142,6 +183,7 @@ return function()
 			camera:enable(true)
 		end
 		self:notifyToActors{onContent=CONTENT_START}
+		self.gameStatus = GAMESTATUS_STARTING
 	end
 
 	function M:pause()
@@ -154,7 +196,7 @@ return function()
 			content.useCamera = false
 		end
 		self:notifyToActors{onContent=CONTENT_DESTORY}
-		removeEventListeners()
+		self:removeEventListeners()
 	  sound:reset(true)
 	end
 
