@@ -23,6 +23,7 @@ end
 function M:result(params)
   player = nil
   self.gameStatus = GAMESTATUS_ENDING
+  self:closeGame()
   -- self:pushNextLevel{nextLevel=MENU_LEVEL , params={message=params.message or "Next..."}}
   -- self:gotoNextLevel{nextLevel=MENU_LEVEL}
 end

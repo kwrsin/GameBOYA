@@ -13,14 +13,13 @@ local function getContentManager(sceneGroup)
 
 	local lvlPath = getNextLevelPath()
 	local dotPath = GAME_LEVELS[utils.lastWord(lvlPath)] or DEFAULT_CONTENT_MANAGER
-	local contentManager = require(dotPath)
+	contentManager = require(dotPath)
 	contentManager:create(sceneGroup, lvlPath)
-	return contentManager
 end
 
 function scene:create(event)
 	local sceneGroup = self.view
-	contentManager = getContentManager(sceneGroup)
+	getContentManager(sceneGroup)
 end
 
 function scene:show(event)

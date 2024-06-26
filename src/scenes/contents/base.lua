@@ -44,6 +44,7 @@ return function()
 			title=L('startBanner'),
 			complete=function()
 				M.gameStatus = GAMESTATUS_PLAYING
+				self:startGame()
 			end,
 		}
 	end
@@ -213,6 +214,22 @@ return function()
 	    time = options.time or 400,
 	    params={message=options.message or '', time=1000}
 	  })
+	end
+
+	function M:closeGame()
+		for i, actor in ipairs(actors) do
+			if actor then
+				actor:finish()
+			end
+		end
+	end
+
+	function M:startGame()
+		for i, actor in ipairs(actors) do
+			if actor then
+				actor:startGame()
+			end
+		end
 	end
 
 	return M

@@ -128,8 +128,8 @@ return function(params)
 
   function M:restart()
     self:enable()
-    if self.go.start then
-      self.go:start()
+    if self.go.play then
+      self.go:play()
     end
   end
 
@@ -157,6 +157,12 @@ return function(params)
   end
 
   function M:disappear()
+  end
+
+  function M:finish()
+  end
+
+  function M:startGame()
   end
 
   function M:update(event)
