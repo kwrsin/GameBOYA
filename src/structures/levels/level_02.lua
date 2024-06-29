@@ -17,6 +17,7 @@ M.structures={
     'cirkit_starter',
     'cirkit_shadow',
     'cirkit_racer_red',
+    'cirkit_bankA',
   },
   structPath='src.structures.gos.'
 }
@@ -77,6 +78,36 @@ M.layers={
 				params={
 					x=CX,
 					y=CY,
+					props={
+						rotation=0.000000,
+					},
+				},
+			},			
+			{
+				class='src.gos.walls.wall_bankA_custom',
+				params={
+					x=CX,
+					y=CY+30,
+					props={
+						rotation=0.000000,
+					},
+				},
+			},			
+			{
+				class='src.gos.walls.wall_bankA_custom',
+				params={
+					x=CX+180,
+					y=CY+30,
+					props={
+						rotation=0.000000,
+					},
+				},
+			},			
+			{
+				class='src.gos.walls.wall_bankA_custom',
+				params={
+					x=CX+380,
+					y=CY+30,
 					props={
 						rotation=0.000000,
 					},

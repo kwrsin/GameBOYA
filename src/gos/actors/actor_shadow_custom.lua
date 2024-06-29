@@ -7,6 +7,9 @@ return function(options)
 	local M = generator(params)
 	M.speed = 2
   M.go.gravityScale = 0
+  M.go.onBank = nil
+  M.go.bankHeight = 0
+
 
   function M:createRacer()
   	local params = M.params
@@ -38,6 +41,11 @@ return function(options)
   	self:_backDefault()
   	self:_mappingX()
   	self:_mappingY()
+  	if self.go.onBank then
+  		self.go.y = self.go.y -self.go.onBank:getBankHeightDelta(self.go)
+  	end
+  	self:_clumpTop()
+  	self:_clumpBottom()
   end
 
   function M.commands:win()
@@ -95,6 +103,18 @@ return function(options)
     	self.go.x = 
     		self.go.x + self.vel.x * self.speed
   	-- end
+  end
+
+  function M:_clumpTop()
+  	if self.go.y < CY - 42 - self.go.bankHeight then
+  		self.go.y = CY - 42 - self.go.bankHeight
+  	end
+  end
+
+  function M:_clumpBottom()
+  	if self.go.y > CY + 100 - self.go.bankHeight then
+  		self.go.y = CY + 100 - self.go.bankHeight
+  	end
   end
 
 	return M
