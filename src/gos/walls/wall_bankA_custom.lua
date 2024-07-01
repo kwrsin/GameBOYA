@@ -38,6 +38,9 @@ return function(options)
   			shadow.bankHeight = shadow.bankHeight + 1.4
   			return 1.4
   		elseif diff > 32 then
+  			if not shadow.onJump then
+  				shadow:jump()
+  			end
 				return 0
   		else
   			shadow.bankHeight = shadow.bankHeight - 1.4

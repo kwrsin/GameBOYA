@@ -165,6 +165,9 @@ return function(params)
   function M:startGame()
   end
 
+  function M:subEnterFrame(event)
+  end
+
   function M:update(event)
     if not self.go then return end
     local sequence = self.go.sequence
@@ -182,6 +185,7 @@ return function(params)
     if self.delay > 0 then
       self.delay = self.delay - 1
     end
+    self:subEnterFrame(event)
   end
 
   function M:getButtonStatus()

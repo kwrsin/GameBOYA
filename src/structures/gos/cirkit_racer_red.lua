@@ -8,7 +8,10 @@ return {
 		{ time=270, loopCount=0, name="down", frames={ 3,8,}, },
 		{ time=270, loopCount=0, name="finish", frames={ 4,9,}, },
 		{ time=270, loopCount=0, name="crush", frames={ 5,}, },
+		{ time=270, loopCount=0, name="jumping", frames={ 4,}, },
 	},
 	sounds = {
+		jump='assets/sounds/jump.wav',
+		idle='assets/sounds/idle.wav',
 	},
 }

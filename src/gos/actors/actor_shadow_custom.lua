@@ -9,6 +9,9 @@ return function(options)
   M.go.gravityScale = 0
   M.go.onBank = nil
   M.go.bankHeight = 0
+  M.go.onJump = false
+  sound:effect2('idle', {loops=-1, channel=3})
+
 
 
   function M:createRacer()
@@ -17,6 +20,7 @@ return function(options)
 			parent = params.parent,
 			x = params.x,
 			y = params.y,
+			shadow = M,
   	}
   	M.racer = racerGenerator(racerParams)
 
@@ -32,6 +36,17 @@ return function(options)
   	self:setSequence( 'win' )
   end
 
+  function M:subEnterFrame(event)
+  	M.racer:enterFrame(event)
+  end  
+
+	function M.go:jump()
+		self.onJump = true
+		M:setSequence( 'jumping' )
+		M.racer:jump(4)
+	end
+
+
 -- [ COMMANDS ] --
   function M.commands:default()
   	self:_up()
@@ -39,11 +54,15 @@ return function(options)
   	self:_left()
   	self:_right()
   	self:_backDefault()
-  	self:_mappingX()
-  	self:_mappingY()
-  	if self.go.onBank then
-  		self.go.y = self.go.y -self.go.onBank:getBankHeightDelta(self.go)
-  	end
+  	self:_setBankHeight()
+  	self:_clumpTop()
+  	self:_clumpBottom()
+  end
+
+  function M.commands:jumping()
+   	self:_left()
+  	self:_right()
+  	self:_setBankHeight()
   	self:_clumpTop()
   	self:_clumpBottom()
   end
@@ -52,23 +71,19 @@ return function(options)
   	self.racer:setSequence( 'finish' )
   	self:_left()
   	self:_right()
-  	self:_mappingX()
-  	self:_mappingY()
   end
 
 -- [ MICRO COMMANDS ] --
+	function M:_setBankHeight()
+  	if self.go.onBank then
+  		self.go.y = self.go.y -self.go.onBank:getBankHeightDelta(self.go)
+  	end
+	end
+
 	function M:_backDefault()
 		if self.buttons.up <= 0 and self.buttons.down <= 0 then
 			self.racer:play( 'default' )
 		end
-	end
-
-	function M:_mappingX()
-  	self.racer.go.x = self.go.x
-	end
-
-	function M:_mappingY()
-  	self.racer.go.y = self.go.y
 	end
 
   function M:_up()
