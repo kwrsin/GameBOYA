@@ -13,7 +13,7 @@ return function(options)
 
 	function M:jump(ratio)
 		self:setSequence( 'jumping' )
-		self.verticalDumping = self.shadow.speed * ratio
+		self.verticalDumping = self.shadow.acceleration / 100 * self.shadow:getTorque() * ratio
 		self.direction = -1
 		sound:effect2( 'jump' )
 	end
@@ -60,10 +60,10 @@ return function(options)
 			self.direction =  1
 		end
 		if self.go.y >= self.shadow.go.y then
-			if self.verticalDumping > 15 then
-				self:jump(4)
-			elseif self.verticalDumping > 5 then
+			if self.verticalDumping > 20 then
 				self:jump(2)
+			elseif self.verticalDumping > 10 then
+				self:jump(1)
 			else
 				self.go.y = self.shadow.go.y
 				self.verticalDumping = 0
@@ -71,6 +71,12 @@ return function(options)
 				self:setSequence( 'default' )
 				self.shadow:setSequence( 'default' )
 			end			
+			-- self.go.y = self.shadow.go.y
+			-- self.verticalDumping = 0
+			-- self.shadow.go.onJump = false
+			-- self:setSequence( 'default' )
+			-- self.shadow:setSequence( 'default' )
+
 		end
 	end
 

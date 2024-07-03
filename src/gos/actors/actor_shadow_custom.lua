@@ -5,13 +5,14 @@ local racerGenerator = require 'src.gos.actors.actor_red_racer_custom'
 return function(options)
 	local params = utils.fastCopy(options or {}, params)
 	local M = generator(params)
-	M.speed = 2
+	M.speed = 4
+	M.acceleration = 0
   M.go.gravityScale = 0
   M.go.onBank = nil
   M.go.bankHeight = 0
   M.go.onJump = false
+  M.baseLineY = params.y
   sound:effect2('idle', {loops=-1, channel=3})
-
 
 
   function M:createRacer()
@@ -27,6 +28,12 @@ return function(options)
   end
   M.createRacer()
 
+  function M:getTorque()
+  	local coef = 2
+  	local vX = self.acceleration / 100
+  	return coef * vX * vX
+  end
+
 -- [ OVERRIDED ] --
  	function M:getButtonStatus()
     utils.merge(buttonStatus, self.buttons)	
@@ -41,9 +48,10 @@ return function(options)
   end  
 
 	function M.go:jump()
+		if M.acceleration < 60 then return end
 		self.onJump = true
 		M:setSequence( 'jumping' )
-		M.racer:jump(4)
+		M.racer:jump(3)
 	end
 
 
@@ -53,10 +61,12 @@ return function(options)
   	self:_down()
   	self:_left()
   	self:_right()
+  	self:_axelUp()
   	self:_backDefault()
   	self:_setBankHeight()
   	self:_clumpTop()
   	self:_clumpBottom()
+  	self:_move()
   end
 
   function M.commands:jumping()
@@ -65,6 +75,7 @@ return function(options)
   	self:_setBankHeight()
   	self:_clumpTop()
   	self:_clumpBottom()
+  	self:_move()
   end
 
   function M.commands:win()
@@ -74,9 +85,14 @@ return function(options)
   end
 
 -- [ MICRO COMMANDS ] --
+	function M:_move()
+		self.go.y = self.baseLineY - self.go.bankHeight
+	end
+
 	function M:_setBankHeight()
   	if self.go.onBank then
-  		self.go.y = self.go.y -self.go.onBank:getBankHeightDelta(self.go)
+  		self.go.bankHeight =
+  			self.go.onBank:getBankHeightDelta(self.go)
   	end
 	end
 
@@ -86,20 +102,33 @@ return function(options)
 		end
 	end
 
+	function M:_axelUp()
+		if self.buttons.btnA and self.buttons.btnA > 0 then
+			self.acceleration = self.buttons.btnA
+		else
+			self.acceleration = self.acceleration - 1
+			if self.acceleration <= 0 then
+				self.acceleration = 0
+			end
+		end
+	end
+
   function M:_up()
+  	if self.acceleration <= 0 then return end
   	if self.buttons.up > 0 then
   		self.vel.y = -1
-    	self.go.y = 
-    		self.go.y + self.vel.y * self.speed
+  		self.baseLineY = 
+	  		self.baseLineY + self.vel.y * self.speed
     	self.racer:play( 'up' )
   	end
   end
 
   function M:_down()
+  	if self.acceleration <= 0 then return end
   	if self.buttons.down > 0 then
   		self.vel.y = 1
-    	self.go.y = 
-    		self.go.y + self.vel.y * self.speed
+  		self.baseLineY =
+  			self.baseLineY + self.vel.y * self.speed
     	self.racer:play( 'down' )
   	end
   end
@@ -116,19 +145,19 @@ return function(options)
   	-- if self.buttons.right > 0 then
   		self.vel.x = 1
     	self.go.x = 
-    		self.go.x + self.vel.x * self.speed
+    		self.go.x + self.vel.x * self.speed * self:getTorque()
   	-- end
   end
 
   function M:_clumpTop()
-  	if self.go.y < CY - 42 - self.go.bankHeight then
-  		self.go.y = CY - 42 - self.go.bankHeight
+  	if self.baseLineY < CY - 42 then
+  		self.baseLineY = CY - 42
   	end
   end
 
   function M:_clumpBottom()
-  	if self.go.y > CY + 100 - self.go.bankHeight then
-  		self.go.y = CY + 100 - self.go.bankHeight
+  	if self.baseLineY > CY + 100 then
+  		self.baseLineY = CY + 100
   	end
   end
 

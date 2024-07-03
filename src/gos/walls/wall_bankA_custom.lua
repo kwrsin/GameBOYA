@@ -32,24 +32,23 @@ return function(options)
 	-- end
   function M.go:getBankHeightDelta(shadow)
   	local rightEdge = self.x + self.width / 2
-  	local diff = rightEdge - shadow.x - 10
+  	local colHalfWidth = 12
+  	local grad = 1.4
+  	local diff = rightEdge - shadow.x - colHalfWidth
   	if diff > 0 then
   		if diff > 64 then
-  			shadow.bankHeight = shadow.bankHeight + 1.4
-  			return 1.4
+  			return -(diff - 64 - 32) * grad
   		elseif diff > 32 then
   			if not shadow.onJump then
   				shadow:jump()
   			end
-				return 0
+				return 32
   		else
-  			shadow.bankHeight = shadow.bankHeight - 1.4
-  			return -1.4
+  			return -(-diff * grad)
   		end
   	end
 		return 0
   end
-
 
 	return M
 end

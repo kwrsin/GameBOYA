@@ -6,8 +6,8 @@ return {
   key_1 = {
    data = {
     y = 1.0266723632812,
-    x = -4.2666625976562,
-    halfWidth = 11.946655273438,
+    x = 0,
+    halfWidth = 12,
     halfHeight = 17.066650390625,
    },
    type = "rect",
