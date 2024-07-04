@@ -16,6 +16,10 @@ function M:enterFrame(event)
   for i, actor in ipairs(actors) do
     actor:enterFrame(event)
   end
+  local uis = self:getuserInterfaces()
+  for i, ui in ipairs(uis) do
+    ui:enterFrame(event)
+  end
 
   camera:enterFrame(event)
 end

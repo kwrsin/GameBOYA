@@ -18,6 +18,7 @@ M.structures={
     'cirkit_shadow',
     'cirkit_racer_red',
     'cirkit_bankA',
+    'cirkit_9slice',
   },
   structPath='src.structures.gos.'
 }
@@ -185,10 +186,18 @@ M.layers={
 					},
 				},
 			},
+		},
+		props={
+			name='Background',
+			visible=true,
+		},
+	},
+	{
+		gos={
 			{
-				class='src.gos.walls.bnk01_custom',
+				class='src.gos.UIs.ui_cirkit_custom',
 				params={
-					x=224.000000,
+					x=CX,
 					y=280.000000,
 					props={
 						rotation=0.000000,
@@ -207,7 +216,7 @@ M.layers={
 			},
 		},
 		props={
-			name='Background',
+			name='UserInterfaces',
 			visible=true,
 		},
 	},

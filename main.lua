@@ -4,10 +4,10 @@
 --
 -----------------------------------------------------------------------------------------
 --[ Game Main ]
--- require 'src.systems.global'
+require 'src.systems.global'
 
 --[ Development Tools ]
 -- require 'dev.tools.systems.global' 
 
 --[ REPL SCRACHPAD ]
-require 'REPL.systems.global'
+-- require 'REPL.systems.global'

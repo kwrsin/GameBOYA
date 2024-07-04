@@ -6,6 +6,7 @@ local content
 local selectedLevel
 local actors
 local banner
+local userInterfaces
 
 return function()
 	local M = {}
@@ -73,6 +74,8 @@ return function()
 	    register=function(obj, params)
 	      if obj.isActor then
 	        M:entry(obj)
+	      elseif obj.isUI then
+	      	M:addUIs(obj)
 	      end
 	      if params.isPlayer then
 	        player = obj
@@ -112,8 +115,13 @@ return function()
 		return actors
 	end
 
+	function M:getuserInterfaces()
+		return userInterfaces
+	end
+
 	function M:create(parent, lvlPath)
 	  actors = {}
+	  userInterfaces = {}
 		selectedLevel = require(lvlPath)
 	  if selectedLevel.edition then
 	    loadLevel()
@@ -128,6 +136,11 @@ return function()
 	function M:entry(actor)
 	  if not actor then return end
 	  actors[#actors + 1] = actor
+	end
+
+	function M:addUIs(ui)
+		if not ui then return end
+		userInterfaces[#userInterfaces + 1] = ui
 	end
 
 	function M:disableActors()
